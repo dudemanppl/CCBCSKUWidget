@@ -2,6 +2,7 @@
   "name": "CC/BC SKU Widget",
   "version": "1.0",
   "description": "Adds button to instantly copy SKUs to clipboard",
+  "author": "Tommy Liao",
   "permissions": [
     "https://www.competitivecyclist.com/*",
     "https://www.backcountry.com/*"
