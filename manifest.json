@@ -1,0 +1,20 @@
+{
+  "name": "CC/BC SKU Widget",
+  "version": "1.0",
+  "description": "Adds button to instantly copy SKUs to clipboard",
+  "permissions": [
+    "https://www.competitivecyclist.com/*",
+    "https://www.backcountry.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches:": [
+        "https://www.competitivecyclist.com/*",
+        "https://www.backcountry.com/*"
+      ],
+      "css": ["CCBCSKUWidget.css"],
+      "js": ["CCBCSKUWidget.js"]
+    }
+  ],
+  "browser_action": {}
+}
