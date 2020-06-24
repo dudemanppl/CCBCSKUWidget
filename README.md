@@ -4,6 +4,15 @@
 
 Browser extension made for use on the Competitive Cyclist and Backcountry websites to be able to quickly copy item SKUs to the clipboard.
 
+Only tested with Chrome so far, so good luck. I'll publish it when its more polished. Email me at tliao@backcountry.com if you have any concerns.
+
+## Installation
+
+1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/CCBCSKUWidget.zip "link to file")**.
+2. Unzip the file.
+3. Go to [chrome://extensions/](chrome://extensions/) and check the box for **Developer mode** in the top right.
+4. Click the **load unpacked extension** button and select the folder where you unzipped the file.
+
 ## License
 
 The MIT License (MIT)
