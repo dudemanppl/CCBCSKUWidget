@@ -1,4 +1,4 @@
-# CCBC SKU Widget
+# CC/BC SKU Widget
 
 ## Description
 
@@ -10,7 +10,7 @@ Only tested with Chrome so far, so good luck. I'll publish it when its more poli
 
 1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/CCBCSKUWidget.zip "link to file")**.
 2. Unzip the file.
-3. Go to [chrome://extensions/](chrome://extensions/) and check the box for **Developer mode** in the top right.
+3. Go to chrome://extensions/ and check the box for **Developer mode** in the top right.
 4. Click the **load unpacked extension** button and select the folder where you unzipped the file.
 
 ## License
