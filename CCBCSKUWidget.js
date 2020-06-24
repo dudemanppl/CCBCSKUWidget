@@ -5,21 +5,49 @@
 const isCC = window.location.host === "www.competitivecyclist.com";
 
 /**
+ * Runs function on all elements of given class name.
+ *
+ * @param {string} targetElemClassName Element selector by class name.
+ * @param {function} func Function to call on every element.
+ */
+
+const runOnAllElems = (targetElemClassName, func) => {
+  const elems = document.getElementsByClassName(targetElemClassName);
+
+  for (const elem of [...elems]) {
+    func(elem);
+  }
+};
+
+/**
+ * Deletes all elements of a given class name.
+ *
+ * @param {string} targetElemClassName Element selector by class name.
+ */
+
+const deleteAllElems = targetElemClassName => {
+  runOnAllElems(targetElemClassName, elem => elem.remove());
+};
+
+/**
  * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension.
  */
 
 if (!isCC) {
-  const items = document.getElementsByClassName("js-pl-expandable");
-
-  for (const item of items) {
-    const { style } = item;
+  deleteAllElems("js-pl-focus-trigger");
+  deleteAllElems("js-pl-color-thumbs");
+  deleteAllElems("js-pl-sizes-wrap");
+  deleteAllElems("js-product-listing-show-more");
+  runOnAllElems("js-pl-expandable", elem => {
+    const { style } = elem;
 
     style.top = "10px";
     style.left = "10px";
     style.right = "10px";
-
-    item.childNodes[3].remove();
-  }
+    style.bottom = "10px";
+  });
+} else {
+  delete "js-productcomparison-toggle-wrap";
 }
 
 /**
@@ -199,27 +227,21 @@ class SKUWidgetContainer extends Div {
 }
 
 /**
- * Adds the SKU Widget to each DOM element passed through.
+ * Adds the SKU Widget to all elements of given class name.
  *
- * @param {array} arrOfItems An array of DOM elements to add the SKU Widget to.
+ * @param {string} targetElemClassName Element selector by class name.
  */
 
-const addSKUWidget = arrOfItems => {
-  for (const item of arrOfItems) {
-    const productID = item.getAttribute("data-product-id");
+const addSKUWidget = targetElemClassName => {
+  runOnAllElems(targetElemClassName, elem => {
+    const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new SKUWidgetContainer(productID).create();
-    const appendLocation = isCC ? item : item.firstChild.lastChild;
+    const targetLocation = isCC
+      ? elem.firstChild
+      : elem.firstChild.childNodes[2];
 
-    appendLocation.appendChild(SKUWidget);
-  }
+    targetLocation.appendChild(SKUWidget);
+  });
 };
 
-/**
- * Array of all items on the page, based on which which website it is on.
- */
-
-const allItemsOnPage = isCC
-  ? document.getElementsByClassName("product")
-  : document.querySelectorAll(`[role="group"]`);
-
-addSKUWidget(allItemsOnPage);
+addSKUWidget("js-product-listing");
