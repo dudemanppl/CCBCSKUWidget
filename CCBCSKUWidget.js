@@ -5,14 +5,14 @@
 const isCC = window.location.host === "www.competitivecyclist.com";
 
 /**
- * Runs function on all elements of given class name.
+ * Runs a function on each element of a given class.
  *
- * @param {string} targetElemClassName Element selector by class name.
- * @param {function} func Function to call on every element.
+ * @param {string} elemClassName HTML element class.
+ * @param {function} func Function to be run on each element.
  */
 
-const runOnAllElems = (targetElemClassName, func) => {
-  const elems = document.getElementsByClassName(targetElemClassName);
+const runOnAllElems = (elemClassName, func) => {
+  const elems = document.getElementsByClassName(elemClassName);
 
   for (const elem of [...elems]) {
     func(elem);
@@ -20,26 +20,25 @@ const runOnAllElems = (targetElemClassName, func) => {
 };
 
 /**
- * Deletes all elements of a given class name.
+ * Deletes all elements of a given class.
  *
- * @param {string} targetElemClassName Element selector by class name.
+ * @param {string} elemClassName HTML element class.
  */
 
-const deleteAllElems = targetElemClassName => {
-  runOnAllElems(targetElemClassName, elem => elem.remove());
+const deleteAllElems = elemClassName => {
+  runOnAllElems(elemClassName, elem => elem.remove());
 };
 
 /**
- * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension.
+ * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension. Removes compare option from plp, ditto.
  */
 
 if (!isCC) {
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
-  deleteAllElems("js-product-listing-show-more");
-  runOnAllElems("js-pl-expandable", elem => {
-    const { style } = elem;
+  runOnAllElems("js-pl-expandable", item => {
+    const { style } = item;
 
     style.top = "10px";
     style.left = "10px";
@@ -47,7 +46,7 @@ if (!isCC) {
     style.bottom = "10px";
   });
 } else {
-  delete "js-productcomparison-toggle-wrap";
+  deleteAllElems("js-productcomparison-toggle-wrap");
 }
 
 /**
@@ -227,13 +226,13 @@ class SKUWidgetContainer extends Div {
 }
 
 /**
- * Adds the SKU Widget to all elements of given class name.
+ * Adds the SKU Widget to each element of a given class.
  *
- * @param {string} targetElemClassName Element selector by class name.
+ * @param {string} elemClassName HTML element class.
  */
 
-const addSKUWidget = targetElemClassName => {
-  runOnAllElems(targetElemClassName, elem => {
+const addSKUWidget = elemClassName => {
+  runOnAllElems(elemClassName, elem => {
     const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new SKUWidgetContainer(productID).create();
     const targetLocation = isCC
