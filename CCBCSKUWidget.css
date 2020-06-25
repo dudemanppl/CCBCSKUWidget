@@ -31,6 +31,16 @@
   color: #222;
 }
 
+#oos-alert {
+  float: right;
+  color: red;
+  width: 40px;
+}
+
+.ui-basedropdown-link #oos-alert {
+  display: none;
+}
+
 /* CC PLI fix */
 
 .ui-pli {
@@ -39,28 +49,28 @@
 
 /* BC PL enbiggener */
 
-.ui-pl-placeholder {
-  padding-top: 100% !important;
-  margin-top: 0 !important;
+.product.ui-product-listing .ui-pl-placeholder {
+  padding-top: 100%;
+  margin-top: 0;
 }
 
 /* BC purchase button restyling */
 
-.product-buybox__actions {
+.product-buybox.js-product-buybox .product-buybox__actions {
   flex-wrap: wrap;
   justify-content: space-around;
-  margin: 0 !important;
-  width: 320px !important;
+  margin: 0;
+  width: 320px;
 }
 
-.product-buybox__action {
-  float: none !important;
-  width: 100% !important;
+.product-buybox__actions .product-buybox__action {
+  float: none;
+  width: 100%;
   margin: 8px;
 }
 
-.product-buybox__btn {
-  margin: 0 !important;
-  width: 100% !important;
-  padding: 0 !important;
+.product-buybox__action .product-buybox__btn {
+  margin: 0;
+  width: 100%;
+  padding: 0;
 }

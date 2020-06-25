@@ -79,13 +79,18 @@ class HTMLElem {
 }
 
 /**
- * Returns new button
+ * Returns new button with hover and click effects
+ *
+ * @param {string} [id] Id for HTML element.
+ * @param {array} [classList] Array of desired classes to add.
+ * @param {string} text Desired text of the button.
+ * @param {function} func Function to be invoked on click.
  */
 
 class Button extends HTMLElem {
-  constructor(id, classList, originalText, func) {
+  constructor(id, classList, text, func) {
     super("button", id, classList);
-    this.originalText = originalText;
+    this.text = text;
     this.func = func;
   }
 
@@ -93,14 +98,14 @@ class Button extends HTMLElem {
     const newButton = super.create();
 
     newButton.setAttribute("type", "button");
-    newButton.innerHTML = this.originalText;
+    newButton.innerHTML = this.text;
 
     newButton.addEventListener("mouseenter", () => {
       newButton.innerHTML = "Click to copy";
     });
 
     newButton.addEventListener("mouseleave", () => {
-      newButton.innerHTML = this.originalText;
+      newButton.innerHTML = this.text;
     });
 
     newButton.onclick = () => {
@@ -116,6 +121,12 @@ class Button extends HTMLElem {
     return newButton;
   }
 }
+
+/**
+ * Returns copy product id (parent SKU) button for the PLP
+ *
+ * @param {string} productID Product ID to be copied to clipboard.
+ */
 
 class CopyProductIDButtonPLP extends Button {
   constructor(productID) {
@@ -174,24 +185,75 @@ const addSKUWidget = () => {
 
 isPLP && addSKUWidget();
 
+/**
+ * Returns copy child SKU button on the PDP
+ *
+ * @param {string} [id] Id for HTML element.
+ * @param {array} [classList] Array of desired classes to add.
+ */
+
 class CopySKUButtonPDP extends Button {
   constructor(id, classList) {
-    super(id, classList, "Copy SKU", () =>
-      navigator.clipboard.writeText(
-        isCC
-          ? document
-              .getElementById("product-variant-select")
-              .getAttribute("sku-value")
-          : document.getElementsByClassName("js-selected-product-variant")[0]
-              .value
-      )
-    );
+    super(id, classList, "Copy SKU", () => {
+      const SKU = isCC
+        ? document
+            .getElementById("product-variant-select")
+            .getAttribute("sku-value")
+        : document.getElementsByClassName("js-selected-product-variant")[0]
+            .value;
+
+      navigator.clipboard.writeText(SKU);
+    });
   }
 
   create() {
     return super.create();
   }
 }
+
+/**
+ * Changes the "add to wishlist" button to read "OOS" when item is out of stock
+ */
+
+const addOOSAlertToCC = () => {
+  const productObjStr = document.getElementsByClassName(
+    "kraken-product-script"
+  )[0].textContent;
+
+  const products = JSON.parse(productObjStr.slice(13, productObjStr.length - 1))
+    .skusCollection;
+
+  const dropdownOptions = document.getElementsByClassName(
+    "js-unifiedropdown-option"
+  );
+
+  const OOSButton = document.getElementsByClassName("js-add-to-wishlist")[0];
+
+  /** First element is a placeholder */
+  for (let i = 1; i < dropdownOptions.length; i += 1) {
+    const dropdownOption = dropdownOptions[i];
+
+    const childSKU = dropdownOption.getAttribute("sku-value");
+    const stockLevel = products[childSKU].inventory;
+    // console.log(dropdownOption.lastChild);
+
+    if (!stockLevel) {
+      const OOS = new HTMLElem("div", "oos-alert", [
+        "ui-basedropdown-option-value",
+        "ui-unifiedropdown-option-value",
+      ]).create();
+
+      OOS.innerHTML = "OOS";
+
+      dropdownOption.appendChild(OOS);
+      dropdownOption.style.backgroundColor = "lightgrey";
+    }
+
+    dropdownOption.onclick = () => {
+      OOSButton.innerHTML = stockLevel ? "save for later" : "OOS";
+    };
+  }
+};
 
 /**
  * Adds CopySKUButton elem to PDP.
@@ -211,12 +273,10 @@ const addCopySKUButtonPDP = () => {
   const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
   if (isCC) {
+    addOOSAlertToCC();
     targetLocation.appendChild(newCopySKUButtonPDP);
   } else {
-    /**
-     * Adds container to BC to mimic layout of original buttons
-     */
-
+    /* Adds container to BC to mimic layout of original buttons */
     const container = new HTMLElem("div", null, [
       "product-buybox__action",
     ]).create();
