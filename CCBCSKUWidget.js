@@ -172,9 +172,7 @@ const addSKUWidget = () => {
   });
 };
 
-if (isPLP) {
-  addSKUWidget();
-}
+isPLP && addSKUWidget();
 
 class CopySKUButtonPDP extends Button {
   constructor(id, classList) {
@@ -228,6 +226,4 @@ const addCopySKUButtonPDP = () => {
   }
 };
 
-if (isPDP) {
-  addCopySKUButtonPDP();
-}
+isPDP && addCopySKUButtonPDP();
