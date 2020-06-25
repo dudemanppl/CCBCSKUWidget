@@ -3,6 +3,8 @@
  */
 
 const isCC = window.location.host === "www.competitivecyclist.com";
+const isPLP = document.getElementsByClassName("results").length;
+const isPDP = document.getElementsByClassName("js-pdp-body-content");
 
 /**
  * Runs a function on each element of a given class.
@@ -37,8 +39,8 @@ if (!isCC) {
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
-  runOnAllElems("js-pl-expandable", item => {
-    const { style } = item;
+  runOnAllElems("js-pl-expandable", elem => {
+    const { style } = elem;
 
     style.top = "10px";
     style.left = "10px";
@@ -66,17 +68,19 @@ const toggle = (time, func1, func2) => {
 };
 
 /**
- * Returns new HTML element given a tagName.
+ * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name.
  * @param {string} [id] Id for HTML element.
+ * @param {array} [classList] Array of desired classes to add.
  * @return {Element} New HTML element with tag name.
  */
 
 class HTMLElem {
-  constructor(tagName, id) {
+  constructor(tagName, id, classList) {
     this.tagName = tagName;
     this.id = id;
+    this.classList = classList;
   }
 
   create() {
@@ -84,6 +88,10 @@ class HTMLElem {
 
     if (this.id) {
       newHTMLElem.id = this.id;
+    }
+
+    if (this.classList) {
+      newHTMLElem.classList.add(...this.classList);
     }
 
     return newHTMLElem;
@@ -94,22 +102,16 @@ class HTMLElem {
  * Returns new div HTML element with optional classnames.
  *
  * @param {string} [id] Id for HTML element.
- * @param {string} [classList] Comma seperated values of desired classes to add.
  * @return {Element} New div HTML element.
  */
 
 class Div extends HTMLElem {
   constructor(id, classList) {
-    super("div", id);
-    this.classList = classList;
+    super("div", id, classList);
   }
 
   create() {
     const newDiv = super.create();
-
-    if (this.classList) {
-      newDiv.classList.add(this.classList);
-    }
 
     return newDiv;
   }
@@ -243,4 +245,70 @@ const addSKUWidget = elemClassName => {
   });
 };
 
-addSKUWidget("js-product-listing");
+if (isPLP) {
+  addSKUWidget("js-product-listing");
+}
+
+/**
+ * Creates button to copy the SKU of the currently selected variant on.
+ *
+ * @param {string} id Id given to button.
+ * @param {array} classList Array of desired classes to add.
+ * @return {Element}
+ */
+
+class CopySKUButtonPDP extends HTMLElem {
+  constructor(id, classList) {
+    super("button", id, classList);
+  }
+
+  create() {
+    const newCopySKUButtonPDP = super.create();
+
+    newCopySKUButtonPDP.setAttribute("type", "button");
+    newCopySKUButtonPDP.innerHTML = "Copy variant SKU";
+
+    newCopySKUButtonPDP.onclick = () => {
+      navigator.clipboard.writeText(
+        isCC
+          ? document
+              .getElementById("product-variant-select")
+              .getAttribute("sku-value")
+          : document.querySelector('[itemprop="productID"]').content
+      );
+    };
+
+    return newCopySKUButtonPDP;
+  }
+}
+
+/**
+ * Adds CopySKUButton elem to DOM.
+ */
+
+const addCopySKUButtonPDP = () => {
+  const id = `add-sku-button-${isCC ? "cc" : "bc"}`;
+
+  const classList = isCC
+    ? ["btn", "btn--secondary"]
+    : ["btn-reset", "product-buybox__btn"];
+
+  const targetLocation = isCC
+    ? document.getElementsByClassName("add-to-cart")[0]
+    : document.getElementsByClassName("js-buybox-actions")[0];
+
+  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
+
+  if (isCC) {
+    targetLocation.appendChild(newCopySKUButtonPDP);
+  } else {
+    const container = new Div(null, ["product-buybox__action"]).create();
+    container.appendChild(newCopySKUButtonPDP);
+
+    targetLocation.appendChild(container);
+  }
+};
+
+if (isPDP) {
+  addCopySKUButtonPDP();
+}
