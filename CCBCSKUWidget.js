@@ -99,7 +99,7 @@ class HTMLElem {
  */
 
 class Button extends HTMLElem {
-  constructor(id, classList, originalText, textToCopy) {
+  constructor(id, classList, originalText, textToCopy = originalText) {
     super("button", id, classList);
     this.originalText = originalText;
     this.textToCopy = textToCopy;
@@ -126,9 +126,8 @@ class Button extends HTMLElem {
 
       newButton.innerHTML = "Copied!";
 
-      navigator.clipboard.writeText(
-        this.textToCopy ? this.originalText : this.textToCopy
-      );
+      console.log(this.textToCopy);
+      navigator.clipboard.writeText(this.textToCopy);
     };
 
     return newButton;
