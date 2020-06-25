@@ -182,7 +182,8 @@ class CopySKUButtonPDP extends Button {
           ? document
               .getElementById("product-variant-select")
               .getAttribute("sku-value")
-          : document.querySelector('[itemprop="productID"]').content
+          : document.getElementsByClassName("js-selected-product-variant")[0]
+              .value
       )
     );
   }
