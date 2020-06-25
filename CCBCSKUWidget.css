@@ -28,6 +28,11 @@
   line-height: 20px;
 }
 
+#product-id-button {
+  height: 28px;
+  width: 104px;
+}
+
 #overlay:hover #product-id-button {
   display: none;
 }

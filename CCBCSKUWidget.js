@@ -1,10 +1,6 @@
-/**
- * Boolean of if the current URL is Competitive Cyclist or not.
- */
-
 const isCC = window.location.host === "www.competitivecyclist.com";
-const isPLP = document.getElementsByClassName("results").length;
-const isPDP = document.getElementsByClassName("js-pdp-body-content");
+const isPLP = document.getElementsByClassName("ui-ajaxplp").length;
+const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
 /**
  * Runs a function on each element of a given class.
@@ -171,9 +167,9 @@ class Overlay extends Div {
  * @return {Element} Product ID Button.
  */
 
-class ProductIDButton extends Div {
+class ProductIDButton extends HTMLElem {
   constructor(productID) {
-    super("product-id-button");
+    super("button", "product-id-button", ["btn-reset"]);
     this.productID = productID;
   }
 
@@ -187,14 +183,17 @@ class ProductIDButton extends Div {
     overlay.onclick = () => {
       navigator.clipboard.writeText(this.productID);
       toggle(
-        60,
+        70,
         () => (overlay.style.backgroundColor = "black"),
         () => (overlay.style.backgroundColor = null)
       );
       overlay.firstChild.innerHTML = "Copied!";
     };
 
-    // Resets text on hover
+    /**
+     * Resets text on when cursor is no longer over button
+     */
+
     overlay.addEventListener(
       "mouseleave",
       () => (overlay.firstChild.innerHTML = "Click to copy")
@@ -230,23 +229,23 @@ class SKUWidgetContainer extends Div {
 /**
  * Adds the SKU Widget to each element of a given class.
  *
- * @param {string} elemClassName HTML element class.
  */
 
-const addSKUWidget = elemClassName => {
-  runOnAllElems(elemClassName, elem => {
+const addSKUWidget = () => {
+  runOnAllElems("js-product-listing", elem => {
     const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new SKUWidgetContainer(productID).create();
     const targetLocation = isCC
       ? elem.firstChild
       : elem.firstChild.childNodes[2];
+    console.log(elem.firstChild);
 
     targetLocation.appendChild(SKUWidget);
   });
 };
 
 if (isPLP) {
-  addSKUWidget("js-product-listing");
+  addSKUWidget();
 }
 
 /**
@@ -266,7 +265,7 @@ class CopySKUButtonPDP extends HTMLElem {
     const newCopySKUButtonPDP = super.create();
 
     newCopySKUButtonPDP.setAttribute("type", "button");
-    newCopySKUButtonPDP.innerHTML = "Copy variant SKU";
+    newCopySKUButtonPDP.innerHTML = "Copy SKU";
 
     newCopySKUButtonPDP.onclick = () => {
       navigator.clipboard.writeText(
@@ -283,7 +282,7 @@ class CopySKUButtonPDP extends HTMLElem {
 }
 
 /**
- * Adds CopySKUButton elem to DOM.
+ * Adds CopySKUButton elem to PDP.
  */
 
 const addCopySKUButtonPDP = () => {
@@ -293,15 +292,20 @@ const addCopySKUButtonPDP = () => {
     ? ["btn", "btn--secondary"]
     : ["btn-reset", "product-buybox__btn"];
 
-  const targetLocation = isCC
-    ? document.getElementsByClassName("add-to-cart")[0]
-    : document.getElementsByClassName("js-buybox-actions")[0];
+  const targetLocation = document.getElementsByClassName(
+    isCC ? "add-to-cart" : "js-buybox-actions"
+  )[0];
+  console.log(targetLocation);
 
   const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
   if (isCC) {
     targetLocation.appendChild(newCopySKUButtonPDP);
   } else {
+    /**
+     * Adds container to BC to mimic layout of original buttons
+     */
+
     const container = new Div(null, ["product-buybox__action"]).create();
     container.appendChild(newCopySKUButtonPDP);
 
