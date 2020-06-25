@@ -238,7 +238,6 @@ const addSKUWidget = () => {
     const targetLocation = isCC
       ? elem.firstChild
       : elem.firstChild.childNodes[2];
-    console.log(elem.firstChild);
 
     targetLocation.appendChild(SKUWidget);
   });
@@ -295,7 +294,6 @@ const addCopySKUButtonPDP = () => {
   const targetLocation = document.getElementsByClassName(
     isCC ? "add-to-cart" : "js-buybox-actions"
   )[0];
-  console.log(targetLocation);
 
   const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
