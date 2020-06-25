@@ -3,22 +3,6 @@ const isPLP = document.getElementsByClassName("ui-ajaxplp").length;
 const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
 /**
- * Runs function, repeats after certain amount of time.
- *
- * @param {number} time Time in ms until it is toggled back on.
- * @param {function} func1 Function to be run.
- * @param {function} [func2] Function to undo first function
- */
-
-const toggle = (time, func1, func2) => {
-  func1();
-  /**
-   * If second function not specified, assume the first function is a function that toggles.
-   */
-  setTimeout(func2 ? func2 : func1, time);
-};
-
-/**
  * Runs a function on each element of a given class.
  *
  * @param {string} elemClassName HTML element class.
@@ -99,10 +83,10 @@ class HTMLElem {
  */
 
 class Button extends HTMLElem {
-  constructor(id, classList, originalText, textToCopy = originalText) {
+  constructor(id, classList, originalText, func) {
     super("button", id, classList);
     this.originalText = originalText;
-    this.textToCopy = textToCopy;
+    this.func = func;
   }
 
   create() {
@@ -126,11 +110,22 @@ class Button extends HTMLElem {
 
       newButton.innerHTML = "Copied!";
 
-      console.log(this.textToCopy);
-      navigator.clipboard.writeText(this.textToCopy);
+      this.func();
     };
 
     return newButton;
+  }
+}
+
+class CopyProductIDButtonPLP extends Button {
+  constructor(productID) {
+    super("product-id-button", ["btn-reset", "btn"], productID, () =>
+      navigator.clipboard.writeText(productID)
+    );
+  }
+
+  create() {
+    return super.create();
   }
 }
 
@@ -150,13 +145,11 @@ class SKUWidgetContainer extends HTMLElem {
   create() {
     const newSKUWidgetContainer = super.create();
 
-    const productIDBtn = new Button(
-      "product-id-button",
-      ["btn-reset", "btn"],
+    const newCopyProductIDButtonPLP = new CopyProductIDButtonPLP(
       this.productID
     ).create();
 
-    newSKUWidgetContainer.appendChild(productIDBtn);
+    newSKUWidgetContainer.appendChild(newCopyProductIDButtonPLP);
 
     return newSKUWidgetContainer;
   }
@@ -183,11 +176,29 @@ if (isPLP) {
   addSKUWidget();
 }
 
+class CopySKUButtonPDP extends Button {
+  constructor(id, classList) {
+    super(id, classList, "Copy SKU", () =>
+      navigator.clipboard.writeText(
+        isCC
+          ? document
+              .getElementById("product-variant-select")
+              .getAttribute("sku-value")
+          : document.querySelector('[itemprop="productID"]').content
+      )
+    );
+  }
+
+  create() {
+    return super.create();
+  }
+}
+
 /**
  * Adds CopySKUButton elem to PDP.
  */
 
-const addPDPCopySKUButton = () => {
+const addCopySKUButtonPDP = () => {
   const id = `add-sku-button-${isCC ? "cc" : "bc"}`;
 
   const classList = isCC
@@ -198,19 +209,10 @@ const addPDPCopySKUButton = () => {
     isCC ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
-  const newPDPCopySKUButton = new Button(
-    id,
-    classList,
-    "Copy SKU",
-    isCC
-      ? document
-          .getElementById("product-variant-select")
-          .getAttribute("sku-value")
-      : document.querySelector('[itemprop="productID"]').content
-  ).create();
+  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
   if (isCC) {
-    targetLocation.appendChild(newPDPCopySKUButton);
+    targetLocation.appendChild(newCopySKUButtonPDP);
   } else {
     /**
      * Adds container to BC to mimic layout of original buttons
@@ -219,12 +221,13 @@ const addPDPCopySKUButton = () => {
     const container = new HTMLElem("div", null, [
       "product-buybox__action",
     ]).create();
-    container.appendChild(newPDPCopySKUButton);
+
+    container.appendChild(newCopySKUButtonPDP);
 
     targetLocation.appendChild(container);
   }
 };
 
 if (isPDP) {
-  addPDPCopySKUButton();
+  addCopySKUButtonPDP();
 }

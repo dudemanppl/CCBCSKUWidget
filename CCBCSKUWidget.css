@@ -44,6 +44,8 @@
   margin-top: 0 !important;
 }
 
+/* BC purchase button restyling */
+
 .product-buybox__actions {
   flex-wrap: wrap;
   justify-content: space-around;
