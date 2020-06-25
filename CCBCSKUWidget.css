@@ -9,42 +9,12 @@
   align-items: center;
 }
 
-#overlay:hover {
-  background-color: white;
-}
-
-#overlay:hover #hidden-div {
-  display: block;
-}
-
-#product-id-button,
-#hidden-div {
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  border-radius: 5px;
-  padding: 3px;
-  height: 20px;
-  width: 95px;
-  text-align: center;
-  line-height: 20px;
-}
-
 #product-id-button {
-  height: 28px;
-  width: 104px;
-}
-
-#overlay:hover #product-id-button {
-  display: none;
-}
-
-#overlay {
-  transition: background-color 0.15s;
-  background-color: lightgray;
-  height: 28px;
-}
-
-#hidden-div {
-  display: none;
+  transition: 0.3s;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+  height: 40px;
+  width: 140px;
+  line-height: 40px;
 }
 
 #add-sku-button-cc {
@@ -54,7 +24,6 @@
 }
 #add-sku-button-bc {
   border: 1px solid black;
-  width: 320px;
 }
 
 #add-sku-button-bc:hover {

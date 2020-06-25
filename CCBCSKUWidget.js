@@ -3,6 +3,22 @@ const isPLP = document.getElementsByClassName("ui-ajaxplp").length;
 const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
 /**
+ * Runs function, repeats after certain amount of time.
+ *
+ * @param {number} time Time in ms until it is toggled back on.
+ * @param {function} func1 Function to be run.
+ * @param {function} [func2] Function to undo first function
+ */
+
+const toggle = (time, func1, func2) => {
+  func1();
+  /**
+   * If second function not specified, assume the first function is a function that toggles.
+   */
+  setTimeout(func2 ? func2 : func1, time);
+};
+
+/**
  * Runs a function on each element of a given class.
  *
  * @param {string} elemClassName HTML element class.
@@ -48,22 +64,6 @@ if (!isCC) {
 }
 
 /**
- * Runs function, repeats after certain amount of time.
- *
- * @param {number} time Time in ms until it is toggled back on.
- * @param {function} func1 Function to be run.
- * @param {function} [func2] Function to undo first function
- */
-
-const toggle = (time, func1, func2) => {
-  func1();
-  /**
-   * If second function not specified, assume the first function is a function that toggles.
-   */
-  setTimeout(func2 ? func2 : func1, time);
-};
-
-/**
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name.
@@ -95,111 +95,43 @@ class HTMLElem {
 }
 
 /**
- * Returns new div HTML element with optional classnames.
- *
- * @param {string} [id] Id for HTML element.
- * @return {Element} New div HTML element.
+ * Returns new button
  */
 
-class Div extends HTMLElem {
-  constructor(id, classList) {
-    super("div", id, classList);
+class Button extends HTMLElem {
+  constructor(id, classList, originalText, textToCopy) {
+    super("button", id, classList);
+    this.originalText = originalText;
+    this.textToCopy = textToCopy;
   }
 
   create() {
-    const newDiv = super.create();
+    const newButton = super.create();
 
-    return newDiv;
-  }
-}
+    newButton.setAttribute("type", "button");
+    newButton.innerHTML = this.originalText;
 
-/**
- * Returns new HTML div; has an id of hidden-div
- *
- * @param {string} [text] Optional text to be placed inside.
- * @return {Element} New div HTML element with id
- */
+    newButton.addEventListener("mouseenter", () => {
+      newButton.innerHTML = "Click to copy";
+    });
 
-class HiddenDiv extends Div {
-  constructor(text) {
-    super("hidden-div");
-    this.text = text;
-  }
+    newButton.addEventListener("mouseleave", () => {
+      newButton.innerHTML = this.originalText;
+    });
 
-  create() {
-    const newHiddenDiv = super.create();
+    newButton.onclick = () => {
+      newButton.style.backgroundColor = isCC ? "white" : "black";
 
-    if (this.text) {
-      newHiddenDiv.innerHTML = this.text;
-    }
+      setTimeout(() => (newButton.style.backgroundColor = null), 100);
 
-    return newHiddenDiv;
-  }
-}
+      newButton.innerHTML = "Copied!";
 
-/**
- * Returns new HTML div; has an id of overlay.
- *
- * @param {string} [text] Optional text inside the overlay.
- * @return {Element} Overlay.
- */
-
-class Overlay extends Div {
-  constructor(text) {
-    super("overlay");
-    this.text = text;
-  }
-
-  create() {
-    const newOverlay = super.create();
-    const hiddenDiv = new HiddenDiv(this.text).create();
-
-    newOverlay.appendChild(hiddenDiv);
-
-    return newOverlay;
-  }
-}
-
-/**
- * Returns new HTML div; displays product ID, can click to copy to clipboard
- *
- * @param {string} productID Seven letter string from CC/BC catalog.
- * @return {Element} Product ID Button.
- */
-
-class ProductIDButton extends HTMLElem {
-  constructor(productID) {
-    super("button", "product-id-button", ["btn-reset"]);
-    this.productID = productID;
-  }
-
-  create() {
-    const newProductIDButton = super.create();
-    const overlay = new Overlay("Click to copy").create();
-
-    newProductIDButton.innerHTML = this.productID;
-    overlay.appendChild(newProductIDButton);
-
-    overlay.onclick = () => {
-      navigator.clipboard.writeText(this.productID);
-      toggle(
-        70,
-        () => (overlay.style.backgroundColor = "black"),
-        () => (overlay.style.backgroundColor = null)
+      navigator.clipboard.writeText(
+        this.textToCopy ? this.originalText : this.textToCopy
       );
-      overlay.firstChild.innerHTML = "Copied!";
     };
 
-    /**
-     * Resets text on when cursor is no longer over button
-     */
-
-    overlay.addEventListener(
-      "mouseleave",
-      () => (overlay.firstChild.innerHTML = "Click to copy")
-    );
-
-    return overlay;
+    return newButton;
   }
 }
 
@@ -210,15 +142,20 @@ class ProductIDButton extends HTMLElem {
  * @return {Element} SKU Widget.
  */
 
-class SKUWidgetContainer extends Div {
+class SKUWidgetContainer extends HTMLElem {
   constructor(productID) {
-    super("sku-widget-container");
+    super("div", "sku-widget-container");
     this.productID = productID;
   }
 
   create() {
     const newSKUWidgetContainer = super.create();
-    const productIDBtn = new ProductIDButton(this.productID).create();
+
+    const productIDBtn = new Button(
+      "product-id-button",
+      ["btn-reset", "btn"],
+      this.productID
+    ).create();
 
     newSKUWidgetContainer.appendChild(productIDBtn);
 
@@ -248,43 +185,10 @@ if (isPLP) {
 }
 
 /**
- * Creates button to copy the SKU of the currently selected variant on.
- *
- * @param {string} id Id given to button.
- * @param {array} classList Array of desired classes to add.
- * @return {Element}
- */
-
-class CopySKUButtonPDP extends HTMLElem {
-  constructor(id, classList) {
-    super("button", id, classList);
-  }
-
-  create() {
-    const newCopySKUButtonPDP = super.create();
-
-    newCopySKUButtonPDP.setAttribute("type", "button");
-    newCopySKUButtonPDP.innerHTML = "Copy SKU";
-
-    newCopySKUButtonPDP.onclick = () => {
-      navigator.clipboard.writeText(
-        isCC
-          ? document
-              .getElementById("product-variant-select")
-              .getAttribute("sku-value")
-          : document.querySelector('[itemprop="productID"]').content
-      );
-    };
-
-    return newCopySKUButtonPDP;
-  }
-}
-
-/**
  * Adds CopySKUButton elem to PDP.
  */
 
-const addCopySKUButtonPDP = () => {
+const addPDPCopySKUButton = () => {
   const id = `add-sku-button-${isCC ? "cc" : "bc"}`;
 
   const classList = isCC
@@ -295,22 +199,33 @@ const addCopySKUButtonPDP = () => {
     isCC ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
-  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
+  const newPDPCopySKUButton = new Button(
+    id,
+    classList,
+    "Copy SKU",
+    isCC
+      ? document
+          .getElementById("product-variant-select")
+          .getAttribute("sku-value")
+      : document.querySelector('[itemprop="productID"]').content
+  ).create();
 
   if (isCC) {
-    targetLocation.appendChild(newCopySKUButtonPDP);
+    targetLocation.appendChild(newPDPCopySKUButton);
   } else {
     /**
      * Adds container to BC to mimic layout of original buttons
      */
 
-    const container = new Div(null, ["product-buybox__action"]).create();
-    container.appendChild(newCopySKUButtonPDP);
+    const container = new HTMLElem("div", null, [
+      "product-buybox__action",
+    ]).create();
+    container.appendChild(newPDPCopySKUButton);
 
     targetLocation.appendChild(container);
   }
 };
 
 if (isPDP) {
-  addCopySKUButtonPDP();
+  addPDPCopySKUButton();
 }
