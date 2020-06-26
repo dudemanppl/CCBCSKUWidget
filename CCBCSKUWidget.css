@@ -37,14 +37,16 @@
   width: 40px;
 }
 
-.ui-basedropdown-link #oos-alert {
-  display: none;
-}
-
 /* CC PLI fix */
 
 .ui-pli {
   border: 1px solid white;
+}
+
+.item-unformatted .ui-productcomparison-toggle,
+.add-to-cart .js-productcomparison-toggle-wrap,
+.ui-basedropdown-link #oos-alert {
+  display: none;
 }
 
 /* BC PL enbiggener */
