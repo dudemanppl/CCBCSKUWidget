@@ -1,6 +1,10 @@
+const c = className => {
+  return document.getElementsByClassName(className);
+};
+
 const isCC = window.location.host === "www.competitivecyclist.com";
-const isPLP = document.getElementsByClassName("ui-ajaxplp").length;
-const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
+const isPLP = c("ui-product-listing-grid").length || c("ui-ajaxplp").length;
+const isPDP = c("js-kraken-pdp-body").length;
 
 /**
  * Runs a function on each element of a given class.
@@ -10,7 +14,7 @@ const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
  */
 
 const runOnAllElems = (elemClassName, func) => {
-  const elems = document.getElementsByClassName(elemClassName);
+  const elems = c(elemClassName);
 
   for (const elem of [...elems]) {
     func(elem);
@@ -20,32 +24,38 @@ const runOnAllElems = (elemClassName, func) => {
 /**
  * Deletes all elements of a given class.
  *
- * @param {string} elemClassName HTML element class.
+ * @param {string} elemClassNames HTML element class.
  */
 
-const deleteAllElems = elemClassName => {
-  runOnAllElems(elemClassName, elem => elem.remove());
+const deleteAllElems = ([...elemClassNames]) => {
+  for (const elemClassName of elemClassNames) {
+    runOnAllElems(elemClassName, elem => elem.remove());
+  }
 };
 
 /**
- * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension. Removes compare option from plp, ditto.
+ * Forces styling on BC PLP to prevent onhover zoom effect, which sorta messes with the extension.
  */
 
-if (!isCC) {
-  deleteAllElems("js-pl-focus-trigger");
-  deleteAllElems("js-pl-color-thumbs");
-  deleteAllElems("js-pl-sizes-wrap");
-  runOnAllElems("js-pl-expandable", elem => {
-    const { style } = elem;
+const forceStyles = () => {
+  if (!isCC) {
+    deleteAllElems([
+      "js-pl-focus-trigger",
+      "js-pl-color-thumbs",
+      "js-pl-sizes-wrap",
+      "js-pl-sizes-wrap",
+    ]);
 
-    style.top = "10px";
-    style.left = "10px";
-    style.right = "10px";
-    style.bottom = "10px";
-  });
-} else {
-  deleteAllElems("js-productcomparison-toggle-wrap");
-}
+    runOnAllElems("js-pl-expandable", elem => {
+      const { style } = elem;
+
+      style.top = "10px";
+      style.left = "10px";
+      style.right = "10px";
+      style.bottom = "10px";
+    });
+  }
+};
 
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
@@ -106,12 +116,13 @@ class Button extends HTMLElem {
 
     newButton.addEventListener("mouseleave", () => {
       newButton.innerHTML = this.text;
+      newButton.removeAttribute("style");
     });
 
     newButton.onclick = () => {
       newButton.style.backgroundColor = isCC ? "white" : "black";
 
-      setTimeout(() => (newButton.style.backgroundColor = null), 100);
+      setTimeout(() => newButton.removeAttribute("style"), 100);
 
       newButton.innerHTML = "Copied!";
 
@@ -167,11 +178,14 @@ class SKUWidgetContainer extends HTMLElem {
 }
 
 /**
- * Adds the SKU Widget to each element of a given class.
+ * Adds the SKU widget to each item of the PLP and forces styling
  *
  */
 
-const addSKUWidget = () => {
+const addSKUWidgetPLP = () => {
+  if (isCC) deleteAllElems("js-productcomparison-toggle-wrap");
+
+  forceStyles();
   runOnAllElems("js-product-listing", elem => {
     const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new SKUWidgetContainer(productID).create();
@@ -183,7 +197,32 @@ const addSKUWidget = () => {
   });
 };
 
-isPLP && addSKUWidget();
+isPLP && addSKUWidgetPLP();
+
+/**
+ * Copies current item variant to clipboard, otherwise changes styling of a given element.
+ *
+ * @param {string} id Id of elem to target.
+ */
+
+const copyCurrVariant = id => {
+  const SKU = isCC
+    ? document
+        .getElementById("product-variant-select")
+        .getAttribute("sku-value")
+    : c("js-selected-product-variant")[0].value;
+
+  if (SKU) {
+    navigator.clipboard.writeText(SKU);
+  } else {
+    const elem = document.getElementById(id);
+    const { style } = elem;
+
+    style.backgroundColor = isCC ? "white" : "black";
+    style.color = "red";
+    elem.innerHTML = "Select a variant!";
+  }
+};
 
 /**
  * Returns copy child SKU button on the PDP
@@ -194,16 +233,7 @@ isPLP && addSKUWidget();
 
 class CopySKUButtonPDP extends Button {
   constructor(id, classList) {
-    super(id, classList, "Copy SKU", () => {
-      const SKU = isCC
-        ? document
-            .getElementById("product-variant-select")
-            .getAttribute("sku-value")
-        : document.getElementsByClassName("js-selected-product-variant")[0]
-            .value;
-
-      navigator.clipboard.writeText(SKU);
-    });
+    super(id, classList, "Copy SKU", () => copyCurrVariant(id));
   }
 
   create() {
@@ -212,63 +242,54 @@ class CopySKUButtonPDP extends Button {
 }
 
 /**
- * Changes the "add to wishlist" button to read "OOS" when item is out of stock
+ * Adds OOS alert on item dropdown when item is out of stock on CC.
  */
 
 const addOOSAlertToCC = () => {
-  const productObjStr = document.getElementsByClassName(
-    "kraken-product-script"
-  )[0].textContent;
+  const variantsObjStr = c("kraken-product-script")[0].textContent;
 
-  const products = JSON.parse(productObjStr.slice(13, productObjStr.length - 1))
-    .skusCollection;
+  const variants = JSON.parse(
+    variantsObjStr.slice(13, variantsObjStr.length - 1)
+  ).skusCollection;
 
-  const dropdownOptions = document.getElementsByClassName(
-    "js-unifiedropdown-option"
-  );
+  const dropdownOptions = c("js-unifiedropdown-option");
 
-  const OOSButton = document.getElementsByClassName("js-add-to-wishlist")[0];
-
-  /** First element is a placeholder */
+  /** First element is a placeholder, so skip that. */
   for (let i = 1; i < dropdownOptions.length; i += 1) {
     const dropdownOption = dropdownOptions[i];
 
     const childSKU = dropdownOption.getAttribute("sku-value");
-    const stockLevel = products[childSKU].inventory;
-    // console.log(dropdownOption.lastChild);
+    const stockLevel = variants[childSKU].inventory;
 
+    /** Add OOS alert to dropdown option if no stock. */
     if (!stockLevel) {
-      const OOS = new HTMLElem("div", "oos-alert", [
+      const OOSAlert = new HTMLElem("div", "oos-alert", [
         "ui-basedropdown-option-value",
         "ui-unifiedropdown-option-value",
       ]).create();
 
-      OOS.innerHTML = "OOS";
+      OOSAlert.innerHTML = "OOS";
 
-      dropdownOption.appendChild(OOS);
+      dropdownOption.appendChild(OOSAlert);
       dropdownOption.style.backgroundColor = "lightgrey";
     }
-
-    dropdownOption.onclick = () => {
-      OOSButton.innerHTML = stockLevel ? "save for later" : "OOS";
-    };
   }
 };
 
 /**
- * Adds CopySKUButton elem to PDP.
+ * Adds SKU widget to the PDP.
  */
 
-const addCopySKUButtonPDP = () => {
+const addSKUWidgetPDP = () => {
+  if (isCC) deleteAllElems("js-productcomparison-toggle-wrap");
+
   const id = `add-sku-button-${isCC ? "cc" : "bc"}`;
 
   const classList = isCC
     ? ["btn", "btn--secondary"]
     : ["btn-reset", "product-buybox__btn"];
 
-  const targetLocation = document.getElementsByClassName(
-    isCC ? "add-to-cart" : "js-buybox-actions"
-  )[0];
+  const targetLocation = c(isCC ? "add-to-cart" : "js-buybox-actions")[0];
 
   const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
@@ -287,4 +308,4 @@ const addCopySKUButtonPDP = () => {
   }
 };
 
-isPDP && addCopySKUButtonPDP();
+isPDP && addSKUWidgetPDP();
