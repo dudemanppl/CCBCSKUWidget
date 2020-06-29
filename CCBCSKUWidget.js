@@ -183,7 +183,9 @@ const addSKUWidget = () => {
   });
 };
 
-isPLP && addSKUWidget();
+if (isPLP) {
+  addSKUWidget();
+}
 
 /**
  * Returns copy child SKU button on the PDP
@@ -287,4 +289,25 @@ const addCopySKUButtonPDP = () => {
   }
 };
 
-isPDP && addCopySKUButtonPDP();
+/**
+ * Adds link to get to interchange with current product to check stock.
+ */
+
+const addICLinkPDP = () => {
+  const target = document.getElementsByClassName("product-sku__id")[0];
+
+  const parentSKU = target.lastChild.innerHTML;
+
+  const linkToIC = new HTMLElem("a", "link-to-ic");
+
+  linkToIC.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${parentSKU}`;
+
+  linkToIC.innerText = "Click to go to IC";
+
+  target.appendChild(linkToIC);
+};
+
+if (isPDP) {
+  addICLinkPDP();
+  addCopySKUButtonPDP();
+}
