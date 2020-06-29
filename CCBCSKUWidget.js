@@ -123,6 +123,29 @@ class Button extends HTMLElem {
 }
 
 /**
+ * Runs callback given a fulfilled promise of the stock level, title, child SKU, and price of an item given a product ID
+ *
+ * @param {string} productID Product ID to look up item.
+ * @param {function} func Callback to make use of obj with item info.
+ */
+
+const getItemInfo = async (productID, func) => {
+  try {
+    const site = isCC ? "competitivecyclist" : "bcs";
+
+    const res = await fetch(
+      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice&site=${site}`
+    );
+
+    const json = await res.json();
+
+    func(json);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
  * Returns copy product id (parent SKU) button for the PLP
  *
  * @param {string} productID Product ID to be copied to clipboard.
