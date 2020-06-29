@@ -295,16 +295,12 @@ const addCopySKUButtonPDP = () => {
 
 const addICLinkPDP = () => {
   const target = document.getElementsByClassName("product-sku__id")[0];
-
   const parentSKU = target.lastChild.innerHTML;
 
   const linkToIC = new HTMLElem("a", "link-to-ic").create();
 
   linkToIC.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${parentSKU}`;
-
   linkToIC.innerText = "Click to go to IC";
-
-  console.log(linkToIC);
 
   target.appendChild(linkToIC);
 };
