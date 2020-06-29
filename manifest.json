@@ -5,7 +5,6 @@
   "author": "Tommy Liao",
   "manifest_version": 2,
   "permissions": [
-    "tabs",
     "https://www.competitivecyclist.com/*",
     "https://www.backcountry.com/*"
   ],
