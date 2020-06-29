@@ -96,6 +96,8 @@ class Button extends HTMLElem {
 
   create() {
     const newButton = super.create();
+    const { style } = newButton;
+    const backgroundColor = isCC ? "white" : "black";
 
     newButton.setAttribute("type", "button");
     newButton.innerHTML = this.text;
@@ -106,12 +108,13 @@ class Button extends HTMLElem {
 
     newButton.addEventListener("mouseleave", () => {
       newButton.innerHTML = this.text;
+      newButton.removeAttribute("style");
     });
 
     newButton.onclick = () => {
-      newButton.style.backgroundColor = isCC ? "white" : "black";
+      style.backgroundColor = backgroundColor;
 
-      setTimeout(() => (newButton.style.backgroundColor = null), 100);
+      setTimeout(() => (style.backgroundColor = null), 100);
 
       newButton.innerHTML = "Copied!";
 
@@ -187,6 +190,28 @@ if (isPLP) {
   addSKUWidget();
 }
 
+const SKUButtonValidator = () => {
+  const SKUButton = document.getElementById(
+    `add-sku-button-${isCC ? "cc" : "bc"}`
+  );
+
+  const { style } = SKUButton;
+
+  const SKU = isCC
+    ? document
+        .getElementById("product-variant-select")
+        .getAttribute("sku-value")
+    : document.getElementsByClassName("js-selected-product-variant")[0].value;
+
+  if (SKU) {
+    navigator.clipboard.writeText(SKU);
+  } else {
+    SKUButton.innerText = "Choose Item";
+    style.color = "red";
+    style.backgroundColor = "white";
+  }
+};
+
 /**
  * Returns copy child SKU button on the PDP
  *
@@ -196,16 +221,7 @@ if (isPLP) {
 
 class CopySKUButtonPDP extends Button {
   constructor(id, classList) {
-    super(id, classList, "Copy SKU", () => {
-      const SKU = isCC
-        ? document
-            .getElementById("product-variant-select")
-            .getAttribute("sku-value")
-        : document.getElementsByClassName("js-selected-product-variant")[0]
-            .value;
-
-      navigator.clipboard.writeText(SKU);
-    });
+    super(id, classList, "Copy SKU", SKUButtonValidator);
   }
 
   create() {
