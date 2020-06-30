@@ -253,7 +253,6 @@ const addOOSAlertToCC = () => {
 
     const childSKU = dropdownOption.getAttribute("sku-value");
     const stockLevel = products[childSKU].inventory;
-    // console.log(dropdownOption.lastChild);
 
     if (!stockLevel) {
       const OOS = new HTMLElem("div", "oos-alert", [
