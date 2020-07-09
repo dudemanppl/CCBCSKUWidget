@@ -1,7 +1,7 @@
 const isCC = window.location.host === "www.competitivecyclist.com";
 const isPLP =
   document.getElementsByClassName("ui-ajaxplp").length ||
-  document.getElementsByClassName("ui-product-listing-grid");
+  document.getElementsByClassName("ui-product-listing-grid").length;
 const isPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
 /**
@@ -88,32 +88,37 @@ class HTMLElem {
  */
 
 class Button extends HTMLElem {
-  constructor(id, classList, text, func) {
+  constructor(id, classList, text, textOnHover, textOnClick, func) {
     super("button", id, classList);
     this.text = text;
+    this.textOnHover = textOnHover;
+    this.textOnClick = textOnClick;
     this.func = func;
   }
 
   create() {
     const newButton = super.create();
+    const { style } = newButton;
+    const backgroundColor = isCC ? "white" : "black";
 
     newButton.setAttribute("type", "button");
     newButton.innerHTML = this.text;
 
     newButton.addEventListener("mouseenter", () => {
-      newButton.innerHTML = "Click to copy";
+      newButton.innerHTML = this.textOnHover;
     });
 
     newButton.addEventListener("mouseleave", () => {
       newButton.innerHTML = this.text;
+      newButton.removeAttribute("style");
     });
 
     newButton.onclick = () => {
-      newButton.style.backgroundColor = isCC ? "white" : "black";
+      style.backgroundColor = backgroundColor;
 
-      setTimeout(() => (newButton.style.backgroundColor = null), 100);
+      setTimeout(() => (style.backgroundColor = null), 100);
 
-      newButton.innerHTML = "Copied!";
+      newButton.innerHTML = this.textOnClick;
 
       this.func();
     };
@@ -138,12 +143,15 @@ const getItemInfo = async (productID, func) => {
     );
 
     const json = await res.json();
-
     func(json);
   } catch (err) {
     console.log(err);
   }
 };
+
+getItemInfo("GIR003E", ({ products }) => {
+  console.log(products[0].skus);
+});
 
 /**
  * Returns copy product id (parent SKU) button for the PLP
@@ -153,8 +161,13 @@ const getItemInfo = async (productID, func) => {
 
 class CopyProductIDButtonPLP extends Button {
   constructor(productID) {
-    super("product-id-button", ["btn-reset", "btn"], productID, () =>
-      navigator.clipboard.writeText(productID)
+    super(
+      "product-id-button",
+      ["btn-reset", "btn"],
+      "Get SKUs",
+      "Get SKUs",
+      "Checking...",
+      () => navigator.clipboard.writeText(productID)
     );
   }
 
@@ -211,6 +224,32 @@ if (isPLP) {
 }
 
 /**
+ *  Checks to see if a varient is selected
+ */
+
+const SKUButtonValidator = () => {
+  const SKUButton = document.getElementById(
+    `add-sku-button-${isCC ? "cc" : "bc"}`
+  );
+
+  const { style } = SKUButton;
+
+  const SKU = isCC
+    ? document
+        .getElementById("product-variant-select")
+        .getAttribute("sku-value")
+    : document.getElementsByClassName("js-selected-product-variant")[0].value;
+
+  if (SKU) {
+    navigator.clipboard.writeText(SKU);
+  } else {
+    SKUButton.innerText = "Choose Item";
+    style.color = "red";
+    style.backgroundColor = "white";
+  }
+};
+
+/**
  * Returns copy child SKU button on the PDP
  *
  * @param {string} [id] Id for HTML element.
@@ -219,16 +258,14 @@ if (isPLP) {
 
 class CopySKUButtonPDP extends Button {
   constructor(id, classList) {
-    super(id, classList, "Copy SKU", () => {
-      const SKU = isCC
-        ? document
-            .getElementById("product-variant-select")
-            .getAttribute("sku-value")
-        : document.getElementsByClassName("js-selected-product-variant")[0]
-            .value;
-
-      navigator.clipboard.writeText(SKU);
-    });
+    super(
+      id,
+      classList,
+      "Copy SKU",
+      "Click to copy",
+      "Copied!",
+      SKUButtonValidator
+    );
   }
 
   create() {
@@ -260,7 +297,6 @@ const addOOSAlertToCC = () => {
 
     const childSKU = dropdownOption.getAttribute("sku-value");
     const stockLevel = products[childSKU].inventory;
-    // console.log(dropdownOption.lastChild);
 
     if (!stockLevel) {
       const OOS = new HTMLElem("div", "oos-alert", [
