@@ -79,55 +79,6 @@ class HTMLElem {
 }
 
 /**
- * Returns new button with hover and click effects
- *
- * @param {string} [id] Id for HTML element.
- * @param {array} [classList] Array of desired classes to add.
- * @param {string} text Desired text of the button.
- * @param {function} func Function to be invoked on click.
- */
-
-class Button extends HTMLElem {
-  constructor(id, classList, text, textOnHover, textOnClick, func) {
-    super("button", id, classList);
-    this.text = text;
-    this.textOnHover = textOnHover;
-    this.textOnClick = textOnClick;
-    this.func = func;
-  }
-
-  create() {
-    const newButton = super.create();
-    const { style } = newButton;
-    const backgroundColor = isCC ? "white" : "black";
-
-    newButton.setAttribute("type", "button");
-    newButton.innerHTML = this.text;
-
-    newButton.addEventListener("mouseenter", () => {
-      newButton.innerHTML = this.textOnHover;
-    });
-
-    newButton.addEventListener("mouseleave", () => {
-      newButton.innerHTML = this.text;
-      newButton.removeAttribute("style");
-    });
-
-    newButton.onclick = () => {
-      style.backgroundColor = backgroundColor;
-
-      setTimeout(() => (style.backgroundColor = null), 100);
-
-      newButton.innerHTML = this.textOnClick;
-
-      this.func();
-    };
-
-    return newButton;
-  }
-}
-
-/**
  * Runs callback given a fulfilled promise of the stock level, title, child SKU, and price of an item given a product ID
  *
  * @param {string} productID Product ID to look up item.
@@ -149,32 +100,9 @@ const getItemInfo = async (productID, func) => {
   }
 };
 
-getItemInfo("GIR003E", ({ products }) => {
-  console.log(products[0].skus);
-});
-
-/**
- * Returns copy product id (parent SKU) button for the PLP
- *
- * @param {string} productID Product ID to be copied to clipboard.
- */
-
-class CopyProductIDButtonPLP extends Button {
-  constructor(productID) {
-    super(
-      "product-id-button",
-      ["btn-reset", "btn"],
-      "Get SKUs",
-      "Get SKUs",
-      "Checking...",
-      () => navigator.clipboard.writeText(productID)
-    );
-  }
-
-  create() {
-    return super.create();
-  }
-}
+// getItemInfo("GIR003E", ({ products }) => {
+//   console.log(products[0].skus);
+// });
 
 /**
  * Returns new HTML div; the main SKU Widget container.
@@ -192,9 +120,13 @@ class SKUWidgetContainer extends HTMLElem {
   create() {
     const newSKUWidgetContainer = super.create();
 
-    const newCopyProductIDButtonPLP = new CopyProductIDButtonPLP(
-      this.productID
+    const newCopyProductIDButtonPLP = new HTMLElem(
+      "div",
+      "unifiedropdown-sku-selector",
+      ["js-basedropdown-wrapper", "ui-unifiedropdown-wrapper"]
     ).create();
+
+    newCopyProductIDButtonPLP.innerHTML = "Select options";
 
     newSKUWidgetContainer.appendChild(newCopyProductIDButtonPLP);
 
@@ -256,20 +188,37 @@ const SKUButtonValidator = () => {
  * @param {array} [classList] Array of desired classes to add.
  */
 
-class CopySKUButtonPDP extends Button {
+class CopySKUButtonPDP extends HTMLElem {
   constructor(id, classList) {
-    super(
-      id,
-      classList,
-      "Copy SKU",
-      "Click to copy",
-      "Copied!",
-      SKUButtonValidator
-    );
+    super("button", id, classList);
   }
 
   create() {
-    return super.create();
+    const newButton = super.create();
+    const { style } = newButton;
+    const backgroundColor = isCC ? "white" : "black";
+
+    newButton.setAttribute("type", "button");
+    newButton.innerHTML = "Copy SKU";
+
+    newButton.addEventListener("mouseenter", () => {
+      newButton.innerHTML = "Click to copy";
+    });
+
+    newButton.addEventListener("mouseleave", () => {
+      newButton.innerHTML = "Copy SKU";
+      newButton.removeAttribute("style");
+    });
+
+    newButton.onclick = () => {
+      style.backgroundColor = backgroundColor;
+
+      setTimeout(() => (style.backgroundColor = null), 100);
+
+      newButton.innerHTML = "Copied!";
+
+      SKUButtonValidator();
+    };
   }
 }
 
