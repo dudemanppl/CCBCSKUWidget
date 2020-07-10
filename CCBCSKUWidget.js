@@ -71,7 +71,11 @@ class HTMLElem {
     }
 
     if (this.classList) {
-      newHTMLElem.classList.add(...this.classList);
+      if (Array.isArray(this.classList)) {
+        newHTMLElem.classList.add(...this.classList);
+      } else {
+        newHTMLElem.classList.add(this.classList);
+      }
     }
 
     return newHTMLElem;
@@ -102,7 +106,7 @@ const getItemInfo = async (productID, func) => {
 
 class SelectorDropdownOption extends HTMLElem {
   constructor(product) {
-    super("li", "plp-dropdown-option-single");
+    super("li", null, ["plp-dropdown-option-single"]);
     this.product = product;
   }
 
@@ -124,7 +128,7 @@ class SelectorDropdownOption extends HTMLElem {
 
 class SelectorDropdown extends HTMLElem {
   constructor(productID) {
-    super("ul", "plp-dropdown-options");
+    super("ul", null, "plp-dropdown-options");
     this.productID = productID;
   }
 
@@ -147,15 +151,16 @@ class SelectorDropdown extends HTMLElem {
 
 class SelectorDropdownContainer extends HTMLElem {
   constructor(productID) {
-    super("div", "plp-dropdown-container");
+    super("div", null, "plp-dropdown-container");
     this.productID = productID;
-    this.clicked = false;
+    this.requested = false;
   }
 
   create() {
     const newSelectorDropdownContainer = super.create();
     const currentOption = new HTMLElem(
       "div",
+      null,
       "plp-dropdown-current-option"
     ).create();
 
@@ -164,19 +169,24 @@ class SelectorDropdownContainer extends HTMLElem {
     newSelectorDropdownContainer.appendChild(currentOption);
 
     currentOption.onclick = () => {
-      if (!this.clicked) {
+      if (!this.requested) {
         const newSelectorDropdown = new SelectorDropdown(
           this.productID
         ).create();
 
         newSelectorDropdownContainer.appendChild(newSelectorDropdown);
 
-        this.clicked = true;
-      } else {
-        document
-          .getElementById("plp-dropdown-options")
-          .classList.toggle("hidden");
+        this.requested = true;
       }
+      document.addEventListener(
+        "mousedown",
+        ({ button }) => {
+          if (button === 0) {
+            newSelectorDropdownContainer.lastChild.classList.toggle("hidden");
+          }
+        },
+        { once: true }
+      );
     };
 
     return newSelectorDropdownContainer;
@@ -223,7 +233,6 @@ const addSKUWidget = () => {
       : elem.firstChild.childNodes[2];
 
     targetLocation.appendChild(SKUWidget);
-    // console.log("test");
   });
 };
 
