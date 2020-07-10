@@ -116,9 +116,17 @@ class SelectorDropdownOption extends HTMLElem {
     const {
       salePrice: price,
       id: SKU,
-      availability: { stockLevel: stock },
+      availability: { stockLevel },
       title: variantName,
     } = this.product;
+
+    const stockLevelElem = new HTMLElem("div", null, "stock-level").create();
+
+    stockLevelElem.innerHTML = stockLevel ? stockLevel : "OOS";
+
+    !stockLevel && stockLevelElem.classList.add("oos-alert");
+
+    newSelectorDropdownOption.appendChild(stockLevelElem);
 
     newSelectorDropdownOption.innerHTML = `${variantName} ($${price})`;
 
@@ -177,16 +185,21 @@ class SelectorDropdownContainer extends HTMLElem {
         newSelectorDropdownContainer.appendChild(newSelectorDropdown);
 
         this.requested = true;
+      } else {
+        newSelectorDropdownContainer.lastChild.classList.toggle("hidden");
       }
-      document.addEventListener(
-        "mousedown",
-        ({ button }) => {
-          if (button === 0) {
-            newSelectorDropdownContainer.lastChild.classList.toggle("hidden");
-          }
-        },
-        { once: true }
-      );
+
+      setTimeout(() => {
+        document.addEventListener(
+          "click",
+          e => {
+            if (e.target !== currentOption) {
+              newSelectorDropdownContainer.lastChild.classList.add("hidden");
+            }
+          },
+          { once: true }
+        );
+      }, 0);
     };
 
     return newSelectorDropdownContainer;
@@ -334,7 +347,8 @@ const addOOSAlertToCC = () => {
     const stockLevel = products[childSKU].inventory;
 
     if (!stockLevel) {
-      const OOS = new HTMLElem("div", "oos-alert", [
+      const OOS = new HTMLElem("div", null, [
+        "oos-alert",
         "ui-basedropdown-option-value",
         "ui-unifiedropdown-option-value",
       ]).create();
