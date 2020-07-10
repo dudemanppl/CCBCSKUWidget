@@ -100,9 +100,88 @@ const getItemInfo = async (productID, func) => {
   }
 };
 
-// getItemInfo("GIR003E", ({ products }) => {
-//   console.log(products[0].skus);
-// });
+class SelectorDropdownOption extends HTMLElem {
+  constructor(product) {
+    super("li", "plp-dropdown-option-single");
+    this.product = product;
+  }
+
+  create() {
+    const newSelectorDropdownOption = super.create();
+
+    const {
+      salePrice: price,
+      id: SKU,
+      availability: { stockLevel: stock },
+      title: variantName,
+    } = this.product;
+
+    newSelectorDropdownOption.innerHTML = `${variantName} ($${price})`;
+
+    return newSelectorDropdownOption;
+  }
+}
+
+class SelectorDropdown extends HTMLElem {
+  constructor(productID) {
+    super("ul", "plp-dropdown-options");
+    this.productID = productID;
+  }
+
+  create() {
+    const newSelectorDropdown = super.create();
+    getItemInfo(this.productID, ({ products }) => {
+      const allProducts = products[0].skus;
+
+      for (const product of allProducts) {
+        const newSelectorDropdownOption = new SelectorDropdownOption(
+          product
+        ).create();
+
+        newSelectorDropdown.appendChild(newSelectorDropdownOption);
+      }
+    });
+    return newSelectorDropdown;
+  }
+}
+
+class SelectorDropdownContainer extends HTMLElem {
+  constructor(productID) {
+    super("div", "plp-dropdown-container");
+    this.productID = productID;
+    this.clicked = false;
+  }
+
+  create() {
+    const newSelectorDropdownContainer = super.create();
+    const currentOption = new HTMLElem(
+      "div",
+      "plp-dropdown-current-option"
+    ).create();
+
+    currentOption.innerHTML = "Select options";
+
+    newSelectorDropdownContainer.appendChild(currentOption);
+
+    currentOption.onclick = () => {
+      if (!this.clicked) {
+        const newSelectorDropdown = new SelectorDropdown(
+          this.productID
+        ).create();
+
+        newSelectorDropdownContainer.appendChild(newSelectorDropdown);
+
+        this.clicked = true;
+      } else {
+        document
+          .getElementById("plp-dropdown-options")
+          .classList.toggle("hidden");
+      }
+    };
+
+    return newSelectorDropdownContainer;
+  }
+}
 
 /**
  * Returns new HTML div; the main SKU Widget container.
@@ -120,15 +199,11 @@ class SKUWidgetContainer extends HTMLElem {
   create() {
     const newSKUWidgetContainer = super.create();
 
-    const newCopyProductIDButtonPLP = new HTMLElem(
-      "div",
-      "unifiedropdown-sku-selector",
-      ["js-basedropdown-wrapper", "ui-unifiedropdown-wrapper"]
+    const selectorDropdown = new SelectorDropdownContainer(
+      this.productID
     ).create();
 
-    newCopyProductIDButtonPLP.innerHTML = "Select options";
-
-    newSKUWidgetContainer.appendChild(newCopyProductIDButtonPLP);
+    newSKUWidgetContainer.appendChild(selectorDropdown);
 
     return newSKUWidgetContainer;
   }
@@ -148,6 +223,7 @@ const addSKUWidget = () => {
       : elem.firstChild.childNodes[2];
 
     targetLocation.appendChild(SKUWidget);
+    // console.log("test");
   });
 };
 
@@ -156,7 +232,7 @@ if (isPLP) {
 }
 
 /**
- *  Checks to see if a varient is selected
+ *  Checks to see if a variant is selected
  */
 
 const SKUButtonValidator = () => {
@@ -219,6 +295,7 @@ class CopySKUButtonPDP extends HTMLElem {
 
       SKUButtonValidator();
     };
+    return newButton;
   }
 }
 
