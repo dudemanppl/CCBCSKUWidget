@@ -124,7 +124,7 @@
 
 .item-unformatted .ui-productcomparison-toggle,
 .add-to-cart .js-productcomparison-toggle-wrap,
-.ui-basedropdown-link #oos-alert {
+.ui-basedropdown-link .oos-alert {
   display: none;
 }
 

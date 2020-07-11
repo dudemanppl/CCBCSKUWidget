@@ -120,13 +120,17 @@ class SelectorDropdownOption extends HTMLElem {
       title: variantName,
     } = this.product;
 
-    const stockLevelElem = new HTMLElem("div", null, "stock-level").create();
+    // const stockLevelElem = new HTMLElem("div", null, "stock-level").create();
 
-    stockLevelElem.innerHTML = stockLevel ? stockLevel : "OOS";
+    // stockLevelElem.innerHTML = "OOS";
 
-    !stockLevel && stockLevelElem.classList.add("oos-alert");
+    // !stockLevel && stockLevelElem.classList.add("oos-alert");
 
-    newSelectorDropdownOption.appendChild(stockLevelElem);
+    // newSelectorDropdownOption.appendChild(stockLevelElem);
+
+    newSelectorDropdownOption.onclick = () => {
+      navigator.clipboard.writeText(SKU);
+    };
 
     newSelectorDropdownOption.innerHTML = `${variantName} ($${price})`;
 
