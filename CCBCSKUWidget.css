@@ -31,10 +31,17 @@
   color: #222;
 }
 
-.oos-alert {
-  float: right;
+.oos-alert:before {
+  content: "OOS";
+  position: absolute;
+  right: 8px;
+  font-size: 16px;
   color: red;
-  width: 40px;
+  font-weight: 600;
+}
+
+.oos-alert {
+  background: lightgray;
 }
 
 #link-to-ic {
@@ -109,10 +116,14 @@
   padding: 0 8px;
   color: black;
   font-weight: 400;
+  margin: 0;
 }
 
 .plp-dropdown-option-single:hover {
   background: #ebebeb;
+}
+
+.plp-dropdown-option-single.oos-alert:after {
 }
 
 /* CC PLI fix */

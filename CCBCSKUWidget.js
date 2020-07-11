@@ -120,19 +120,15 @@ class SelectorDropdownOption extends HTMLElem {
       title: variantName,
     } = this.product;
 
-    // const stockLevelElem = new HTMLElem("div", null, "stock-level").create();
+    !stockLevel && newSelectorDropdownOption.classList.add("oos-alert");
 
-    // stockLevelElem.innerHTML = "OOS";
-
-    // !stockLevel && stockLevelElem.classList.add("oos-alert");
-
-    // newSelectorDropdownOption.appendChild(stockLevelElem);
+    newSelectorDropdownOption.innerHTML = `${variantName} ($${price.toFixed(
+      2
+    )})`;
 
     newSelectorDropdownOption.onclick = () => {
       navigator.clipboard.writeText(SKU);
     };
-
-    newSelectorDropdownOption.innerHTML = `${variantName} ($${price})`;
 
     return newSelectorDropdownOption;
   }
@@ -341,8 +337,6 @@ const addOOSAlertToCC = () => {
     "js-unifiedropdown-option"
   );
 
-  const OOSButton = document.getElementsByClassName("js-add-to-wishlist")[0];
-
   /** First element is a placeholder */
   for (let i = 1; i < dropdownOptions.length; i += 1) {
     const dropdownOption = dropdownOptions[i];
@@ -350,22 +344,7 @@ const addOOSAlertToCC = () => {
     const childSKU = dropdownOption.getAttribute("sku-value");
     const stockLevel = products[childSKU].inventory;
 
-    if (!stockLevel) {
-      const OOS = new HTMLElem("div", null, [
-        "oos-alert",
-        "ui-basedropdown-option-value",
-        "ui-unifiedropdown-option-value",
-      ]).create();
-
-      OOS.innerHTML = "OOS";
-
-      dropdownOption.appendChild(OOS);
-      dropdownOption.style.backgroundColor = "lightgrey";
-    }
-
-    dropdownOption.onclick = () => {
-      OOSButton.innerHTML = stockLevel ? "save for later" : "OOS";
-    };
+    !stockLevel && dropdownOption.classList.add("oos-alert");
   }
 };
 
