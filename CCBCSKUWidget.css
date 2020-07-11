@@ -31,10 +31,10 @@
   color: #222;
 }
 
-.oos-alert:before {
+.oos-alert:after {
   content: "OOS";
-  position: absolute;
-  right: 8px;
+  float: right;
+  margin-right: 15px;
   font-size: 16px;
   color: red;
   font-weight: 600;
@@ -88,8 +88,8 @@
   position: absolute;
   top: 36px;
   left: 5%;
-  width: 90%;
-  min-width: 300px;
+  min-width: 90%;
+  width: max-content;
   box-sizing: border-box;
   border-radius: 2px;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
