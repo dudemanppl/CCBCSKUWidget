@@ -237,7 +237,7 @@ class SKUWidgetContainer extends HTMLElem {
  *
  */
 
-const addSKUWidget = () => {
+const addSKUWidgets = () => {
   runOnAllElems("js-product-listing", elem => {
     const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new SKUWidgetContainer(productID).create();
@@ -250,7 +250,24 @@ const addSKUWidget = () => {
 };
 
 if (isPLP) {
-  addSKUWidget();
+  addSKUWidgets();
+
+  /** Adds widgets on SPA rerender*/
+
+  let currURL = location.href;
+
+  document.addEventListener("click", () => {
+    requestAnimationFrame(() => {
+      const { href } = location;
+      if (currURL !== href) {
+        setTimeout(() => {
+          addSKUWidgets();
+        }, 300);
+
+        currURL = href;
+      }
+    });
+  });
 }
 
 /**
@@ -322,7 +339,7 @@ class CopySKUButtonPDP extends HTMLElem {
 }
 
 /**
- * Changes the "add to wishlist" button to read "OOS" when item is out of stock
+ * Changes styling of dropdown option to reflect OOS status
  */
 
 const addOOSAlertToCC = () => {
