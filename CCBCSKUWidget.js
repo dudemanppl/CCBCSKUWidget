@@ -3,6 +3,14 @@ const onCompetitiveCyclist =
 const onPLP = document.getElementsByClassName("search-results").length;
 const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
+const strToUSD = num => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(num);
+};
+
 /**
  * Runs a function on each element of a given class.
  *
@@ -98,7 +106,7 @@ const getItemInfo = async productID => {
 
     const json = await res.json();
 
-    return Promise.resolve(json);
+    return Promise.resolve(json.products[0].skus);
   } catch (err) {
     console.log(err);
   }
@@ -112,33 +120,57 @@ const getItemInfo = async productID => {
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(product, currentOption) {
+  constructor(product, currentOption, p) {
     super("li", null, ["plp-dropdown-option-single"]);
     this.product = product;
     this.currentOption = currentOption;
+    this.p = p;
   }
 
   create() {
     const newPLPSelectorDropdownOption = super.create();
 
     const {
-      salePrice: price,
+      salePrice,
       id: SKU,
       availability: { stockLevel },
       title: variantName,
     } = this.product;
 
+    const price = strToUSD(salePrice);
+
     /** Adds OOS alert to dropdown option */
 
     !stockLevel && newPLPSelectorDropdownOption.classList.add("oos-alert");
 
-    const variantPriceStr = `${variantName} ($${price.toFixed(2)})`;
+    const variantPriceStr = `${variantName} (${price})`;
 
     newPLPSelectorDropdownOption.innerHTML = variantPriceStr;
 
     /** Sets current option shown to the selected variant, shows small notification that the item was selected */
 
     newPLPSelectorDropdownOption.onclick = () => {
+      const priceLocation = this.currentOption.parentElement.parentElement
+        .parentElement.childNodes[2].childNodes[3].firstChild;
+
+      /** Deletes price range  or sets price to reflect price of currently selected variant */
+      if (!this.p.deleted) {
+        const priceLocationParent = priceLocation.parentElement;
+        const clonedNode = priceLocation.cloneNode();
+        clonedNode.innerHTML = price;
+
+        priceLocation.remove();
+
+        priceLocationParent.insertBefore(
+          clonedNode,
+          priceLocationParent.lastChild
+        );
+
+        this.p.deleted = true;
+      } else {
+        priceLocation.innerHTML = price;
+      }
+
       navigator.clipboard.writeText(SKU);
       this.currentOption.classList.add("flash");
 
@@ -173,13 +205,15 @@ class PLPSelectorDropdown extends HTMLElem {
 
   async create() {
     const newPLPSelectorDropdown = super.create();
-    const { products } = await getItemInfo(this.productID);
-    const allProducts = products[0].skus;
+    const allProducts = await getItemInfo(this.productID);
+
+    const price = { deleted: false };
 
     for (const product of allProducts) {
       const newPLPSelectorDropdownOption = new PLPSelectorDropdownOption(
         product,
-        this.currentOption
+        this.currentOption,
+        price
       ).create();
 
       newPLPSelectorDropdown.appendChild(newPLPSelectorDropdownOption);
@@ -230,6 +264,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
         newPLPSelectorDropdownContainer.lastChild.classList.toggle("hidden");
       }
 
+      /** Adds event listener when call stack is clear */
       setTimeout(() => {
         document.addEventListener(
           "click",
@@ -314,7 +349,7 @@ const addPLPWidgets = () => {
   const refreshButtonTarget = document.getElementsByClassName(
     "js-header-global-text-promo"
   )[0];
-  
+
   const newPLPWidgetRefreshButton = new PLPWidgetRefreshButton().create();
 
   refreshButtonTarget.appendChild(newPLPWidgetRefreshButton);
@@ -421,7 +456,7 @@ const addOOSAlertToCC = () => {
  */
 
 const addCopySKUButtonPDP = () => {
-  const id = `add-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`;
+  const id = `copy-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`;
 
   const classList = onCompetitiveCyclist
     ? ["btn", "btn--secondary"]
