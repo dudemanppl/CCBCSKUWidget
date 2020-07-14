@@ -17,16 +17,16 @@
   line-height: 40px;
 }
 
-#add-sku-button-cc {
+#copy-sku-button-cc {
   width: calc(50% - 5px);
   float: right;
   margin-bottom: 15px;
 }
-#add-sku-button-bc {
+#copy-sku-button-bc {
   border: 1px solid black;
 }
 
-#add-sku-button-bc:hover {
+#copy-sku-button-bc:hover {
   background: white;
   color: #222;
 }
@@ -131,6 +131,16 @@
 
 .plp-dropdown-option-single:hover {
   background: #ebebeb;
+}
+
+#plp-widget-refresh-button {
+  transition: 0.2s;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+#plp-widget-refresh-button:hover {
+  background: black;
 }
 
 /* CC PLI fix */

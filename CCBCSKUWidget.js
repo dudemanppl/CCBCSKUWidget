@@ -275,6 +275,26 @@ class PLPWidgetContainer extends HTMLElem {
   }
 }
 
+class PLPWidgetRefreshButton extends HTMLElem {
+  constructor() {
+    super("div", "plp-widget-refresh-button", ["btn", "btn-reset"]);
+  }
+
+  create() {
+    const newPLPWidgetRefreshButton = super.create();
+
+    newPLPWidgetRefreshButton.innerHTML = "Add SKU Widgets";
+
+    newPLPWidgetRefreshButton.onclick = () => {
+      document.getElementById("plp-widget-refresh-button").remove();
+      deleteAllElems("sku-widget-container");
+      addPLPWidgets();
+    };
+
+    return newPLPWidgetRefreshButton;
+  }
+}
+
 /**
  * Adds the SKU Widget to each element of a given class.
  *
@@ -290,6 +310,14 @@ const addPLPWidgets = () => {
 
     targetLocation.appendChild(SKUWidget);
   });
+
+  const refreshButtonTarget = document.getElementsByClassName(
+    "js-header-global-text-promo"
+  )[0];
+  
+  const newPLPWidgetRefreshButton = new PLPWidgetRefreshButton().create();
+
+  refreshButtonTarget.appendChild(newPLPWidgetRefreshButton);
 };
 
 if (onPLP) {
@@ -302,16 +330,13 @@ if (onPLP) {
 
 const SKUButtonValidator = () => {
   const SKUButton = document.getElementById(
-    `add-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`
+    `copy-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`
   );
 
   const { style } = SKUButton;
 
-  const SKU = onCompetitiveCyclist
-    ? document
-        .getElementById("product-variant-select")
-        .getAttribute("sku-value")
-    : document.getElementsByClassName("js-selected-product-variant")[0].value;
+  const SKU = document.getElementsByClassName("js-selected-product-variant")[0]
+    .value;
 
   if (SKU) {
     navigator.clipboard.writeText(SKU);
