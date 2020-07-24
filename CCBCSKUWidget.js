@@ -18,6 +18,29 @@ const strToUSD = (num) => {
 };
 
 /**
+ * Runs callback given a fulfilled promise of the stock level, title, child SKU, and price of an item given a product ID
+ *
+ * @param {string} productID Product ID to look up item.
+ * @return {array} Array of objects with item info.
+ */
+
+const getItemInfo = async (productID) => {
+  try {
+    const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
+
+    const res = await fetch(
+      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice&site=${site}`
+    );
+
+    const json = await res.json();
+
+    return Promise.resolve(json.products[0].skus);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
  * Runs a function on each element of a given class.
  *
  * @param {string} elemClassName HTML element class.
@@ -61,27 +84,6 @@ if (!onCompetitiveCyclist) {
 }
 
 /**
- * Adds link to WMS
- *
- * @param {string} productPage On either PDP or PLP
- * @param {Elem} target HTML elem to place elem
- * @param {string} parentSKU SKU to check in WMS
- */
-
-const addWMSLink = (productPage, target, parentSKU) => {
-  const linkToIC = new HTMLElem(
-    "a",
-    null,
-    `link-to-wms-${productPage}`
-  ).create();
-
-  linkToIC.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${parentSKU}`;
-  linkToIC.innerText = "Click to go to WMS";
-
-  target.appendChild(linkToIC);
-};
-
-/**
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name.
@@ -117,27 +119,30 @@ class HTMLElem {
 }
 
 /**
- * Runs callback given a fulfilled promise of the stock level, title, child SKU, and price of an item given a product ID
+ * Adds button that links to WMS inventory page of desired product ID
  *
- * @param {string} productID Product ID to look up item.
- * @return {array} Array of objects with item info.
+ * @param {string} productID Product ID to check in WMS
+ * @param {array} classList Classes to be added to the link
  */
 
-const getItemInfo = async (productID) => {
-  try {
-    const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
-
-    const res = await fetch(
-      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice&site=${site}`
-    );
-
-    const json = await res.json();
-
-    return Promise.resolve(json.products[0].skus);
-  } catch (err) {
-    console.log(err);
+class WMSLink extends HTMLElem {
+  constructor(productID, classList) {
+    super("a", null, [`link-to-wms-${onPLP ? "plp" : "pdp"}`, ...classList]);
+    this.productID = productID;
   }
-};
+
+  create() {
+    const newWMSLink = super.create();
+
+    newWMSLink.setAttribute("type", "button");
+
+    newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${this.productID}`;
+
+    newWMSLink.innerText = "Click to go to WMS";
+
+    return newWMSLink;
+  }
+}
 
 /**
  * Creates single dropdown option
@@ -332,11 +337,8 @@ class PLPWidgetContainer extends HTMLElem {
       this.productID
     ).create();
 
-    const goToICButton = new HTMLElem("a", null, "go-to-ic-plp").create();
-
-    goToICButton.innerHTML = "Click to go to WMS";
-
     newPLPWidgetContainer.appendChild(selectorDropdown);
+    WMSLink("plp", newPLPWidgetContainer, this.productID);
 
     return newPLPWidgetContainer;
   }
@@ -426,7 +428,10 @@ const SKUButtonValidator = () => {
 
 class CopySKUButtonPDP extends HTMLElem {
   constructor(id, classList) {
-    super("button", id, classList);
+    super("button", id, [
+      ...classList,
+      onCompetitiveCyclist ? "buy-box__compare-btn" : null,
+    ]);
   }
 
   create() {
@@ -490,22 +495,28 @@ const addOOSAlertToCC = () => {
  * Adds CopySKUButton elem to PDP.
  */
 
-const addCopySKUButtonPDP = () => {
-  const id = `copy-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`;
+const addPDPButtons = () => {
+  const cc = onCompetitiveCyclist;
+  const id = `copy-sku-button-${cc ? "cc" : "bc"}`;
+  const productID = document.querySelector("b").innerHTML;
 
-  const classList = onCompetitiveCyclist
-    ? ["btn", "btn--secondary"]
-    : ["btn-reset", "product-buybox__btn"];
+  const classList = [
+    "btn",
+    "btn-reset",
+    ...(cc ? ["btn--secondary"] : ["product-buybox__btn"]),
+  ];
 
   const targetLocation = document.getElementsByClassName(
-    onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
+    cc ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
   const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
+  const newWMSLink = new WMSLink(productID, classList).create();
 
-  if (onCompetitiveCyclist) {
+  if (cc) {
     addOOSAlertToCC();
     targetLocation.appendChild(newCopySKUButtonPDP);
+    targetLocation.appendChild(newWMSLink);
   } else {
     /* Adds container to BC to mimic layout of original buttons */
     const container = new HTMLElem("div", null, [
@@ -519,11 +530,5 @@ const addCopySKUButtonPDP = () => {
 };
 
 if (onPDP) {
-  addCopySKUButtonPDP();
-  if (onCompetitiveCyclist) {
-    const target = document.getElementsByClassName("product-sku__id")[0];
-    const parentSKU = target.lastChild.innerHTML;
-
-    addWMSLink("pdp", target, parentSKU);
-  }
+  addPDPButtons();
 }
