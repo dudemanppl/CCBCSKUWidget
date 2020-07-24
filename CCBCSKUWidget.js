@@ -3,7 +3,13 @@ const onCompetitiveCyclist =
 const onPLP = document.getElementsByClassName("search-results").length;
 const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
-const strToUSD = num => {
+/**
+ * Formats number to string with dollar sign and trailing decimals
+ *
+ * @param {number} num Number to be formatted in to string
+ */
+
+const strToUSD = (num) => {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -32,8 +38,8 @@ const runOnAllElems = (elemClassName, func) => {
  * @param {string} elemClassName HTML element class.
  */
 
-const deleteAllElems = elemClassName => {
-  runOnAllElems(elemClassName, elem => elem.remove());
+const deleteAllElems = (elemClassName) => {
+  runOnAllElems(elemClassName, (elem) => elem.remove());
 };
 
 /**
@@ -44,7 +50,7 @@ if (!onCompetitiveCyclist) {
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
-  runOnAllElems("js-pl-expandable", elem => {
+  runOnAllElems("js-pl-expandable", (elem) => {
     const { style } = elem;
 
     style.top = "10px";
@@ -53,6 +59,27 @@ if (!onCompetitiveCyclist) {
     style.bottom = "10px";
   });
 }
+
+/**
+ * Adds link to WMS
+ *
+ * @param {string} productPage On either PDP or PLP
+ * @param {Elem} target HTML elem to place elem
+ * @param {string} parentSKU SKU to check in WMS
+ */
+
+const addWMSLink = (productPage, target, parentSKU) => {
+  const linkToIC = new HTMLElem(
+    "a",
+    null,
+    `link-to-wms-${productPage}`
+  ).create();
+
+  linkToIC.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${parentSKU}`;
+  linkToIC.innerText = "Click to go to WMS";
+
+  target.appendChild(linkToIC);
+};
 
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
@@ -96,7 +123,7 @@ class HTMLElem {
  * @return {array} Array of objects with item info.
  */
 
-const getItemInfo = async productID => {
+const getItemInfo = async (productID) => {
   try {
     const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
 
@@ -207,6 +234,7 @@ class PLPSelectorDropdown extends HTMLElem {
     const newPLPSelectorDropdown = super.create();
     const allProducts = await getItemInfo(this.productID);
 
+    /** obj doesn't lose reference when being passed down, bootleg state management */
     const price = { deleted: false };
 
     for (const product of allProducts) {
@@ -268,7 +296,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       setTimeout(() => {
         document.addEventListener(
           "click",
-          e => {
+          (e) => {
             /** If the target is the currentOption, it already has an event listener to close it */
             if (e.target !== currentOption) {
               newPLPSelectorDropdownContainer.lastChild.classList.add("hidden");
@@ -304,6 +332,10 @@ class PLPWidgetContainer extends HTMLElem {
       this.productID
     ).create();
 
+    const goToICButton = new HTMLElem("a", null, "go-to-ic-plp").create();
+
+    goToICButton.innerHTML = "Click to go to WMS";
+
     newPLPWidgetContainer.appendChild(selectorDropdown);
 
     return newPLPWidgetContainer;
@@ -336,7 +368,7 @@ class PLPWidgetRefreshButton extends HTMLElem {
  */
 
 const addPLPWidgets = () => {
-  runOnAllElems("js-product-listing", elem => {
+  runOnAllElems("js-product-listing", (elem) => {
     const productID = elem.getAttribute("data-product-id");
     const SKUWidget = new PLPWidgetContainer(productID).create();
     const targetLocation = onCompetitiveCyclist
@@ -347,12 +379,15 @@ const addPLPWidgets = () => {
   });
 
   const refreshButtonTarget = document.getElementsByClassName(
-    "js-header-global-text-promo"
+    "header-bottom-search"
   )[0];
 
   const newPLPWidgetRefreshButton = new PLPWidgetRefreshButton().create();
 
-  refreshButtonTarget.appendChild(newPLPWidgetRefreshButton);
+  refreshButtonTarget.insertBefore(
+    newPLPWidgetRefreshButton,
+    refreshButtonTarget.firstChild
+  );
 };
 
 if (onPLP) {
@@ -483,25 +518,12 @@ const addCopySKUButtonPDP = () => {
   }
 };
 
-/**
- * Adds link to get to interchange with current product to check stock.
- */
-
-const addICLinkPDP = () => {
-  const target = document.getElementsByClassName("product-sku__id")[0];
-  const parentSKU = target.lastChild.innerHTML;
-
-  const linkToIC = new HTMLElem("a", "link-to-ic").create();
-
-  linkToIC.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${parentSKU}`;
-  linkToIC.innerText = "Click to go to IC";
-
-  target.appendChild(linkToIC);
-};
-
 if (onPDP) {
   addCopySKUButtonPDP();
   if (onCompetitiveCyclist) {
-    addICLinkPDP();
+    const target = document.getElementsByClassName("product-sku__id")[0];
+    const parentSKU = target.lastChild.innerHTML;
+
+    addWMSLink("pdp", target, parentSKU);
   }
 }
