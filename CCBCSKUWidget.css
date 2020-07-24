@@ -1,8 +1,8 @@
 .sku-widget-container {
   position: absolute;
-  bottom: 0;
+  bottom: 10px;
   left: 0;
-  height: 80px;
+  height: 70px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -70,13 +70,12 @@ form .link-to-wms-pdp {
   top: 0;
   border-left: 1px solid #ccc;
   padding: 6px;
-  z-index: 6;
 }
 
 .plp-dropdown-current-option {
   transition: 0.1s;
   position: absolute;
-  width: calc(90% - 48px);
+  width: 86%;
   height: 34px;
   padding-left: 10px;
   line-height: 34px;
@@ -132,7 +131,9 @@ form .link-to-wms-pdp {
   background: #ebebeb;
 }
 
-.link-to-wms-pdp
+div.sku-widget-container div.plp-dropdown-container a.link-to-wms-plp {
+  margin-top: 5px;
+}
 
 /* CC PLI fix */
 

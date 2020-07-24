@@ -333,12 +333,14 @@ class PLPWidgetContainer extends HTMLElem {
   create() {
     const newPLPWidgetContainer = super.create();
 
-    const selectorDropdown = new PLPSelectorDropdownContainer(
+    const newSelectorDropdown = new PLPSelectorDropdownContainer(
       this.productID
     ).create();
 
-    newPLPWidgetContainer.appendChild(selectorDropdown);
-    WMSLink("plp", newPLPWidgetContainer, this.productID);
+    const newWMSLink = new WMSLink(this.productID, []).create();
+
+    newPLPWidgetContainer.appendChild(newSelectorDropdown);
+    newPLPWidgetContainer.appendChild(newWMSLink);
 
     return newPLPWidgetContainer;
   }
