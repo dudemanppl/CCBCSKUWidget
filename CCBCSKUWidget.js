@@ -1,5 +1,6 @@
 const onCompetitiveCyclist =
   window.location.host === "www.competitivecyclist.com";
+const siteString = onCompetitiveCyclist ? "cc" : "bc";
 const onPLP = document.getElementsByClassName("search-results").length;
 const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
@@ -135,10 +136,8 @@ class WMSLink extends HTMLElem {
     const newWMSLink = super.create();
 
     newWMSLink.setAttribute("type", "button");
-
     newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${this.productID}`;
-
-    newWMSLink.innerText = "Click to go to WMS";
+    newWMSLink.innerText = "Go to WMS";
 
     return newWMSLink;
   }
@@ -148,15 +147,14 @@ class WMSLink extends HTMLElem {
  * Creates single dropdown option
  *
  * @param {object} product Object containing info about an item
- * @param {Elem} currentOption Reference to HTML elem with the current option chosen
+ * @param {Elem} dropdownContainer Reference to HTML elem with the current option chosen
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(product, currentOption, p) {
+  constructor(product, dropdownContainer) {
     super("li", null, ["plp-dropdown-option-single"]);
     this.product = product;
-    this.currentOption = currentOption;
-    this.p = p;
+    this.dropdownContainer = dropdownContainer;
   }
 
   create() {
@@ -182,38 +180,16 @@ class PLPSelectorDropdownOption extends HTMLElem {
     /** Sets current option shown to the selected variant, shows small notification that the item was selected */
 
     newPLPSelectorDropdownOption.onclick = () => {
-      const priceLocation = this.currentOption.parentElement.parentElement
-        .parentElement.childNodes[2].childNodes[3].firstChild;
-
-      /** Deletes price range  or sets price to reflect price of currently selected variant */
-      if (!this.p.deleted) {
-        const priceLocationParent = priceLocation.parentElement;
-        const clonedNode = priceLocation.cloneNode();
-        clonedNode.innerHTML = price;
-
-        priceLocation.remove();
-
-        priceLocationParent.insertBefore(
-          clonedNode,
-          priceLocationParent.lastChild
-        );
-
-        this.p.deleted = true;
-      } else {
-        priceLocation.innerHTML = price;
-      }
+      const { firstChild } = this.dropdownContainer;
 
       navigator.clipboard.writeText(SKU);
-      this.currentOption.classList.add("flash");
-
-      this.currentOption.innerHTML = "SKU Copied!";
-
+      this.dropdownContainer.classList.add("flash");
+      firstChild.innerHTML = "SKU Copied!";
       setTimeout(() => {
-        this.currentOption.classList.remove("flash");
+        this.dropdownContainer.classList.remove("flash");
       }, 100);
-
       setTimeout(() => {
-        this.currentOption.innerHTML = variantPriceStr;
+        firstChild.innerHTML = variantPriceStr;
       }, 500);
     };
 
@@ -225,28 +201,24 @@ class PLPSelectorDropdownOption extends HTMLElem {
  * Creates variant selector dropdown on PLP with price and stock information
  *
  * @param {string} productID Parent SKU to query BC products REST API
- * @param {Elem} currentOption Reference to HTML elem with the current option chosen
+ * @param {Elem} dropdownContainer Reference to HTML elem with the current option chosen
  */
 
 class PLPSelectorDropdown extends HTMLElem {
-  constructor(productID, currentOption) {
+  constructor(productID, dropdownContainer) {
     super("ul", null, "plp-dropdown-options");
     this.productID = productID;
-    this.currentOption = currentOption;
+    this.dropdownContainer = dropdownContainer;
   }
 
   async create() {
     const newPLPSelectorDropdown = super.create();
     const allProducts = await getItemInfo(this.productID);
 
-    /** obj doesn't lose reference when being passed down, bootleg state management */
-    const price = { deleted: false };
-
     for (const product of allProducts) {
       const newPLPSelectorDropdownOption = new PLPSelectorDropdownOption(
         product,
-        this.currentOption,
-        price
+        this.dropdownContainer
       ).create();
 
       newPLPSelectorDropdown.appendChild(newPLPSelectorDropdownOption);
@@ -264,18 +236,17 @@ class PLPSelectorDropdown extends HTMLElem {
 
 class PLPSelectorDropdownContainer extends HTMLElem {
   constructor(productID) {
-    super("div", null, "plp-dropdown-container");
+    super("div", null, ["plp-dropdown-container", siteString]);
     this.productID = productID;
     this.requested = false;
   }
 
   create() {
     const newPLPSelectorDropdownContainer = super.create();
-    const currentOption = new HTMLElem(
-      "div",
-      null,
-      "plp-dropdown-current-option"
-    ).create();
+    const currentOption = new HTMLElem("div", null, [
+      "plp-dropdown-current-option",
+      siteString,
+    ]).create();
 
     currentOption.innerHTML = "Select options";
 
@@ -283,11 +254,11 @@ class PLPSelectorDropdownContainer extends HTMLElem {
 
     /** Queries only once the dropdown has been clicked */
 
-    currentOption.onclick = async () => {
+    newPLPSelectorDropdownContainer.onclick = async () => {
       if (!this.requested) {
         const newSelectorDropdown = await new PLPSelectorDropdown(
           this.productID,
-          currentOption
+          newPLPSelectorDropdownContainer
         ).create();
 
         newPLPSelectorDropdownContainer.appendChild(newSelectorDropdown);
@@ -302,8 +273,8 @@ class PLPSelectorDropdownContainer extends HTMLElem {
         document.addEventListener(
           "click",
           (e) => {
-            /** If the target is the currentOption, it already has an event listener to close it */
-            if (e.target !== currentOption) {
+            /** If the target is the dropdownContainer, it already has an event listener to close it */
+            if (e.target !== newPLPSelectorDropdownContainer) {
               newPLPSelectorDropdownContainer.lastChild.classList.add("hidden");
             }
           },
@@ -337,7 +308,10 @@ class PLPWidgetContainer extends HTMLElem {
       this.productID
     ).create();
 
-    const newWMSLink = new WMSLink(this.productID, []).create();
+    const newWMSLink = new WMSLink(this.productID, [
+      "btn",
+      "btn-reset",
+    ]).create();
 
     newPLPWidgetContainer.appendChild(newSelectorDropdown);
     newPLPWidgetContainer.appendChild(newWMSLink);
@@ -403,9 +377,7 @@ if (onPLP) {
  */
 
 const SKUButtonValidator = () => {
-  const SKUButton = document.getElementById(
-    `copy-sku-button-${onCompetitiveCyclist ? "cc" : "bc"}`
-  );
+  const SKUButton = document.getElementById(`copy-sku-button-${siteString}`);
 
   const { style } = SKUButton;
 
@@ -467,14 +439,37 @@ class CopySKUButtonPDP extends HTMLElem {
 }
 
 /**
+ * Adds container for BC PDP to keep styling in line
+ *
+ * @param {Elem} elem HTML Element to add inside container
+ */
+
+class BCPDPContainer extends HTMLElem {
+  constructor(elem) {
+    super("div", null, "product-buybox__action");
+    this.elem = elem;
+  }
+
+  create() {
+    const newBCPDPContainer = super.create();
+
+    newBCPDPContainer.appendChild(this.elem);
+
+    return newBCPDPContainer;
+  }
+}
+
+/**
  * Changes styling of dropdown option to reflect OOS status
  */
 
 const addOOSAlertToCC = () => {
+  /** Product obj from DOM as a string */
   const productObjStr = document.getElementsByClassName(
     "kraken-product-script"
   )[0].textContent;
 
+  /** Parses obj string to JS obj */
   const products = JSON.parse(productObjStr.slice(13, productObjStr.length - 1))
     .skusCollection;
 
@@ -500,7 +495,11 @@ const addOOSAlertToCC = () => {
 const addPDPButtons = () => {
   const cc = onCompetitiveCyclist;
   const id = `copy-sku-button-${cc ? "cc" : "bc"}`;
-  const productID = document.querySelector("b").innerHTML;
+  const productID = cc
+    ? document.querySelector("b").innerHTML
+    : document.querySelector(
+        '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
+      ).value;
 
   const classList = [
     "btn",
@@ -521,13 +520,11 @@ const addPDPButtons = () => {
     targetLocation.appendChild(newWMSLink);
   } else {
     /* Adds container to BC to mimic layout of original buttons */
-    const container = new HTMLElem("div", null, [
-      "product-buybox__action",
-    ]).create();
+    const copySKUContainer = new BCPDPContainer(newCopySKUButtonPDP).create();
+    const WMSLinkContainer = new BCPDPContainer(newWMSLink).create();
 
-    container.appendChild(newCopySKUButtonPDP);
-
-    targetLocation.appendChild(container);
+    targetLocation.appendChild(WMSLinkContainer);
+    targetLocation.appendChild(copySKUContainer);
   }
 };
 
