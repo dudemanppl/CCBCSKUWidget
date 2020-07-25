@@ -372,6 +372,18 @@ const addPLPWidgets = () => {
 };
 
 if (onPLP) {
+  if (onCompetitiveCyclist) {
+    document
+      .getElementsByClassName("header-bottom-search")[0]
+      .classList.add("cc-plp");
+
+    const navButtons = document.getElementsByClassName("header-nav__item");
+
+    for (const button of [...navButtons]) {
+      button.classList.add("ccplp");
+    }
+  }
+
   addPLPWidgets();
 }
 
