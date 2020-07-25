@@ -274,7 +274,10 @@ class PLPSelectorDropdownContainer extends HTMLElem {
           "click",
           (e) => {
             /** If the target is the dropdownContainer, it already has an event listener to close it */
-            if (e.target !== newPLPSelectorDropdownContainer) {
+            if (
+              e.target !== newPLPSelectorDropdownContainer &&
+              e.target !== currentOption
+            ) {
               newPLPSelectorDropdownContainer.lastChild.classList.add("hidden");
             }
           },
