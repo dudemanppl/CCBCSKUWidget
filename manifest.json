@@ -17,5 +17,6 @@
       "css": ["CCBCSKUWidget.css"],
       "js": ["CCBCSKUWidget.js"]
     }
-  ]
+  ],
+  "background": { "scripts": ["hot-reload.js"] }
 }

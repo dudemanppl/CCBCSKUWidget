@@ -17,6 +17,10 @@
   line-height: 40px;
 }
 
+.btn.btn--secondary {
+  transition: 0.3s;
+}
+
 #copy-sku-button-bc {
   width: 320px;
   margin-top: 6px;
@@ -166,19 +170,6 @@ form .link-to-wms-pdp {
   background: #ebebeb;
 }
 
-#plp-widget-refresh-button {
-  transition: 0.2s;
-  border-radius: 3px;
-  background: #ebebeb;
-  border: 1px solid #ccc;
-}
-
-#plp-widget-refresh-button:hover {
-  border-color: black;
-  background: white;
-  color: black;
-}
-
 /* CC PLI fix */
 
 .product-grid .ui-pli {
@@ -191,69 +182,6 @@ form .link-to-wms-pdp {
 .add-to-cart .buy-box__wishlist-btn,
 .ui-basedropdown-link .oos-alert {
   display: none;
-}
-
-#header-nav .header-bottom-search.cc-plp {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-width: 480px;
-}
-
-.header-bottom-search.cc-plp #search-box {
-  margin: 0;
-  width: 300px;
-}
-
-nav.header-nav ul.header-nav__cats li .header-nav__text {
-  padding: 0 5px;
-}
-
-@media only screen and (min-width: 56.25em) {
-  a.header-bottom-logo {
-    margin-right: 20px;
-  }
-}
-@media only screen and (max-width: 1180px) {
-  li.header-nav__item.cc-plp a.header-nav__text[data-id="7"] {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 1135px) {
-  li.header-nav__item.cc-plp a.header-nav__text[data-id="6"] {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 1095px) {
-  .header-bottom-search.cc-plp #search-box {
-    width: 225px;
-  }
-  #header-nav .header-bottom-search.cc-plp {
-    min-width: 400px;
-  }
-}
-
-@media only screen and (max-width: 1015px) {
-  li.header-nav__item.cc-plp a.header-nav__text[data-id="5"] {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 960px) {
-  #plp-widget-refresh-button {
-    display: none;
-  }
-  #header-nav .header-bottom-search.cc-plp {
-    min-width: 225px;
-  }
-  li.header-nav__item.cc-plp a.header-nav__text[data-id="5"] {
-    display: block;
-  }
-  li.header-nav__item.cc-plp a.header-nav__text[data-id="6"] {
-    display: block;
-  }
 }
 
 /* BC PL enbiggener */

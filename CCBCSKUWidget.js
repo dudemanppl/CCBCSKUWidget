@@ -323,26 +323,6 @@ class PLPWidgetContainer extends HTMLElem {
   }
 }
 
-class PLPWidgetRefreshButton extends HTMLElem {
-  constructor() {
-    super("div", "plp-widget-refresh-button", ["btn", "btn-reset"]);
-  }
-
-  create() {
-    const newPLPWidgetRefreshButton = super.create();
-
-    newPLPWidgetRefreshButton.innerHTML = "Add SKU Widgets";
-
-    newPLPWidgetRefreshButton.onclick = () => {
-      document.getElementById("plp-widget-refresh-button").remove();
-      deleteAllElems("sku-widget-container");
-      addPLPWidgets();
-    };
-
-    return newPLPWidgetRefreshButton;
-  }
-}
-
 /**
  * Adds the SKU Widget to each element of a given class.
  *
@@ -358,17 +338,6 @@ const addPLPWidgets = () => {
 
     targetLocation.appendChild(SKUWidget);
   });
-
-  const refreshButtonTarget = document.getElementsByClassName(
-    "header-bottom-search"
-  )[0];
-
-  const newPLPWidgetRefreshButton = new PLPWidgetRefreshButton().create();
-
-  refreshButtonTarget.insertBefore(
-    newPLPWidgetRefreshButton,
-    refreshButtonTarget.firstChild
-  );
 };
 
 if (onPLP) {
@@ -383,8 +352,10 @@ if (onPLP) {
       button.classList.add("ccplp");
     }
   }
-
   addPLPWidgets();
+
+  const targetNode = document.getElementsByClassName("js-inner-body")[0];
+  new MutationObserver(addPLPWidgets).observe(targetNode, { childList: true });
 }
 
 /**
