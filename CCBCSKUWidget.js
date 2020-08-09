@@ -19,7 +19,7 @@ const strToUSD = (num) => {
 };
 
 /**
- * Runs callback given a fulfilled promise of the stock level, title, child SKU, and price of an item given a product ID
+ * Sends request to BC API, returns obj with information about given product
  *
  * @param {string} productID Product ID to look up item.
  * @return {array} Array of objects with item info.
@@ -88,31 +88,27 @@ if (!onCompetitiveCyclist) {
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name.
- * @param {string} [id] Id for HTML element.
  * @param {array} [classList] Array of desired classes to add.
+ * @param {string} [id] Id for HTML element.
  * @return {Element} New HTML element with tag name.
  */
 
 class HTMLElem {
-  constructor(tagName, id, classList) {
+  constructor(tagName, classList, id) {
     this.tagName = tagName;
-    this.id = id;
     this.classList = classList;
+    this.id = id;
   }
 
   create() {
     const newHTMLElem = document.createElement(this.tagName);
 
-    if (this.id) {
-      newHTMLElem.id = this.id;
+    if (this.classList) {
+      newHTMLElem.classList.add(...this.classList);
     }
 
-    if (this.classList) {
-      if (Array.isArray(this.classList)) {
-        newHTMLElem.classList.add(...this.classList);
-      } else {
-        newHTMLElem.classList.add(this.classList);
-      }
+    if (this.id) {
+      newHTMLElem.id = this.id;
     }
 
     return newHTMLElem;
@@ -128,7 +124,11 @@ class HTMLElem {
 
 class WMSLink extends HTMLElem {
   constructor(productID, classList) {
-    super("a", null, [`link-to-wms-${onPLP ? "plp" : "pdp"}`, ...classList]);
+    super("a", [
+      `link-to-wms-${onPLP ? "plp" : "pdp"}`,
+      siteString,
+      ...classList,
+    ]);
     this.productID = productID;
   }
 
@@ -147,14 +147,14 @@ class WMSLink extends HTMLElem {
  * Creates single dropdown option
  *
  * @param {object} product Object containing info about an item
- * @param {Elem} dropdownContainer Reference to HTML elem with the current option chosen
+ * @param {Elem} currentOption Reference to HTML elem with the current option chosen
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(product, dropdownContainer) {
-    super("li", null, ["plp-dropdown-option-single"]);
+  constructor(product, currentOption) {
+    super("li", ["plp-dropdown-option-single"]);
     this.product = product;
-    this.dropdownContainer = dropdownContainer;
+    this.currentOption = currentOption;
   }
 
   create() {
@@ -180,17 +180,13 @@ class PLPSelectorDropdownOption extends HTMLElem {
     /** Sets current option shown to the selected variant, shows small notification that the item was selected */
 
     newPLPSelectorDropdownOption.onclick = () => {
-      const { firstChild } = this.dropdownContainer;
-
       navigator.clipboard.writeText(SKU);
-      this.dropdownContainer.classList.add("flash");
-      firstChild.innerHTML = "SKU Copied!";
+      this.currentOption.classList.add("copy-notif");
+      this.currentOption.innerHTML = "SKU Copied!";
       setTimeout(() => {
-        this.dropdownContainer.classList.remove("flash");
-      }, 100);
-      setTimeout(() => {
-        firstChild.innerHTML = variantPriceStr;
-      }, 500);
+        this.currentOption.classList.remove("copy-notif");
+        this.currentOption.innerHTML = variantPriceStr;
+      }, 300);
     };
 
     return newPLPSelectorDropdownOption;
@@ -201,14 +197,14 @@ class PLPSelectorDropdownOption extends HTMLElem {
  * Creates variant selector dropdown on PLP with price and stock information
  *
  * @param {string} productID Parent SKU to query BC products REST API
- * @param {Elem} dropdownContainer Reference to HTML elem with the current option chosen
+ * @param {Elem} currentOption Reference to HTML elem with the current option chosen
  */
 
 class PLPSelectorDropdown extends HTMLElem {
-  constructor(productID, dropdownContainer) {
-    super("ul", null, "plp-dropdown-options");
+  constructor(productID, currentOption) {
+    super("ul", ["plp-dropdown-options"]);
     this.productID = productID;
-    this.dropdownContainer = dropdownContainer;
+    this.currentOption = currentOption;
   }
 
   async create() {
@@ -218,7 +214,7 @@ class PLPSelectorDropdown extends HTMLElem {
     for (const product of allProducts) {
       const newPLPSelectorDropdownOption = new PLPSelectorDropdownOption(
         product,
-        this.dropdownContainer
+        this.currentOption
       ).create();
 
       newPLPSelectorDropdown.appendChild(newPLPSelectorDropdownOption);
@@ -236,14 +232,14 @@ class PLPSelectorDropdown extends HTMLElem {
 
 class PLPSelectorDropdownContainer extends HTMLElem {
   constructor(productID) {
-    super("div", null, ["plp-dropdown-container", siteString]);
+    super("div", ["plp-dropdown-container", siteString]);
     this.productID = productID;
     this.requested = false;
   }
 
   create() {
     const newPLPSelectorDropdownContainer = super.create();
-    const currentOption = new HTMLElem("div", null, [
+    const currentOption = new HTMLElem("div", [
       "plp-dropdown-current-option",
       siteString,
     ]).create();
@@ -258,7 +254,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       if (!this.requested) {
         const newSelectorDropdown = await new PLPSelectorDropdown(
           this.productID,
-          newPLPSelectorDropdownContainer
+          currentOption
         ).create();
 
         newPLPSelectorDropdownContainer.appendChild(newSelectorDropdown);
@@ -300,7 +296,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
 
 class PLPWidgetContainer extends HTMLElem {
   constructor(productID) {
-    super("div", null, "sku-widget-container");
+    super("div", ["sku-widget-container"]);
     this.productID = productID;
   }
 
@@ -341,19 +337,7 @@ const addPLPWidgets = () => {
 };
 
 if (onPLP) {
-  if (onCompetitiveCyclist) {
-    document
-      .getElementsByClassName("header-bottom-search")[0]
-      .classList.add("cc-plp");
-
-    const navButtons = document.getElementsByClassName("header-nav__item");
-
-    for (const button of [...navButtons]) {
-      button.classList.add("ccplp");
-    }
-  }
   addPLPWidgets();
-
   const targetNode = document.getElementsByClassName("js-inner-body")[0];
   new MutationObserver(addPLPWidgets).observe(targetNode, { childList: true });
 }
@@ -388,10 +372,11 @@ const SKUButtonValidator = () => {
 
 class CopySKUButtonPDP extends HTMLElem {
   constructor(id, classList) {
-    super("button", id, [
-      ...classList,
-      onCompetitiveCyclist ? "buy-box__compare-btn" : null,
-    ]);
+    super(
+      "button",
+      [...classList, onCompetitiveCyclist ? "buy-box__compare-btn" : null],
+      id
+    );
   }
 
   create() {
@@ -432,7 +417,7 @@ class CopySKUButtonPDP extends HTMLElem {
 
 class BCPDPContainer extends HTMLElem {
   constructor(elem) {
-    super("div", null, "product-buybox__action");
+    super("div", ["product-buybox__action"]);
     this.elem = elem;
   }
 
@@ -446,10 +431,10 @@ class BCPDPContainer extends HTMLElem {
 }
 
 /**
- * Changes styling of dropdown option to reflect OOS status
+ * Changes styling of dropdown option to reflect OOS status on CC PDP
  */
 
-const addOOSAlertToCC = () => {
+const addOOSAlertToCCPDP = () => {
   /** Product obj from DOM as a string */
   const productObjStr = document.getElementsByClassName(
     "kraken-product-script"
@@ -470,7 +455,7 @@ const addOOSAlertToCC = () => {
     const childSKU = dropdownOption.getAttribute("sku-value");
     const stockLevel = products[childSKU].inventory;
 
-    !stockLevel && dropdownOption.classList.add("oos-alert");
+    !stockLevel && dropdownOption.classList.add("oos-alert", "pdp");
   }
 };
 
@@ -497,17 +482,17 @@ const addPDPButtons = () => {
     cc ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
-  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
   const newWMSLink = new WMSLink(productID, classList).create();
+  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
 
   if (cc) {
-    addOOSAlertToCC();
-    targetLocation.appendChild(newCopySKUButtonPDP);
+    addOOSAlertToCCPDP();
     targetLocation.appendChild(newWMSLink);
+    targetLocation.appendChild(newCopySKUButtonPDP);
   } else {
     /* Adds container to BC to mimic layout of original buttons */
-    const copySKUContainer = new BCPDPContainer(newCopySKUButtonPDP).create();
     const WMSLinkContainer = new BCPDPContainer(newWMSLink).create();
+    const copySKUContainer = new BCPDPContainer(newCopySKUButtonPDP).create();
 
     targetLocation.appendChild(WMSLinkContainer);
     targetLocation.appendChild(copySKUContainer);

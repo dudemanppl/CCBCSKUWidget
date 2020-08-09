@@ -9,14 +9,6 @@
   align-items: center;
 }
 
-#product-id-button {
-  transition: 0.3s;
-  border: 1px solid rgba(0, 0, 0, 0.4);
-  height: 40px;
-  width: 140px;
-  line-height: 40px;
-}
-
 .btn.btn--secondary {
   transition: 0.3s;
 }
@@ -40,7 +32,6 @@ a.link-to-wms-pdp {
 .oos-alert:after {
   content: "OOS";
   float: right;
-  margin-right: 15px;
   font-size: 16px;
   color: red;
   font-weight: 600;
@@ -64,7 +55,7 @@ a.link-to-wms-pdp {
   color: white;
 }
 
-form .link-to-wms-pdp {
+.link-to-wms-pdp {
   float: left;
 }
 
@@ -78,13 +69,11 @@ form .link-to-wms-pdp {
   border: 1px solid;
   width: 90%;
   height: 36px;
-  display: flex;
   cursor: pointer;
-  overflow: hidden;
+  transition: 0.2s;
 }
 
 .plp-dropdown-container.bc {
-  transition: 0.3s;
   border-radius: 4px;
   border-color: #efefef;
 }
@@ -101,16 +90,15 @@ form .link-to-wms-pdp {
   font-family: ccicons;
   color: #555;
   font-size: 24px;
+  line-height: 32px;
   position: absolute;
-  box-sizing: border-box;
-  right: 20px;
-  top: 0;
+  height: 35px;
+  right: 5.5%;
   border-left: 1px solid #ccc;
-  padding: 6px;
+  padding: 0 6px;
 }
 
 .plp-dropdown-current-option {
-  transition: 0.1s;
   position: absolute;
   width: calc(90% - 50px);
   height: 34px;
@@ -121,11 +109,13 @@ form .link-to-wms-pdp {
   white-space: nowrap;
 }
 
-.plp-dropdown-current-option:hover {
+.plp-dropdown-container:hover {
   color: black;
 }
 
-.plp-dropdown-container.flash {
+.plp-dropdown-current-option.copy-notif {
+  transition: 0.15s;
+  text-align: center;
   background: black;
   color: white;
   font-weight: 600;
@@ -134,8 +124,7 @@ form .link-to-wms-pdp {
 .plp-dropdown-options {
   position: absolute;
   top: 36px;
-  left: 5%;
-  min-width: 90%;
+  min-width: calc(90% - 1px);
   width: max-content;
   box-sizing: border-box;
   border-radius: 2px;
@@ -143,10 +132,8 @@ form .link-to-wms-pdp {
   border: 1px solid #ccc;
   border-top: 0;
   background: #fff;
-  max-height: 250px;
-  list-style: none;
+  max-height: 300px;
   z-index: 4;
-  overflow-y: scroll;
   overflow-x: hidden;
   padding: 0;
 }
@@ -157,7 +144,7 @@ form .link-to-wms-pdp {
 
 .plp-dropdown-option-single {
   height: 36px;
-  width: 100%;
+  width: calc(90% + 12px);
   line-height: 36px;
   font-size: 14px;
   padding: 0 8px;
@@ -179,9 +166,14 @@ form .link-to-wms-pdp {
 
 .item-unformatted .ui-productcomparison-toggle,
 .add-to-cart .js-productcomparison-toggle-wrap,
-.add-to-cart .buy-box__wishlist-btn,
-.ui-basedropdown-link .oos-alert {
+.add-to-cart .buy-box__wishlist-btn {
   display: none;
+}
+
+/* CC PDP fix */
+
+.ui-basedropdown-option.ui-unifiedropdown-option .ui-basedropdown-option-value {
+  width: calc(100% - 35px);
 }
 
 /* BC PL enbiggener */
