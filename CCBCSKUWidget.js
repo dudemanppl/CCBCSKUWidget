@@ -29,13 +29,13 @@ const getItemInfo = async (productID) => {
   try {
     const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
 
-    const res = await fetch(
+    let res = await fetch(
       `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice&site=${site}`
     );
 
-    const json = await res.json();
+    res = await res.json();
 
-    return Promise.resolve(json.products[0].skus);
+    return Promise.resolve(await res.products[0].skus);
   } catch (err) {
     console.log(err);
   }
@@ -95,20 +95,14 @@ if (!onCompetitiveCyclist) {
 
 class HTMLElem {
   constructor(tagName, classList, id) {
-    this.tagName = tagName;
-    this.classList = classList;
-    this.id = id;
-  }
+    const newHTMLElem = document.createElement(tagName);
 
-  create() {
-    const newHTMLElem = document.createElement(this.tagName);
-
-    if (this.classList) {
-      newHTMLElem.classList.add(...this.classList);
+    if (classList) {
+      newHTMLElem.classList.add(...classList);
     }
 
-    if (this.id) {
-      newHTMLElem.id = this.id;
+    if (id) {
+      newHTMLElem.id = id;
     }
 
     return newHTMLElem;
@@ -124,19 +118,14 @@ class HTMLElem {
 
 class WMSLink extends HTMLElem {
   constructor(productID, classList) {
-    super("a", [
-      `link-to-wms-${onPLP ? "plp" : "pdp"}`,
-      siteString,
-      ...classList,
-    ]);
-    this.productID = productID;
-  }
-
-  create() {
-    const newWMSLink = super.create();
-
+    const link = "link-to-wms-";
+    const newWMSLink = super(
+      "a",
+      [...(onPLP ? [link + "plp"] : []), siteString, ...classList],
+      onPDP && link + "pdp"
+    );
     newWMSLink.setAttribute("type", "button");
-    newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${this.productID}`;
+    newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
     newWMSLink.innerText = "Go to WMS";
 
     return newWMSLink;
@@ -152,28 +141,22 @@ class WMSLink extends HTMLElem {
 
 class PLPSelectorDropdownOption extends HTMLElem {
   constructor(product, currentOption) {
-    super("li", ["plp-dropdown-option-single"]);
-    this.product = product;
-    this.currentOption = currentOption;
-  }
-
-  create() {
-    const newPLPSelectorDropdownOption = super.create();
+    const newPLPSelectorDropdownOption = super("li", [
+      "plp-dropdown-option-single",
+    ]);
 
     const {
       salePrice,
       id: SKU,
       availability: { stockLevel },
       title: variantName,
-    } = this.product;
+    } = product;
 
-    const price = strToUSD(salePrice);
-
-    /** Adds OOS alert to dropdown option */
+    /** Adds OOS alert as necessary*/
 
     !stockLevel && newPLPSelectorDropdownOption.classList.add("oos-alert");
 
-    const variantPriceStr = `${variantName} (${price})`;
+    const variantPriceStr = `${variantName} (${strToUSD(salePrice)})`;
 
     newPLPSelectorDropdownOption.innerHTML = variantPriceStr;
 
@@ -181,12 +164,13 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
     newPLPSelectorDropdownOption.onclick = () => {
       navigator.clipboard.writeText(SKU);
-      this.currentOption.classList.add("copy-notif");
-      this.currentOption.innerHTML = "SKU Copied!";
+      currentOption.classList.add("copy-notif");
+      currentOption.innerHTML = "SKU Copied!";
+
       setTimeout(() => {
-        this.currentOption.classList.remove("copy-notif");
-        this.currentOption.innerHTML = variantPriceStr;
-      }, 300);
+        currentOption.classList.remove("copy-notif");
+        currentOption.innerHTML = variantPriceStr;
+      }, 250);
     };
 
     return newPLPSelectorDropdownOption;
@@ -202,23 +186,15 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
 class PLPSelectorDropdown extends HTMLElem {
   constructor(productID, currentOption) {
-    super("ul", ["plp-dropdown-options"]);
-    this.productID = productID;
-    this.currentOption = currentOption;
-  }
+    const newPLPSelectorDropdown = super("ul", ["plp-dropdown-options"]);
 
-  async create() {
-    const newPLPSelectorDropdown = super.create();
-    const allProducts = await getItemInfo(this.productID);
-
-    for (const product of allProducts) {
-      const newPLPSelectorDropdownOption = new PLPSelectorDropdownOption(
-        product,
-        this.currentOption
-      ).create();
-
-      newPLPSelectorDropdown.appendChild(newPLPSelectorDropdownOption);
-    }
+    getItemInfo(productID).then((products) => {
+      for (const product of products) {
+        newPLPSelectorDropdown.append(
+          new PLPSelectorDropdownOption(product, currentOption)
+        );
+      }
+    });
 
     return newPLPSelectorDropdown;
   }
@@ -232,47 +208,44 @@ class PLPSelectorDropdown extends HTMLElem {
 
 class PLPSelectorDropdownContainer extends HTMLElem {
   constructor(productID) {
-    super("div", ["plp-dropdown-container", siteString]);
-    this.productID = productID;
-    this.requested = false;
-  }
+    const newPLPSelectorDropdownContainer = super("div", [
+      "plp-dropdown-container",
+      siteString,
+    ]);
 
-  create() {
-    const newPLPSelectorDropdownContainer = super.create();
+    let requested = false;
+
     const currentOption = new HTMLElem("div", [
       "plp-dropdown-current-option",
       siteString,
-    ]).create();
+    ]);
 
     currentOption.innerHTML = "Select options";
 
-    newPLPSelectorDropdownContainer.appendChild(currentOption);
+    newPLPSelectorDropdownContainer.append(currentOption);
 
     /** Queries only once the dropdown has been clicked */
 
     newPLPSelectorDropdownContainer.onclick = async () => {
-      if (!this.requested) {
-        const newSelectorDropdown = await new PLPSelectorDropdown(
-          this.productID,
-          currentOption
-        ).create();
-
-        newPLPSelectorDropdownContainer.appendChild(newSelectorDropdown);
-
-        this.requested = true;
+      /** Element won't be created until it is requested */
+      if (!requested) {
+        newPLPSelectorDropdownContainer.append(
+          await new PLPSelectorDropdown(productID, currentOption)
+        );
+        requested = true;
       } else {
         newPLPSelectorDropdownContainer.lastChild.classList.toggle("hidden");
       }
 
-      /** Adds event listener when call stack is clear */
+      /** Adds event listener when call stack is clear, seems to be buggy otherwise */
       setTimeout(() => {
         document.addEventListener(
           "click",
-          (e) => {
+          ({ target }) => {
             /** If the target is the dropdownContainer, it already has an event listener to close it */
             if (
-              e.target !== newPLPSelectorDropdownContainer &&
-              e.target !== currentOption
+              target !== newPLPSelectorDropdownContainer &&
+              target !== currentOption
             ) {
               newPLPSelectorDropdownContainer.lastChild.classList.add("hidden");
             }
@@ -296,24 +269,12 @@ class PLPSelectorDropdownContainer extends HTMLElem {
 
 class PLPWidgetContainer extends HTMLElem {
   constructor(productID) {
-    super("div", ["sku-widget-container"]);
-    this.productID = productID;
-  }
+    const newPLPWidgetContainer = super("div", ["sku-widget-container"]);
 
-  create() {
-    const newPLPWidgetContainer = super.create();
-
-    const newSelectorDropdown = new PLPSelectorDropdownContainer(
-      this.productID
-    ).create();
-
-    const newWMSLink = new WMSLink(this.productID, [
-      "btn",
-      "btn-reset",
-    ]).create();
-
-    newPLPWidgetContainer.appendChild(newSelectorDropdown);
-    newPLPWidgetContainer.appendChild(newWMSLink);
+    newPLPWidgetContainer.append(
+      new PLPSelectorDropdownContainer(productID),
+      new WMSLink(productID, ["btn", "btn-reset"])
+    );
 
     return newPLPWidgetContainer;
   }
@@ -327,44 +288,25 @@ class PLPWidgetContainer extends HTMLElem {
 const addPLPWidgets = () => {
   runOnAllElems("js-product-listing", (elem) => {
     const productID = elem.getAttribute("data-product-id");
-    const SKUWidget = new PLPWidgetContainer(productID).create();
+    const newPDPWidget = new PLPWidgetContainer(productID);
     const targetLocation = onCompetitiveCyclist
       ? elem.firstChild
       : elem.firstChild.childNodes[2];
 
-    targetLocation.appendChild(SKUWidget);
+    targetLocation.append(newPDPWidget);
   });
 };
 
 if (onPLP) {
   addPLPWidgets();
+
+  /** Watches for changes on SPA to rerender PLP widgets */
   const targetNode = document.getElementsByClassName("js-inner-body")[0];
   new MutationObserver(addPLPWidgets).observe(targetNode, { childList: true });
 }
 
 /**
- *  Checks to see if a variant is selected
- */
-
-const SKUButtonValidator = () => {
-  const SKUButton = document.getElementById(`copy-sku-button-${siteString}`);
-
-  const { style } = SKUButton;
-
-  const SKU = document.getElementsByClassName("js-selected-product-variant")[0]
-    .value;
-
-  if (SKU) {
-    navigator.clipboard.writeText(SKU);
-  } else {
-    SKUButton.innerText = "Choose Item";
-    style.color = "red";
-    style.backgroundColor = "white";
-  }
-};
-
-/**
- * Returns copy child SKU button on the PDP
+ * Creates a button to copy the full SKU of the selected variant on the PDP
  *
  * @param {string} [id] Id for HTML element.
  * @param {array} [classList] Array of desired classes to add.
@@ -372,61 +314,44 @@ const SKUButtonValidator = () => {
 
 class CopySKUButtonPDP extends HTMLElem {
   constructor(id, classList) {
-    super(
-      "button",
-      [...classList, onCompetitiveCyclist ? "buy-box__compare-btn" : null],
-      id
-    );
-  }
+    const newCopySKUButtonPDP = super("button", classList, id);
+    /** Seeing newCopySKUButtonPDP get repeated so many times hurt my eyes  */
+    const b = newCopySKUButtonPDP;
 
-  create() {
-    const newButton = super.create();
-    const { style } = newButton;
-    const backgroundColor = onCompetitiveCyclist ? "white" : "black";
-
-    newButton.setAttribute("type", "button");
-    newButton.innerHTML = "Copy SKU";
-
-    newButton.addEventListener("mouseenter", () => {
-      newButton.innerHTML = "Click to copy";
-    });
-
-    newButton.addEventListener("mouseleave", () => {
-      newButton.innerHTML = "Copy SKU";
-      newButton.removeAttribute("style");
-    });
-
-    newButton.onclick = () => {
-      style.backgroundColor = backgroundColor;
-
-      setTimeout(() => (style.backgroundColor = null), 100);
-
-      newButton.innerHTML = "Copied!";
-
-      SKUButtonValidator();
+    const reset = () => {
+      b.innerText = "Copy SKU";
+      b.classList.remove("no-variant-selected");
     };
-    return newButton;
-  }
-}
 
-/**
- * Adds container for BC PDP to keep styling in line
- *
- * @param {Elem} elem HTML Element to add inside container
- */
+    b.setAttribute("type", "button");
+    reset();
 
-class BCPDPContainer extends HTMLElem {
-  constructor(elem) {
-    super("div", ["product-buybox__action"]);
-    this.elem = elem;
-  }
+    b.addEventListener("mouseenter", () => {
+      b.innerText = "Click to copy";
+    });
 
-  create() {
-    const newBCPDPContainer = super.create();
+    b.addEventListener("mouseleave", reset);
 
-    newBCPDPContainer.appendChild(this.elem);
+    b.onclick = () => {
+      const SKU = document.getElementsByClassName(
+        "js-selected-product-variant"
+      )[0].value;
 
-    return newBCPDPContainer;
+      if (SKU) {
+        navigator.clipboard.writeText(SKU);
+        b.innerText = "Copied!";
+        b.classList.add("flash");
+
+        setTimeout(() => {
+          b.classList.remove("flash");
+        }, 100);
+      } else {
+        b.innerText = "Choose Item";
+        b.classList.add("no-variant-selected");
+      }
+    };
+
+    return newCopySKUButtonPDP;
   }
 }
 
@@ -453,50 +378,50 @@ const addOOSAlertToCCPDP = () => {
     const dropdownOption = dropdownOptions[i];
 
     const childSKU = dropdownOption.getAttribute("sku-value");
-    const stockLevel = products[childSKU].inventory;
+    const { inventory } = products[childSKU];
 
-    !stockLevel && dropdownOption.classList.add("oos-alert", "pdp");
+    !inventory && dropdownOption.classList.add("oos-alert");
   }
 };
 
 /**
- * Adds CopySKUButton elem to PDP.
+ * Adds WMS/CopySKU buttons to PDP.
  */
 
 const addPDPButtons = () => {
   const cc = onCompetitiveCyclist;
-  const id = `copy-sku-button-${cc ? "cc" : "bc"}`;
-  const productID = cc
-    ? document.querySelector("b").innerHTML
-    : document.querySelector(
-        '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
-      ).value;
+  const productID = document.querySelector(
+    '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
+  ).value;
 
   const classList = [
     "btn",
     "btn-reset",
-    ...(cc ? ["btn--secondary"] : ["product-buybox__btn"]),
+    siteString,
+    ...(cc
+      ? ["btn--secondary", "buy-box__compare-btn"]
+      : ["product-buybox__btn"]),
   ];
 
   const targetLocation = document.getElementsByClassName(
     cc ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
-  const newWMSLink = new WMSLink(productID, classList).create();
-  const newCopySKUButtonPDP = new CopySKUButtonPDP(id, classList).create();
+  const nodesToAppendPDP = [
+    new WMSLink(productID, classList),
+    new CopySKUButtonPDP("copy-sku-button", classList),
+  ];
 
-  if (cc) {
-    addOOSAlertToCCPDP();
-    targetLocation.appendChild(newWMSLink);
-    targetLocation.appendChild(newCopySKUButtonPDP);
+  /** Adds container around each node on BC to match layout */
+  if (!cc) {
+    for (let node of nodesToAppendPDP) {
+      node = new HTMLElem("div", ["product-buybox__action"]).append(node);
+    }
   } else {
-    /* Adds container to BC to mimic layout of original buttons */
-    const WMSLinkContainer = new BCPDPContainer(newWMSLink).create();
-    const copySKUContainer = new BCPDPContainer(newCopySKUButtonPDP).create();
-
-    targetLocation.appendChild(WMSLinkContainer);
-    targetLocation.appendChild(copySKUContainer);
+    addOOSAlertToCCPDP();
   }
+
+  targetLocation.append(...nodesToAppendPDP);
 };
 
 if (onPDP) {
