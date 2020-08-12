@@ -186,7 +186,10 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
 class PLPSelectorDropdown extends HTMLElem {
   constructor(productID, currentOption) {
-    const newPLPSelectorDropdown = super("ul", ["plp-dropdown-options"]);
+    const newPLPSelectorDropdown = super("ul", [
+      "plp-dropdown-options",
+      siteString,
+    ]);
 
     getItemInfo(productID).then((products) => {
       for (const product of products) {
@@ -226,11 +229,11 @@ class PLPSelectorDropdownContainer extends HTMLElem {
 
     /** Queries only once the dropdown has been clicked */
 
-    newPLPSelectorDropdownContainer.onclick = async () => {
+    newPLPSelectorDropdownContainer.onclick = () => {
       /** Element won't be created until it is requested */
       if (!requested) {
         newPLPSelectorDropdownContainer.append(
-          await new PLPSelectorDropdown(productID, currentOption)
+          new PLPSelectorDropdown(productID, currentOption)
         );
         requested = true;
       } else {
