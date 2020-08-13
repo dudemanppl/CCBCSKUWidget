@@ -4,19 +4,12 @@
   "description": "Adds button to instantly copy SKUs to clipboard on the Competitive Cyclist and Backcountry websites",
   "author": "Tommy Liao",
   "manifest_version": 2,
-  "permissions": [
-    "https://www.competitivecyclist.com/*",
-    "https://www.backcountry.com/*"
-  ],
+  "permissions": ["https://www.competitivecyclist.com/*"],
   "content_scripts": [
     {
-      "matches": [
-        "https://www.competitivecyclist.com/*",
-        "https://www.backcountry.com/*"
-      ],
+      "matches": ["https://www.competitivecyclist.com/*"],
       "css": ["CCBCSKUWidget.css"],
       "js": ["CCBCSKUWidget.js"]
     }
-  ],
-  "background": { "scripts": ["hot-reload.js"] }
+  ]
 }

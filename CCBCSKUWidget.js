@@ -304,7 +304,9 @@ if (onPLP) {
   addPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
-  const targetNode = document.getElementsByClassName("js-inner-body")[0];
+  const targetNode = document.getElementsByClassName(
+    onCompetitiveCyclist ? "js-inner-body" : "inner-body"
+  )[0];
   new MutationObserver(addPLPWidgets).observe(targetNode, { childList: true });
 }
 
