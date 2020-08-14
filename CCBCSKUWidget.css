@@ -54,6 +54,9 @@ button#copy-sku-button.no-variant-selected {
 .plp-dropdown-options.hidden {
   display: none;
 }
+#copy-sku-button {
+  transition: 0.2s;
+}
 
 #copy-sku-button.cc {
   float: right;
@@ -96,6 +99,7 @@ button#copy-sku-button.no-variant-selected {
 
 #link-to-wms-pdp {
   width: calc(50% - 5px);
+  transition: 0.2s;
 }
 
 #link-to-wms-pdp.cc {
@@ -123,8 +127,8 @@ button#copy-sku-button.no-variant-selected {
   cursor: pointer;
   box-sizing: border-box;
   border-radius: 2px;
-  background-color: white;
   border: 1px solid black;
+  background-color: white;
 }
 
 .plp-dropdown-container.bc {
@@ -149,7 +153,6 @@ button#copy-sku-button.no-variant-selected {
 
 .plp-dropdown-current-option {
   position: absolute;
-
   width: calc(90% - 50px);
   height: 34px;
   padding-left: 10px;
@@ -157,6 +160,11 @@ button#copy-sku-button.no-variant-selected {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  background-color: white;
+}
+
+.plp-dropdown-current-option.bc {
+  width: calc(90% - 46px);
 }
 
 .plp-dropdown-current-option.copy-notif {
@@ -164,7 +172,6 @@ button#copy-sku-button.no-variant-selected {
   color: white;
   font-weight: 600;
   transition: 0.15s;
-
   text-align: center;
 }
 
@@ -177,7 +184,6 @@ button#copy-sku-button.no-variant-selected {
   top: 36px;
   min-width: calc(90% - 1px);
   width: max-content;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
   border-color: #ccc;
   border-top: 0;
   max-height: 300px;
@@ -186,9 +192,13 @@ button#copy-sku-button.no-variant-selected {
   padding: 0;
 }
 
+.plp-dropdown-options.cc {
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
+}
+
 .plp-dropdown-options.bc {
-  top: 24px;
-  border: 1px solid black;
+  top: 26px;
+  border: 1px solid #949494;
 }
 
 .plp-dropdown-option-single {
@@ -196,6 +206,7 @@ button#copy-sku-button.no-variant-selected {
   line-height: 36px;
   font-size: 14px;
   margin: 0;
+  padding: 0 5px;
   white-space: nowrap;
   max-height: 36px;
   transition: 0.15s;
@@ -205,6 +216,18 @@ button#copy-sku-button.no-variant-selected {
 
 .plp-dropdown-option-single:hover {
   background-color: #ebebeb;
+}
+
+.bc-dropdown-caret {
+  fill: #555;
+  height: 26px;
+  width: 26px;
+  float: right;
+  padding: 4px;
+}
+
+.product:hover .bc-dropdown-caret {
+  fill: black;
 }
 
 /* CC PLI fix */

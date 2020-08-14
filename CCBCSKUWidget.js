@@ -70,7 +70,7 @@ const deleteAllElems = (elemClassName) => {
  * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension. Removes compare option from plp, ditto.
  */
 
-if (!onCompetitiveCyclist) {
+const fixBCPLP = () => {
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
@@ -82,6 +82,10 @@ if (!onCompetitiveCyclist) {
     style.right = "10px";
     style.bottom = "10px";
   });
+};
+
+if (!onCompetitiveCyclist) {
+  fixBCPLP();
 }
 
 /**
@@ -133,6 +137,38 @@ class WMSLink extends HTMLElem {
 }
 
 /**
+ * Creates dropdown caret for BC
+ */
+
+class BCDropdownCaret extends HTMLElem {
+  constructor() {
+    const newBCDropdownCaret = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+
+    newBCDropdownCaret.classList.add("bc-dropdown-caret");
+    newBCDropdownCaret.setAttribute("viewBox", "0 0 256 256");
+
+    const svgPath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+    svgPath.setAttribute(
+      "d",
+      "M203.628 107.72c-5.613 5.9-64.759 63.566-64.759 63.566-3.007 3.149-6.939 4.714-10.87 4.714-3.945 0-7.876-1.567-10.87-4.714 0 0-59.145-57.665-64.773-63.565-5.613-5.9-6-16.501 0-22.812 6.014-6.296 14.386-6.79 21.738 0l53.905 52.908 53.891-52.894c7.365-6.79 15.752-6.296 21.738 0 6.014 6.296 5.641 16.912 0 22.797z"
+    );
+
+    svgPath.classList.add("caret-path");
+
+    newBCDropdownCaret.append(svgPath);
+
+    return newBCDropdownCaret;
+  }
+}
+
+/**
  * Creates single dropdown option
  *
  * @param {object} product Object containing info about an item
@@ -170,7 +206,7 @@ class PLPSelectorDropdownOption extends HTMLElem {
       setTimeout(() => {
         currentOption.classList.remove("copy-notif");
         currentOption.innerHTML = variantPriceStr;
-      }, 250);
+      }, 300);
     };
 
     return newPLPSelectorDropdownOption;
@@ -203,6 +239,18 @@ class PLPSelectorDropdown extends HTMLElem {
   }
 }
 
+class PLPCurrentOption extends HTMLElem {
+  constructor() {
+    const newPLPCurrentOption = super("div", [
+      "plp-dropdown-current-option",
+      siteString,
+    ]);
+    newPLPCurrentOption.innerHTML = "Select option";
+
+    return newPLPCurrentOption;
+  }
+}
+
 /**
  * Creates container for PLP dropdown
  *
@@ -216,47 +264,56 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       siteString,
     ]);
 
-    let requested = false;
+    let selectorClicked = false;
+    let dropdownOptions;
 
-    const currentOption = new HTMLElem("div", [
-      "plp-dropdown-current-option",
-      siteString,
-    ]);
+    const closeDropdown = ({ target }) => {
+      const firstClass = target.classList[0];
+      /** If the target is within the dropout container, it already has an event listener to close it */
+      const validTarget =
+        target !== currentOption &&
+        firstClass !== "caret-path" &&
+        firstClass !== "bc-dropdown-caret";
 
-    currentOption.innerHTML = "Select options";
+      validTarget && dropdownOptions.classList.add("hidden");
+    };
+
+    const currentOption = new PLPCurrentOption();
 
     newPLPSelectorDropdownContainer.append(currentOption);
 
-    /** Queries only once the dropdown has been clicked */
+    if (!onCompetitiveCyclist) {
+      newPLPSelectorDropdownContainer.append(new BCDropdownCaret());
+    }
 
     newPLPSelectorDropdownContainer.onclick = () => {
-      /** Element won't be created until it is requested */
-      if (!requested) {
-        newPLPSelectorDropdownContainer.append(
-          new PLPSelectorDropdown(productID, currentOption)
-        );
-        requested = true;
+      /** Element won't be created until it is clicked */
+      if (!selectorClicked) {
+        dropdownOptions = new PLPSelectorDropdown(productID, currentOption);
+        newPLPSelectorDropdownContainer.append(dropdownOptions);
+        selectorClicked = true;
       } else {
-        newPLPSelectorDropdownContainer.lastChild.classList.toggle("hidden");
+        dropdownOptions.classList.toggle("hidden");
       }
 
-      /** Adds event listener when call stack is clear, seems to be buggy otherwise */
-      setTimeout(() => {
-        document.addEventListener(
-          "click",
-          ({ target }) => {
-            /** If the target is the dropdownContainer, it already has an event listener to close it */
-            if (
-              target !== newPLPSelectorDropdownContainer &&
-              target !== currentOption
-            ) {
-              newPLPSelectorDropdownContainer.lastChild.classList.add("hidden");
-            }
-          },
-          /** Removes event listener when fired once */
+      document.addEventListener(
+        "click",
+        closeDropdown,
+        /** Removes event listener when fired once */
+        { once: true }
+      );
+
+      if (!onCompetitiveCyclist) {
+        const targetNode =
+          newPLPSelectorDropdownContainer.parentElement.parentElement
+            .parentElement.parentElement;
+
+        targetNode.addEventListener(
+          "mouseleave",
+          () => dropdownOptions.classList.add("hidden"),
           { once: true }
         );
-      }, 0);
+      }
     };
 
     return newPLPSelectorDropdownContainer;
@@ -307,7 +364,10 @@ if (onPLP) {
   const targetNode = document.getElementsByClassName(
     onCompetitiveCyclist ? "js-inner-body" : "inner-body"
   )[0];
-  new MutationObserver(addPLPWidgets).observe(targetNode, { childList: true });
+  new MutationObserver(() => {
+    !onCompetitiveCyclist && fixBCPLP();
+    addPLPWidgets();
+  }).observe(targetNode, { childList: true });
 }
 
 /**
@@ -330,10 +390,6 @@ class CopySKUButtonPDP extends HTMLElem {
 
     b.setAttribute("type", "button");
     reset();
-
-    b.addEventListener("mouseenter", () => {
-      b.innerText = "Click to copy";
-    });
 
     b.addEventListener("mouseleave", reset);
 
@@ -419,7 +475,7 @@ const addPDPButtons = () => {
 
   /** Adds container around each node on BC to match layout */
   if (!cc) {
-    for (let node of nodesToAppendPDP) {
+    for (node of nodesToAppendPDP) {
       node = new HTMLElem("div", ["product-buybox__action"]).append(node);
     }
   } else {
