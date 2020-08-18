@@ -4,6 +4,9 @@ const siteString = onCompetitiveCyclist ? "cc" : "bc";
 const onPLP = document.getElementsByClassName("search-results").length;
 const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
+/** Changes icon to goat logo when on BC */
+chrome.runtime.sendMessage({ onCompetitiveCyclist });
+
 /**
  * Formats number to string with dollar sign and trailing decimals
  *
@@ -83,10 +86,6 @@ const fixBCPLP = () => {
     style.bottom = "10px";
   });
 };
-
-if (!onCompetitiveCyclist) {
-  fixBCPLP();
-}
 
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
@@ -194,18 +193,18 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
     const variantPriceStr = `${variantName} (${strToUSD(salePrice)})`;
 
-    newPLPSelectorDropdownOption.innerHTML = variantPriceStr;
+    newPLPSelectorDropdownOption.innerText = variantPriceStr;
 
     /** Sets current option shown to the selected variant, shows small notification that the item was selected */
 
     newPLPSelectorDropdownOption.onclick = () => {
       navigator.clipboard.writeText(SKU);
       currentOption.classList.add("copy-notif");
-      currentOption.innerHTML = "SKU Copied!";
+      currentOption.innerText = "SKU Copied!";
 
       setTimeout(() => {
         currentOption.classList.remove("copy-notif");
-        currentOption.innerHTML = variantPriceStr;
+        currentOption.innerText = variantPriceStr;
       }, 300);
     };
 
@@ -239,18 +238,6 @@ class PLPSelectorDropdown extends HTMLElem {
   }
 }
 
-class PLPCurrentOption extends HTMLElem {
-  constructor() {
-    const newPLPCurrentOption = super("div", [
-      "plp-dropdown-current-option",
-      siteString,
-    ]);
-    newPLPCurrentOption.innerHTML = "Select option";
-
-    return newPLPCurrentOption;
-  }
-}
-
 /**
  * Creates container for PLP dropdown
  *
@@ -278,7 +265,12 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       validTarget && dropdownOptions.classList.add("hidden");
     };
 
-    const currentOption = new PLPCurrentOption();
+    const currentOption = new HTMLElem("div", [
+      "plp-dropdown-current-option",
+      siteString,
+    ]);
+
+    currentOption.innerText = "Select option";
 
     newPLPSelectorDropdownContainer.append(currentOption);
 
@@ -358,13 +350,19 @@ const addPLPWidgets = () => {
 };
 
 if (onPLP) {
+  if (!onCompetitiveCyclist) {
+    fixBCPLP();
+  }
+
   addPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
   const targetNode = document.getElementsByClassName(
     onCompetitiveCyclist ? "js-inner-body" : "inner-body"
   )[0];
+
   new MutationObserver(() => {
+    /** Removes zoom-on-hover effect on BC */
     !onCompetitiveCyclist && fixBCPLP();
     addPLPWidgets();
   }).observe(targetNode, { childList: true });
@@ -475,7 +473,7 @@ const addPDPButtons = () => {
 
   /** Adds container around each node on BC to match layout */
   if (!cc) {
-    for (node of nodesToAppendPDP) {
+    for (let node of nodesToAppendPDP) {
       node = new HTMLElem("div", ["product-buybox__action"]).append(node);
     }
   } else {
