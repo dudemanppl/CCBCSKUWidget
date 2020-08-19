@@ -4,10 +4,11 @@
   "description": "Adds button to instantly copy SKUs to clipboard on the Competitive Cyclist and Backcountry websites",
   "author": "Tommy Liao",
   "manifest_version": 2,
-  "icons": { "128": "cc.png" },
+  "icons": { "128": "images/cc.png" },
   "page_action": {
-    "default_icon": "cc.png",
-    "default_popup": "options.html"
+    "browser_style": true,
+    "default_icon": "images/cc.png",
+    "default_popup": "src/options/options.html"
   },
   "permissions": [
     "https://www.competitivecyclist.com/*",
@@ -19,9 +20,18 @@
         "https://www.competitivecyclist.com/*",
         "https://www.backcountry.com/*"
       ],
-      "css": ["CCBCSKUWidget.css"],
-      "js": ["CCBCSKUWidget.js"]
+      "css": ["src/lib/shared.css", "src/plp/plp.css", "src/pdp/pdp.css"],
+      "js": [
+        "src/lib/index.js",
+        "src/plp/dropdown/singleDropdownOption.js",
+        "src/plp/dropdown/dropdownOptions.js",
+        "src/plp/dropdown/BCDropdownCaret.js",
+        "src/plp/dropdown/dropdownContainer.js",
+        "src/plp/index.js",
+        "src/pdp/copySKUButton.js",
+        "src/pdp/index.js"
+      ]
     }
   ],
-  "background": { "scripts": ["changeIcon.js"] }
+  "background": { "scripts": ["src/lib/changeIcon.js"] }
 }

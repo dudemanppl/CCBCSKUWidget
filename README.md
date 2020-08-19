@@ -8,7 +8,7 @@ Only tested with Chrome so far, so good luck. I'll publish it when its more poli
 
 ## Installation
 
-1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/CCBCSKUWidget.zip "link to file")**.
+1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/dist/CCBCSKUWidget.zip "link to file")**.
 2. Unzip the file.
 3. Copy "chrome://extensions/" and paste it in to your address bar.
 4. Check the box for **Developer mode** in the top right.
