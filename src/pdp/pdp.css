@@ -1,0 +1,58 @@
+#copy-sku-button.bc:hover {
+  background-color: white;
+  color: #222;
+}
+
+button#copy-sku-button.no-variant-selected {
+  background-color: white;
+  color: red;
+  border-color: red;
+}
+
+#link-to-wms-pdp.bc {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+}
+
+#copy-sku-button.cc.flash {
+  background-color: white;
+}
+
+#copy-sku-button.bc.flash,
+#link-to-wms-pdp.bc:hover {
+  background-color: black;
+}
+
+#link-to-wms-pdp.bc:hover {
+  color: white;
+}
+
+#copy-sku-button {
+  transition: 0.2s;
+}
+
+#copy-sku-button.cc {
+  float: right;
+}
+
+#copy-sku-button.bc {
+  margin-top: 6px;
+  background-color: black;
+  color: white;
+  border: 1px solid black;
+  width: 320px;
+}
+
+#link-to-wms-pdp {
+  width: calc(50% - 5px);
+  transition: 0.2s;
+}
+
+#link-to-wms-pdp.cc {
+  float: left;
+}
+
+
+
+

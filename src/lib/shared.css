@@ -1,0 +1,59 @@
+.oos-alert:before {
+  content: "OOS";
+  margin-left: 10px;
+}
+
+.oos-alert {
+  background-color: lightgray;
+}
+
+.oos-alert:before {
+  color: red;
+  float: right;
+  font-weight: 600;
+  font-size: 16px;
+  padding-right: 5px;
+}
+
+.item-unformatted .ui-productcomparison-toggle,
+.add-to-cart .js-productcomparison-toggle-wrap,
+.add-to-cart .buy-box__wishlist-btn,
+.product-buybox__actions .product-buybox__action--whislist,
+.plp-dropdown-options.hidden {
+  display: none;
+}
+
+/* CC PLI fix */
+
+.product-grid .ui-pli {
+  border-color: white;
+  padding: 10px 20px 110px;
+  border: 1px solid white;
+}
+
+/* CC PDP fix */
+
+.ui-basedropdown-option.ui-unifiedropdown-option .ui-basedropdown-option-value {
+  width: calc(100% - 35px);
+}
+
+/* BC PL enbiggener */
+
+.product.ui-product-listing .ui-pl-placeholder {
+  padding-top: 115%;
+  margin-top: 0;
+}
+
+/* BC purchase button restyling */
+
+.product-buybox.js-product-buybox .product-buybox__actions {
+  flex-wrap: wrap;
+  width: 320px;
+}
+
+.product-buybox__action .product-buybox__btn--cart {
+  width: 156px;
+  background-color: white;
+  border: 1px solid black;
+  color: #222;
+}
