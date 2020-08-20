@@ -1,9 +1,6 @@
 .plp-dropdown-container.cc:before {
   position: absolute;
 }
-.link-to-wms-plp.bc {
-  background-color: white;
-}
 
 .btn.link-to-wms-plp:hover {
   color: white;
@@ -20,6 +17,10 @@
   transition: 0.2s;
   margin-top: 10px;
   padding: 0 15px;
+}
+
+.link-to-wms-plp.bc {
+  background-color: white;
 }
 
 .btn.link-to-wms-plp.cc {
@@ -91,6 +92,7 @@
 
 .plp-dropdown-current-option.bc {
   width: calc(90% - 46px);
+  border-radius: 4px 0 0 4px;
 }
 
 .plp-dropdown-current-option.copy-notif {

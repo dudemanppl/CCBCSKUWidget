@@ -31,7 +31,7 @@ const addPLPWidgets = () => {
       ? elem.firstChild
       : elem.firstChild.childNodes[2];
 
-    targetLocation.append(newPDPWidget);
+    targetLocation !== undefined && targetLocation.append(newPDPWidget);
   });
 };
 

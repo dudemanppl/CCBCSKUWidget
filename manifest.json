@@ -7,8 +7,7 @@
   "icons": { "128": "images/cc.png" },
   "page_action": {
     "browser_style": true,
-    "default_icon": "images/cc.png",
-    "default_popup": "src/options/options.html"
+    "default_icon": "images/cc.png"
   },
   "permissions": [
     "https://www.competitivecyclist.com/*",
@@ -33,5 +32,5 @@
       ]
     }
   ],
-  "background": { "scripts": ["src/lib/changeIcon.js"] }
+  "background": { "scripts": ["hot-reload.js", "src/lib/changeIcon.js"] }
 }
