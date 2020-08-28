@@ -12,7 +12,7 @@ class CopySKUButtonPDP extends HTMLElem {
     const b = newCopySKUButtonPDP;
 
     const reset = () => {
-      b.innerText = "Copy SKU";
+      b.textContent = "Copy SKU";
       b.classList.remove("no-variant-selected");
     };
 
@@ -28,14 +28,14 @@ class CopySKUButtonPDP extends HTMLElem {
 
       if (SKU) {
         navigator.clipboard.writeText(SKU);
-        b.innerText = "Copied!";
+        b.textContent = "Copied!";
         b.classList.add("flash");
 
         setTimeout(() => {
           b.classList.remove("flash");
         }, 100);
       } else {
-        b.innerText = "Choose Item";
+        b.textContent = "Choose Item";
         b.classList.add("no-variant-selected");
       }
     };
@@ -43,4 +43,3 @@ class CopySKUButtonPDP extends HTMLElem {
     return newCopySKUButtonPDP;
   }
 }
-

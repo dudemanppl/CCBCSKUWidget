@@ -2,6 +2,7 @@
  * Returns new HTML div; the main SKU Widget container.
  *
  * @param {string} productID Seven letter string from CC/BC catalog.
+ * @param {Element} productListing PLI product listing where widget was added
  * @return {Element} SKU Widget.
  */
 

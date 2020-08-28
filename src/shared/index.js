@@ -129,7 +129,7 @@ class WMSLink extends HTMLElem {
     );
     newWMSLink.setAttribute("type", "button");
     newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
-    newWMSLink.innerText = "Go to WMS";
+    newWMSLink.textContent = "Go to WMS";
 
     return newWMSLink;
   }

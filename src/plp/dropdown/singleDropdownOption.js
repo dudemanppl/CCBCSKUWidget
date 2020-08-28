@@ -2,8 +2,8 @@
  * Creates single dropdown option
  *
  * @param {object} product Object containing info about an item
- * @param {Elem} currentOption Reference to HTML elem with the current option chosen
- * @param {Elem} productListing R
+ * @param {Element} currentOption Reference to HTML elem with the current option chosen
+ * @param {Element} productListing PLI product listing where widget was added
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
@@ -26,7 +26,7 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
     const variantPriceStr = `${variantName} (${strToUSD(salePrice)})`;
 
-    newPLPSelectorDropdownOption.innerText = variantPriceStr;
+    newPLPSelectorDropdownOption.textContent = variantPriceStr;
 
     /** Location of image on product listing */
 
@@ -43,18 +43,17 @@ class PLPSelectorDropdownOption extends HTMLElem {
       }.com${imageSrc}`;
 
       /** Changes image source if variant image changes */
-      
       if (imageSrcTarget.src !== imgSrcStr) {
         imageSrcTarget.src = imgSrcStr;
       }
 
       navigator.clipboard.writeText(SKU);
       currentOption.classList.add("copy-notif");
-      currentOption.innerText = "SKU Copied!";
+      currentOption.textContent = "SKU Copied!";
 
       setTimeout(() => {
         currentOption.classList.remove("copy-notif");
-        currentOption.innerText = variantPriceStr;
+        currentOption.textContent = variantPriceStr;
       }, 300);
     };
 

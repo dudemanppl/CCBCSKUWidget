@@ -2,6 +2,7 @@
  * Creates container for PLP dropdown
  *
  * @param {string} productID Parent SKU to query BC products REST API
+ * @param {Element} productListing PLI product listing where widget was added
  */
 
 class PLPSelectorDropdownContainer extends HTMLElem {
@@ -16,7 +17,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       siteString,
     ]);
 
-    currentOption.innerText = "Select option";
+    currentOption.textContent = "Select option";
 
     newPLPSelectorDropdownContainer.append(currentOption);
 
@@ -46,8 +47,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
         selectorClicked = true;
       }
 
-      /** Closes dropdown when mouse leaves a PLP product listing */
-
+      /** Closes dropdown when cursor leaves a PLP product listing */
       productListing.addEventListener(
         "mouseleave",
         () => dropdownOptions.classList.add("hidden"),
