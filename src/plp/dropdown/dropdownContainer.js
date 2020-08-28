@@ -29,49 +29,30 @@ class PLPSelectorDropdownContainer extends HTMLElem {
     let selectorClicked = false;
     let dropdownOptions;
 
-    /** Initializes invalid targets here so it won't be created every click */
-    const invalidTargetsToCloseDropdown = new Set([
-      newPLPSelectorDropdownContainer,
-      ...newPLPSelectorDropdownContainer.childNodes,
-    ]);
-
-    const closeDropdown = ({ target }) => {
-      if (!invalidTargetsToCloseDropdown.has(target))
-        dropdownOptions.classList.add("hidden");
-    };
-
-    newPLPSelectorDropdownContainer.onclick = () => {
+    newPLPSelectorDropdownContainer.onclick = (e) => {
+      /** Prevents PDP reroute on CC */
+      if (onCompetitiveCyclist) e.stopPropagation();
       /** Element won't be created until it is clicked */
       if (selectorClicked) {
         dropdownOptions.classList.toggle("hidden");
       } else {
-        dropdownOptions = new PLPSelectorDropdown(productID, currentOption, productListing);
+        dropdownOptions = new PLPSelectorDropdown(
+          productID,
+          currentOption,
+          productListing
+        );
+
         newPLPSelectorDropdownContainer.append(dropdownOptions);
         selectorClicked = true;
       }
 
-      /** Adds event listener when dropdown is rendered/shows up */
-      setTimeout(() => {
-        document.addEventListener(
-          "click",
-          closeDropdown,
-          /** Removes event listener when fired once */
-          { once: true }
-        );
-      }, 0);
+      /** Closes dropdown when mouse leaves a PLP product listing */
 
-      /** Closes dropdown when mouse leaves a PLP listing on BC */
-      if (!onCompetitiveCyclist) {
-        const targetNode =
-          newPLPSelectorDropdownContainer.parentElement.parentElement
-            .parentElement.parentElement;
-
-        targetNode.addEventListener(
-          "mouseleave",
-          () => dropdownOptions.classList.add("hidden"),
-          { once: true }
-        );
-      }
+      productListing.addEventListener(
+        "mouseleave",
+        () => dropdownOptions.classList.add("hidden"),
+        { once: true }
+      );
     };
 
     return newPLPSelectorDropdownContainer;

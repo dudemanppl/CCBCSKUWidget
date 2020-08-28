@@ -31,9 +31,7 @@ const addPLPWidgets = () => {
 
     const newPDPWidget = new PLPWidgetContainer(productID, productListing);
 
-    const targetLocation = onCompetitiveCyclist
-      ? productListing
-      : productListing.childNodes[2];
+    const targetLocation = productListing.childNodes[2];
 
     targetLocation.append(newPDPWidget);
   });
