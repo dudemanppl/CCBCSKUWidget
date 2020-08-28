@@ -33,7 +33,7 @@ const getItemInfo = async (productID) => {
     const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
 
     let res = await fetch(
-      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice&site=${site}`
+      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${site}`
     );
 
     res = await res.json();

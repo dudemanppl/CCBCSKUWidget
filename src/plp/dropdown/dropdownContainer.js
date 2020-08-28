@@ -5,7 +5,7 @@
  */
 
 class PLPSelectorDropdownContainer extends HTMLElem {
-  constructor(productID) {
+  constructor(productID, productListing) {
     const newPLPSelectorDropdownContainer = super("div", [
       "plp-dropdown-container",
       siteString,
@@ -45,7 +45,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       if (selectorClicked) {
         dropdownOptions.classList.toggle("hidden");
       } else {
-        dropdownOptions = new PLPSelectorDropdown(productID, currentOption);
+        dropdownOptions = new PLPSelectorDropdown(productID, currentOption, productListing);
         newPLPSelectorDropdownContainer.append(dropdownOptions);
         selectorClicked = true;
       }

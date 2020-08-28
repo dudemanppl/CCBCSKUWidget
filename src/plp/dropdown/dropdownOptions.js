@@ -6,7 +6,7 @@
  */
 
 class PLPSelectorDropdown extends HTMLElem {
-  constructor(productID, currentOption) {
+  constructor(productID, currentOption, productListing) {
     const newPLPSelectorDropdown = super("ul", [
       "plp-dropdown-options",
       siteString,
@@ -15,7 +15,7 @@ class PLPSelectorDropdown extends HTMLElem {
     getItemInfo(productID).then((products) => {
       for (const product of products) {
         newPLPSelectorDropdown.append(
-          new PLPSelectorDropdownOption(product, currentOption)
+          new PLPSelectorDropdownOption(product, currentOption, productListing)
         );
       }
     });

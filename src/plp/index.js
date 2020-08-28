@@ -6,11 +6,11 @@
  */
 
 class PLPWidgetContainer extends HTMLElem {
-  constructor(productID) {
+  constructor(productID, productListing) {
     const newPLPWidgetContainer = super("div", ["plp-widget-container"]);
 
     newPLPWidgetContainer.append(
-      new PLPSelectorDropdownContainer(productID),
+      new PLPSelectorDropdownContainer(productID, productListing),
       new WMSLink(productID, ["btn", "btn-reset"])
     );
 
@@ -24,12 +24,16 @@ class PLPWidgetContainer extends HTMLElem {
  */
 
 const addPLPWidgets = () => {
-  runOnAllElems("js-product-listing", (elem) => {
-    const productID = elem.getAttribute("data-product-id");
-    const newPDPWidget = new PLPWidgetContainer(productID);
+  runOnAllElems("js-pli-wrap", (productListing) => {
+    const productID = productListing.parentElement.getAttribute(
+      "data-product-id"
+    );
+
+    const newPDPWidget = new PLPWidgetContainer(productID, productListing);
+
     const targetLocation = onCompetitiveCyclist
-      ? elem.firstChild
-      : elem.firstChild.childNodes[2];
+      ? productListing
+      : productListing.childNodes[2];
 
     targetLocation.append(newPDPWidget);
   });
