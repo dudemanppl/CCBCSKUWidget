@@ -19,9 +19,9 @@
         "https://www.competitivecyclist.com/*",
         "https://www.backcountry.com/*"
       ],
-      "css": ["src/lib/shared.css", "src/plp/plp.css", "src/pdp/pdp.css"],
+      "css": ["src/shared/shared.css", "src/plp/plp.css", "src/pdp/pdp.css"],
       "js": [
-        "src/lib/index.js",
+        "src/shared/index.js",
         "src/plp/dropdown/singleDropdownOption.js",
         "src/plp/dropdown/dropdownOptions.js",
         "src/plp/dropdown/BCDropdownCaret.js",
@@ -32,5 +32,5 @@
       ]
     }
   ],
-  "background": { "scripts": ["hot-reload.js", "src/lib/changeIcon.js"] }
+  "background": { "scripts": ["hot-reload.js", "src/shared/changeIcon.js"] }
 }

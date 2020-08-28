@@ -11,20 +11,6 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       siteString,
     ]);
 
-    let selectorClicked = false;
-    let dropdownOptions;
-
-    const closeDropdown = ({ target }) => {
-      const firstClass = target.classList[0];
-      /** If the target is within the dropout container, it already has an event listener to close it */
-      const validTarget =
-        target !== currentOption &&
-        firstClass !== "caret-path" &&
-        firstClass !== "bc-dropdown-caret";
-
-      validTarget && dropdownOptions.classList.add("hidden");
-    };
-
     const currentOption = new HTMLElem("div", [
       "plp-dropdown-current-option",
       siteString,
@@ -34,27 +20,47 @@ class PLPSelectorDropdownContainer extends HTMLElem {
 
     newPLPSelectorDropdownContainer.append(currentOption);
 
+    /** Adds caret to BC PLP dropdown to mimic BC PDP */
     if (!onCompetitiveCyclist) {
       newPLPSelectorDropdownContainer.append(new BCDropdownCaret());
     }
 
+    /** Initializes for future reference */
+    let selectorClicked = false;
+    let dropdownOptions;
+
+    /** Initializes invalid targets here so it won't be created every click */
+    const invalidTargetsToCloseDropdown = new Set([
+      newPLPSelectorDropdownContainer,
+      ...newPLPSelectorDropdownContainer.childNodes,
+    ]);
+
+    const closeDropdown = ({ target }) => {
+      if (!invalidTargetsToCloseDropdown.has(target))
+        dropdownOptions.classList.add("hidden");
+    };
+
     newPLPSelectorDropdownContainer.onclick = () => {
       /** Element won't be created until it is clicked */
-      if (!selectorClicked) {
+      if (selectorClicked) {
+        dropdownOptions.classList.toggle("hidden");
+      } else {
         dropdownOptions = new PLPSelectorDropdown(productID, currentOption);
         newPLPSelectorDropdownContainer.append(dropdownOptions);
         selectorClicked = true;
-      } else {
-        dropdownOptions.classList.toggle("hidden");
       }
 
-      document.addEventListener(
-        "click",
-        closeDropdown,
-        /** Removes event listener when fired once */
-        { once: true }
-      );
+      /** Adds event listener when dropdown is rendered/shows up */
+      setTimeout(() => {
+        document.addEventListener(
+          "click",
+          closeDropdown,
+          /** Removes event listener when fired once */
+          { once: true }
+        );
+      }, 0);
 
+      /** Closes dropdown when mouse leaves a PLP listing on BC */
       if (!onCompetitiveCyclist) {
         const targetNode =
           newPLPSelectorDropdownContainer.parentElement.parentElement
