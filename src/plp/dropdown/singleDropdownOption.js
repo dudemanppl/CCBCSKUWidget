@@ -7,7 +7,7 @@
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(product, currentOption, productListing) {
+  constructor(product, currentOption, productListingImg) {
     const newPLPSelectorDropdownOption = super("li", [
       "plp-dropdown-option-single",
     ]);
@@ -28,13 +28,6 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
     newPLPSelectorDropdownOption.textContent = variantPriceStr;
 
-    /** Location of image on product listing */
-
-    let imageSrcTarget = productListing.childNodes[2].firstChild.firstChild;
-
-    if (!onCompetitiveCyclist)
-      imageSrcTarget = imageSrcTarget.firstChild.firstChild;
-
     /** Sets current option shown to the selected variant, shows small notification that the item was selected */
 
     newPLPSelectorDropdownOption.onclick = () => {
@@ -43,8 +36,8 @@ class PLPSelectorDropdownOption extends HTMLElem {
       }.com${imageSrc}`;
 
       /** Changes image source if variant image changes */
-      if (imageSrcTarget.src !== imgSrcStr) {
-        imageSrcTarget.src = imgSrcStr;
+      if (productListingImg.src !== imgSrcStr) {
+        productListingImg.src = imgSrcStr;
       }
 
       navigator.clipboard.writeText(SKU);

@@ -40,7 +40,7 @@ class PLPSelectorDropdownContainer extends HTMLElem {
         dropdownOptions = new PLPSelectorDropdown(
           productID,
           currentOption,
-          productListing
+          productListing.getElementsByTagName("img")[0]
         );
 
         newPLPSelectorDropdownContainer.append(dropdownOptions);

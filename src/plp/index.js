@@ -30,9 +30,8 @@ const addPLPWidgets = () => {
       "data-product-id"
     );
 
-    const newPDPWidget = new PLPWidgetContainer(productID, productListing);
-
     const targetLocation = productListing.childNodes[2];
+    const newPDPWidget = new PLPWidgetContainer(productID, targetLocation);
 
     targetLocation.append(newPDPWidget);
   });
