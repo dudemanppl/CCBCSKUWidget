@@ -28,7 +28,7 @@ const addPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
     fixBCPLP();
   }
-  runOnAllElems(".js-pli-wrap", (productListing) => {
+  runOnAllElems("js-pli-wrap", (productListing) => {
     const productID = productListing.parentElement.getAttribute(
       "data-product-id"
     );

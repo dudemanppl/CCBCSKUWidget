@@ -47,16 +47,26 @@ const getItemInfo = async (productID) => {
 /**
  * Runs a function on each element of a given class.
  *
- * @param {string} querySelector HTML element class.
+ * @param {string} elemClassName HTML element class.
  * @param {function} func Function to be run on each element.
  */
 
-const runOnAllElems = (querySelector, func) => {
-  const elems = document.querySelectorAll(querySelector);
+const runOnAllElems = (elemClassName, func) => {
+  const elems = document.getElementsByClassName(elemClassName);
 
   for (const elem of [...elems]) {
     func(elem);
   }
+};
+
+/**
+ * Deletes all elements of a given class.
+ *
+ * @param {string} elemClassName HTML element class.
+ */
+
+const deleteAllElems = (elemClassName) => {
+  runOnAllElems(elemClassName, (elem) => elem.remove());
 };
 
 /**
@@ -66,23 +76,18 @@ const runOnAllElems = (querySelector, func) => {
 const fixBCPLP = () => {
   const nice = performance.now();
 
-  runOnAllElems(
-    ".js-pl-focus-trigger, .js-pl-color-thumbs, .js-pl-sizes-wrap, .js-pl-expandable",
-    (elem) => {
-      if (elem.classList[1] === "js-pl-expandable") {
-        const { style } = elem;
+  deleteAllElems("js-pl-focus-trigger");
+  deleteAllElems("js-pl-color-thumbs");
+  deleteAllElems("js-pl-sizes-wrap");
+  runOnAllElems("js-pl-expandable", (elem) => {
+    const { style } = elem;
 
-        style.top = "10px";
-        style.left = "10px";
-        style.right = "10px";
-        style.bottom = "10px";
-      } else {
-        elem.remove();
-      }
-    }
-  );
+    style.top = "10px";
+    style.left = "10px";
+    style.right = "10px";
+    style.bottom = "10px";
+  });
   console.log(performance.now() - nice);
-
 };
 
 /**
