@@ -32,5 +32,5 @@
       ]
     }
   ],
-  "background": { "scripts": ["hot-reload.js", "src/shared/changeIcon.js"] }
+  "background": { "scripts": ["src/shared/changeIcon.js"] }
 }

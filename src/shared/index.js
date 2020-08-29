@@ -74,8 +74,6 @@ const deleteAllElems = (elemClassName) => {
  */
 
 const fixBCPLP = () => {
-  const nice = performance.now();
-
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
@@ -87,7 +85,6 @@ const fixBCPLP = () => {
     style.right = "10px";
     style.bottom = "10px";
   });
-  console.log(performance.now() - nice);
 };
 
 /**
