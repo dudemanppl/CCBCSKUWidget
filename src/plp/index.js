@@ -25,7 +25,10 @@ class PLPWidgetContainer extends HTMLElem {
  */
 
 const addPLPWidgets = () => {
-  runOnAllElems("js-pli-wrap", (productListing) => {
+  if (!onCompetitiveCyclist) {
+    fixBCPLP();
+  }
+  runOnAllElems(".js-pli-wrap", (productListing) => {
     const productID = productListing.parentElement.getAttribute(
       "data-product-id"
     );
@@ -38,10 +41,6 @@ const addPLPWidgets = () => {
 };
 
 if (onPLP) {
-  if (!onCompetitiveCyclist) {
-    fixBCPLP();
-  }
-
   addPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
@@ -50,8 +49,9 @@ if (onPLP) {
   )[0];
 
   new MutationObserver(() => {
+    const nice = performance.now();
+
     /** Removes zoom-on-hover effect on BC */
-    !onCompetitiveCyclist && fixBCPLP();
     addPLPWidgets();
   }).observe(targetNode, { childList: true });
 }
