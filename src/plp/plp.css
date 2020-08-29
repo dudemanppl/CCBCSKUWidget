@@ -142,6 +142,11 @@
   color: black;
 }
 
+.plp-dropdown-option-single.curr-selected-option {
+  background-color: #cecece4f;
+  font-weight: 600;
+}
+
 .plp-dropdown-option-single:hover {
   background-color: #ebebeb;
 }

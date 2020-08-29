@@ -12,21 +12,41 @@ class PLPSelectorDropdown extends HTMLElem {
       siteString,
     ]);
 
+    let currentlySelectedOptionIdx;
+
+    /**
+     * @param {number} selectedIdx Index of currently selected option
+     */
+    
+    const highlightCurrSelectedOption = (selectedIdx) => {
+      const currOption = () =>
+        newPLPSelectorDropdown.childNodes[currentlySelectedOptionIdx];
+
+      if (currentlySelectedOptionIdx >= 0) {
+        currOption().classList.toggle("curr-selected-option");
+      }
+      currentlySelectedOptionIdx = selectedIdx;
+
+      currOption().classList.toggle("curr-selected-option");
+    };
+
     const productListingImg = productListing.getElementsByTagName("img")[0];
     const productListingPrice = productListing.getElementsByClassName(
       "js-pl-pricing"
     )[0];
 
-
-
     getItemInfo(productID).then((products) => {
-      for (const product of products) {
+      for (let i = 0; i < products.length; i += 1) {
+        const product = products[i];
+
         newPLPSelectorDropdown.append(
           new PLPSelectorDropdownOption(
             product,
             currentOption,
             productListingImg,
-            productListingPrice
+            productListingPrice,
+            i,
+            highlightCurrSelectedOption
           )
         );
       }

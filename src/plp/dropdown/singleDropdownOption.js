@@ -8,64 +8,75 @@
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(product, currentOption, productListingImg, productListingPrice) {
-    const newPLPSelectorDropdownOption = super("li", [
-      "plp-dropdown-option-single",
-    ]);
-
-    const {
+  constructor(
+    {
       salePrice,
       id: SKU,
       availability: { stockLevel },
       title: variantName,
       image: { url: imageSrc },
-    } = product;
+    },
+    currentOption,
+    productListingImg,
+    productListingPrice,
+    idx,
+    highlightCurrSelectedOption
+  ) {
+    const priceStr = strToUSD(salePrice);
+    const variantPriceStr = `${variantName} (${priceStr})`;
+
+    const newPLPSelectorDropdownOption = super(
+      "li",
+      ["plp-dropdown-option-single"],
+      null,
+      variantPriceStr
+    );
 
     /** Adds OOS alert as necessary*/
 
     if (!stockLevel) newPLPSelectorDropdownOption.classList.add("oos-alert");
 
-    const priceStr = strToUSD(salePrice);
+    const newImgSource = window.location.origin + imageSrc;
 
-    const variantPriceStr = `${variantName} (${priceStr})`;
-
-    newPLPSelectorDropdownOption.textContent = variantPriceStr;
-
-    const imgSrcStr = `https://content.${
-      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
-    }.com${imageSrc}`;
-
-    /** Sets current option shown to the selected variant, shows small notification that the item was selected */
+    newPLPSelectorDropdownOption.addEventListener("mouseenter", () => {
+      /** Changes image source if variant image changes */
+      if (productListingImg.src !== newImgSource) {
+        productListingImg.src = newImgSource;
+      }
+    });
 
     newPLPSelectorDropdownOption.onclick = () => {
-      /** Changes image source if variant image changes */
-      if (productListingImg.src !== imgSrcStr) {
-        productListingImg.src = imgSrcStr;
-      }
+      highlightCurrSelectedOption(idx);
       /** Changes pricing shown if variant pricing changes */
       if (productListingPrice.firstChild.textContent !== priceStr) {
-        while (productListingPrice.lastChild)
+        /** Removes current elements related to price */
+        while (productListingPrice.lastChild) {
           productListingPrice.lastChild.remove();
+        }
 
-        const pricingSpan = new HTMLElem("span", [
-          "ui-pl-pricing__high-price",
-          "ui-pl-pricing--price-retail",
-          "js-item-price-high",
-          "qa-item-price-high",
-        ]);
+        const priceElem = new HTMLElem(
+          "span",
+          [
+            "ui-pl-pricing__high-price",
+            "ui-pl-pricing--price-retail",
+            "js-item-price-high",
+            "qa-item-price-high",
+          ],
+          null,
+          priceStr
+        );
 
-        pricingSpan.textContent = priceStr;
-
-        productListingPrice.appendChild(pricingSpan);
+        productListingPrice.append(priceElem);
       }
 
       /** Copies SKU to clipboard */
       navigator.clipboard.writeText(SKU);
-      currentOption.classList.add("copy-notif");
+      /** Shows short notification of copy */
+      currentOption.classList.toggle("copy-notif");
       currentOption.textContent = "SKU Copied!";
 
       setTimeout(() => {
-        currentOption.classList.remove("copy-notif");
+        currentOption.classList.toggle("copy-notif");
         currentOption.textContent = variantPriceStr;
       }, 300);
     };

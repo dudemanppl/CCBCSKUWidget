@@ -12,12 +12,12 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       siteString,
     ]);
 
-    const currentOption = new HTMLElem("div", [
-      "plp-dropdown-current-option",
-      siteString,
-    ]);
-
-    currentOption.textContent = "Select option";
+    const currentOption = new HTMLElem(
+      "div",
+      ["plp-dropdown-current-option", siteString],
+      null,
+      "Select option"
+    );
 
     newPLPSelectorDropdownContainer.append(currentOption);
 
@@ -26,17 +26,17 @@ class PLPSelectorDropdownContainer extends HTMLElem {
       newPLPSelectorDropdownContainer.append(new BCDropdownCaret());
     }
 
-    /** Initializes for future reference */
     let selectorClicked = false;
     let dropdownOptions;
 
     newPLPSelectorDropdownContainer.onclick = (e) => {
       /** Prevents PDP reroute on CC */
       if (onCompetitiveCyclist) e.stopPropagation();
-      /** Element won't be created until it is clicked */
+      
       if (selectorClicked) {
         dropdownOptions.classList.toggle("hidden");
       } else {
+        /** Element won't be created until it is clicked */
         dropdownOptions = new PLPSelectorDropdown(
           productID,
           currentOption,

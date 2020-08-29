@@ -4,7 +4,7 @@
 
 Browser extension made for use on the Competitive Cyclist and Backcountry websites to be able to quickly copy item SKUs to the clipboard.
 
-Only tested with Chrome so far, so good luck. I'll publish it when its more polished. Email me at tliao@backcountry.com if you have any concerns.
+Only tested with Chrome so far, so good luck. I'll publish it when its more polished. Email me at tommyliao340@gmail.com if you have any concerns.
 
 ## Installation
 

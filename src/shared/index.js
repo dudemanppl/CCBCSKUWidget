@@ -97,7 +97,7 @@ const fixBCPLP = () => {
  */
 
 class HTMLElem {
-  constructor(tagName, classList, id) {
+  constructor(tagName, classList, id, textContent) {
     const newHTMLElem = document.createElement(tagName);
 
     if (classList) {
@@ -106,6 +106,10 @@ class HTMLElem {
 
     if (id) {
       newHTMLElem.id = id;
+    }
+
+    if (textContent) {
+      newHTMLElem.textContent = textContent;
     }
 
     return newHTMLElem;
