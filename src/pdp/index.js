@@ -23,6 +23,7 @@ const addOOSAlertToCCPDP = () => {
     const childSKU = dropdownOption.getAttribute("sku-value");
     const { inventory } = products[childSKU];
 
+    /** When item has no inventory, add OOS alert */
     !inventory && dropdownOption.classList.add("oos-alert");
   }
 };
@@ -55,13 +56,13 @@ const addPDPButtons = () => {
     new CopySKUButtonPDP("copy-sku-button", classList),
   ];
 
-  /** Adds container around each node on BC to match layout */
-  if (!cc) {
+  if (cc) {
+    addOOSAlertToCCPDP();
+  } else {
+    /** Adds container around each node on BC to match layout */
     for (let node of nodesToAppendPDP) {
       node = new HTMLElem("div", ["product-buybox__action"]).append(node);
     }
-  } else {
-    addOOSAlertToCCPDP();
   }
 
   targetLocation.append(...nodesToAppendPDP);
