@@ -12,10 +12,22 @@ class PLPSelectorDropdown extends HTMLElem {
       siteString,
     ]);
 
+    const productListingImg = productListing.getElementsByTagName("img")[0];
+    const productListingPrice = productListing.getElementsByClassName(
+      "js-pl-pricing"
+    )[0];
+
+
+
     getItemInfo(productID).then((products) => {
       for (const product of products) {
         newPLPSelectorDropdown.append(
-          new PLPSelectorDropdownOption(product, currentOption, productListing)
+          new PLPSelectorDropdownOption(
+            product,
+            currentOption,
+            productListingImg,
+            productListingPrice
+          )
         );
       }
     });
