@@ -1,18 +1,12 @@
-.oos-alert:before {
-  content: "OOS";
-  margin-left: 10px;
-}
-
 .oos-alert {
   background-color: lightgray;
 }
 
-.oos-alert:before {
+.oos-alert::before {
+  content: "OOS";
   color: red;
   float: right;
   font-weight: 600;
-  font-size: 16px;
-  padding-right: 5px;
 }
 
 .item-unformatted .ui-productcomparison-toggle,

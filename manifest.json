@@ -1,7 +1,7 @@
 {
   "name": "CC/BC SKU Widget",
   "version": "1.2",
-  "description": "Adds button to instantly copy SKUs to clipboard on the Competitive Cyclist and Backcountry websites",
+  "description": "Instantly copy SKUs and check stock on the Competitive Cyclist and Backcountry websites",
   "author": "Tommy Liao",
   "manifest_version": 2,
   "icons": { "128": "images/cc.png" },

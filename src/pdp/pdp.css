@@ -9,7 +9,7 @@ button#copy-sku-button.no-variant-selected {
   border-color: red;
 }
 
-#link-to-wms-pdp.bc {
+.link-to-wms.pdp.bc {
   background-color: white;
   color: black;
   border: 1px solid black;
@@ -20,11 +20,11 @@ button#copy-sku-button.no-variant-selected {
 }
 
 #copy-sku-button.bc.flash,
-#link-to-wms-pdp.bc:hover {
+.link-to-wms.pdp.bc:hover {
   background-color: black;
 }
 
-#link-to-wms-pdp.bc:hover {
+.link-to-wms.pdp.bc:hover {
   color: white;
 }
 
@@ -44,15 +44,11 @@ button#copy-sku-button.no-variant-selected {
   width: 320px;
 }
 
-#link-to-wms-pdp {
+.link-to-wms.pdp {
   width: calc(50% - 5px);
   transition: 0.2s;
 }
 
-#link-to-wms-pdp.cc {
+.link-to-wms.pdp.cc {
   float: left;
 }
-
-
-
-

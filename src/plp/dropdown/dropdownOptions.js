@@ -1,7 +1,7 @@
 /**
  * Creates variant selector dropdown on PLP with price and stock information
  *
- * @param {string} productID Parent SKU to query BC products REST API
+ * @param {string} productID Parent SKU for item from CC/BC catalog
  * @param {Element} productListing PLI product listing where widget was added
  */
 
@@ -17,17 +17,20 @@ class PLPSelectorDropdown extends HTMLElem {
     /**
      * @param {number} selectedIdx Index of currently selected option
      */
-    
+
     const highlightCurrSelectedOption = (selectedIdx) => {
-      const currOption = () =>
-        newPLPSelectorDropdown.childNodes[currentlySelectedOptionIdx];
+      const toggleCurrOptionClass = () => {
+        newPLPSelectorDropdown.childNodes[
+          currentlySelectedOptionIdx
+        ].classList.toggle("curr-selected-option");
+      };
 
       if (currentlySelectedOptionIdx >= 0) {
-        currOption().classList.toggle("curr-selected-option");
+        toggleCurrOptionClass();
       }
       currentlySelectedOptionIdx = selectedIdx;
 
-      currOption().classList.toggle("curr-selected-option");
+      toggleCurrOptionClass();
     };
 
     const productListingImg = productListing.getElementsByTagName("img")[0];
@@ -41,12 +44,21 @@ class PLPSelectorDropdown extends HTMLElem {
 
         newPLPSelectorDropdown.append(
           new PLPSelectorDropdownOption(
-            product,
+            {
+              price: new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+              }).format(product.salePrice),
+              SKU: product.ID,
+              outOfStock: !product.availability.stockLevel,
+              variant: product.title,
+              imageSrc: product.image.url,
+            },
             currentOption,
             productListingImg,
             productListingPrice,
-            i,
-            highlightCurrSelectedOption
+            () => highlightCurrSelectedOption(i)
           )
         );
       }

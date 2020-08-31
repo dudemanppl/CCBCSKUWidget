@@ -2,7 +2,7 @@
  * Creates dropdown caret for BC
  */
 
-class BCDropdownCaret extends HTMLElem {
+class BCDropdownCaret {
   constructor() {
     const newBCDropdownCaret = document.createElementNS(
       "http://www.w3.org/2000/svg",

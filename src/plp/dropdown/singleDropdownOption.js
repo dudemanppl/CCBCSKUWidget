@@ -1,72 +1,69 @@
 /**
  * Creates single dropdown option
  *
- * @param {object} product Object containing info about an item
+ * @param {Object} product Object containing info about an item
+ * @param {string} product.price Sale price of an item
+ * @param {string} product.SKU Child SKU of an item
+ * @param {boolean} product.outOfStock Whether the item is out of stock or not
+ * @param {string} product.variant Name of the variant of the item
+ * @param {string} product.imageSrc URL of the source of the image of the item
  * @param {Element} currentOption Reference to HTML elem with the current option chosen
  * @param {Element} productListingImg Reference to image of current product listing
  * @param {Element} productListingPrice Reference to the element with pricing information
+ * @param {function} highlightCurrSelectedOption Function to change the highlighting of the currently selected variant
  */
 
 class PLPSelectorDropdownOption extends HTMLElem {
   constructor(
-    {
-      salePrice,
-      id: SKU,
-      availability: { stockLevel },
-      title: variantName,
-      image: { url: imageSrc },
-    },
+    { price, SKU, outOfStock, variant, imageSrc },
     currentOption,
     productListingImg,
     productListingPrice,
-    idx,
     highlightCurrSelectedOption
   ) {
-    const priceStr = strToUSD(salePrice);
-    const variantPriceStr = `${variantName} (${priceStr})`;
-
     const newPLPSelectorDropdownOption = super(
       "li",
       ["plp-dropdown-option-single"],
       null,
-      variantPriceStr
+      `${variant} (${price})`
     );
 
     /** Adds OOS alert as necessary*/
 
-    if (!stockLevel) newPLPSelectorDropdownOption.classList.add("oos-alert");
+    if (outOfStock) newPLPSelectorDropdownOption.classList.add("oos-alert");
 
-    const newImgSource = window.location.origin + imageSrc;
+    const newImgSource = `https://content.${
+      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
+    }.com${imageSrc}`;
 
-    newPLPSelectorDropdownOption.addEventListener("mouseenter", () => {
+    newPLPSelectorDropdownOption.onmouseenter = () => {
       /** Changes image source if variant image changes */
       if (productListingImg.src !== newImgSource) {
         productListingImg.src = newImgSource;
       }
-    });
+    };
 
     newPLPSelectorDropdownOption.onclick = () => {
-      highlightCurrSelectedOption(idx);
-      /** Changes pricing shown if variant pricing changes */
-      if (productListingPrice.firstChild.textContent !== priceStr) {
+      highlightCurrSelectedOption();
+      /** Updates pricing shown if variant pricing changes */
+      if (productListingPrice.firstChild.textContent !== price) {
         /** Removes current elements related to price */
         while (productListingPrice.lastChild) {
           productListingPrice.lastChild.remove();
         }
-
-        const priceElem = new HTMLElem(
-          "span",
-          [
-            "ui-pl-pricing__high-price",
-            "ui-pl-pricing--price-retail",
-            "js-item-price-high",
-            "qa-item-price-high",
-          ],
-          null,
-          priceStr
+        productListingPrice.append(
+          new HTMLElem(
+            "span",
+            [
+              "ui-pl-pricing__high-price",
+              "ui-pl-pricing--price-retail",
+              "js-item-price-high",
+              "qa-item-price-high",
+            ],
+            null,
+            price
+          )
         );
-
-        productListingPrice.append(priceElem);
       }
 
       /** Copies SKU to clipboard */
@@ -77,7 +74,7 @@ class PLPSelectorDropdownOption extends HTMLElem {
 
       setTimeout(() => {
         currentOption.classList.toggle("copy-notif");
-        currentOption.textContent = variantPriceStr;
+        currentOption.textContent = variant;
       }, 300);
     };
 

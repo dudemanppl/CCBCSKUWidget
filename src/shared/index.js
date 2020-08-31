@@ -8,32 +8,19 @@ const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 chrome.runtime.sendMessage({ onCompetitiveCyclist });
 
 /**
- * Formats number to string with dollar sign and trailing decimals
+ * Sends request to BC API, returns array with information about given product
  *
- * @param {number} num Number to be formatted in to string
- */
-
-const strToUSD = (num) => {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 2,
-  }).format(num);
-};
-
-/**
- * Sends request to BC API, returns obj with information about given product
- *
- * @param {string} productID Product ID to look up item.
- * @return {array} Array of objects with item info.
+ * @async
+ * @param {string} productID Product ID to look up item
+ * @return {array} Array of objects with item info
  */
 
 const getItemInfo = async (productID) => {
   try {
-    const site = onCompetitiveCyclist ? "competitivecyclist" : "bcs";
-
     let res = await fetch(
-      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${site}`
+      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
+        onCompetitiveCyclist ? "competitivecyclist" : "bcs"
+      }`
     );
 
     res = await res.json();
@@ -45,13 +32,13 @@ const getItemInfo = async (productID) => {
 };
 
 /**
- * Runs a function on each element of a given class.
+ * Runs a function on each element of a given class
  *
- * @param {string} elemClassName HTML element class.
- * @param {function} func Function to be run on each element.
+ * @param {string} elemClassName HTML element class
+ * @callback func
  */
 
-const runOnAllElems = (elemClassName, func) => {
+const runOnAllElemsofClass = (elemClassName, func) => {
   const elems = document.getElementsByClassName(elemClassName);
 
   for (const elem of [...elems]) {
@@ -60,24 +47,24 @@ const runOnAllElems = (elemClassName, func) => {
 };
 
 /**
- * Deletes all elements of a given class.
+ * Deletes all elements of a given class
  *
- * @param {string} elemClassName HTML element class.
+ * @param {string} elemClassName HTML element class
  */
 
 const deleteAllElems = (elemClassName) => {
-  runOnAllElems(elemClassName, (elem) => elem.remove());
+  runOnAllElemsofClass(elemClassName, (elem) => elem.remove());
 };
 
 /**
- * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension. Removes compare option from plp, ditto.
+ * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension. Removes compare option from plp, ditto
  */
 
 const fixBCPLP = () => {
   deleteAllElems("js-pl-focus-trigger");
   deleteAllElems("js-pl-color-thumbs");
   deleteAllElems("js-pl-sizes-wrap");
-  runOnAllElems("js-pl-expandable", (elem) => {
+  runOnAllElemsofClass("js-pl-expandable", (elem) => {
     const { style } = elem;
 
     style.top = "10px";
@@ -90,10 +77,10 @@ const fixBCPLP = () => {
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
- * @param {string} tagName HTML tag name.
- * @param {array} [classList] Array of desired classes to add.
- * @param {string} [id] Id for HTML element.
- * @return {Element} New HTML element with tag name.
+ * @param {string} tagName HTML tag name
+ * @param {?array} [classList] Array of desired classes to add.
+ * @param {?string} [id] Id for HTML element
+ * @param {?string} [textContent] Text content inside new element
  */
 
 class HTMLElem {
@@ -117,23 +104,32 @@ class HTMLElem {
 }
 
 /**
- * Adds button that links to WMS inventory page of desired product ID
+ * Creates a button that links to WMS inventory page of desired product ID
  *
- * @param {string} productID Product ID to check in WMS
- * @param {array} classList Classes to be added to the link
+ * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
 class WMSLink extends HTMLElem {
-  constructor(productID, classList) {
-    const link = "link-to-wms-";
+  constructor(productID) {
     const newWMSLink = super(
       "a",
-      [...(onPLP ? [link + "plp"] : []), siteString, ...classList],
-      onPDP && link + "pdp"
+      [
+        ...(onPDP
+          ? [
+              "pdp",
+              onCompetitiveCyclist ? "btn--secondary" : "product-buybox__btn",
+            ]
+          : ["plp"]),
+        "link-to-wms",
+        "btn",
+        "btn-reset",
+        siteString,
+      ],
+      null,
+      "Go to WMS"
     );
     newWMSLink.setAttribute("type", "button");
     newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
-    newWMSLink.textContent = "Go to WMS";
 
     return newWMSLink;
   }

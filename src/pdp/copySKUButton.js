@@ -6,37 +6,44 @@
  */
 
 class CopySKUButtonPDP extends HTMLElem {
-  constructor(id, classList) {
-    const newCopySKUButtonPDP = super("button", classList, id);
-    /** Seeing newCopySKUButtonPDP get repeated so many times hurt my eyes  */
-    const b = newCopySKUButtonPDP;
+  constructor() {
+    const newCopySKUButtonPDP = super(
+      "button",
+      [
+        ...(onCompetitiveCyclist
+          ? ["btn--secondary", "buy-box__compare-btn"]
+          : ["product-buybox__btn"]),
+        "btn",
+        "btn-reset",
+        siteString,
+      ],
+      "copy-sku-button",
+      "Copy SKU"
+    );
 
-    const reset = () => {
-      b.textContent = "Copy SKU";
-      b.classList.remove("no-variant-selected");
+    newCopySKUButtonPDP.setAttribute("type", "button");
+
+    newCopySKUButtonPDP.onmouseleave = () => {
+      this.textContent = "Copy SKU";
+      this.classList.remove("no-variant-selected");
     };
 
-    b.setAttribute("type", "button");
-    reset();
-
-    b.addEventListener("mouseleave", reset);
-
-    b.onclick = () => {
+    newCopySKUButtonPDP.onclick = () => {
       const SKU = document.getElementsByClassName(
         "js-selected-product-variant"
       )[0].value;
 
       if (SKU) {
         navigator.clipboard.writeText(SKU);
-        b.textContent = "Copied!";
-        b.classList.add("flash");
+        this.textContent = "Copied!";
+        this.classList.add("flash");
 
         setTimeout(() => {
-          b.classList.remove("flash");
+          this.classList.remove("flash");
         }, 100);
       } else {
-        b.textContent = "Choose Item";
-        b.classList.add("no-variant-selected");
+        this.textContent = "Choose Item";
+        this.classList.add("no-variant-selected");
       }
     };
 
