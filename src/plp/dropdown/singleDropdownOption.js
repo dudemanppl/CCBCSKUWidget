@@ -7,6 +7,7 @@
  * @param {boolean} product.outOfStock Whether the item is out of stock or not
  * @param {string} product.variant Name of the variant of the item
  * @param {string} product.imageSrc URL of the source of the image of the item
+ * @param {boolean} variantSelected Boolean of whether or not an variant has been selected from the current dropdown
  * @param {Element} currentOption Reference to HTML elem with the current option chosen
  * @param {Element} productListingImg Reference to image of current product listing
  * @param {Element} productListingPrice Reference to the element with pricing information
@@ -16,6 +17,7 @@
 class PLPSelectorDropdownOption extends HTMLElem {
   constructor(
     { price, SKU, outOfStock, variant, imageSrc },
+    props,
     currentOption,
     productListingImg,
     productListingPrice,
@@ -47,23 +49,28 @@ class PLPSelectorDropdownOption extends HTMLElem {
       highlightCurrSelectedOption();
       /** Updates pricing shown if variant pricing changes */
       if (productListingPrice.firstChild.textContent !== price) {
-        /** Removes current elements related to price */
-        while (productListingPrice.lastChild) {
-          productListingPrice.lastChild.remove();
+        /** Removes current elements related to price if variant has not been selected yet */
+        if (!props.variantSelected) {
+          while (productListingPrice.lastChild) {
+            productListingPrice.lastChild.remove();
+          }
+          productListingPrice.append(
+            new HTMLElem(
+              "span",
+              [
+                "ui-pl-pricing__high-price",
+                "ui-pl-pricing--price-retail",
+                "js-item-price-high",
+                "qa-item-price-high",
+              ],
+              null,
+              price
+            )
+          );
+          props.variantSelected = true;
+        } else {
+          productListingPrice.firstChild.textContent = price;
         }
-        productListingPrice.append(
-          new HTMLElem(
-            "span",
-            [
-              "ui-pl-pricing__high-price",
-              "ui-pl-pricing--price-retail",
-              "js-item-price-high",
-              "qa-item-price-high",
-            ],
-            null,
-            price
-          )
-        );
       }
 
       /** Copies SKU to clipboard */

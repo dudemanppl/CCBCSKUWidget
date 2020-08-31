@@ -11,7 +11,7 @@ class PLPSelectorDropdown extends HTMLElem {
       "plp-dropdown-options",
       siteString,
     ]);
-
+    const state = { variantSelected: false };
     let currentlySelectedOptionIdx;
 
     /**
@@ -55,6 +55,7 @@ class PLPSelectorDropdown extends HTMLElem {
               variant: product.title,
               imageSrc: product.image.url,
             },
+            state,
             currentOption,
             productListingImg,
             productListingPrice,
