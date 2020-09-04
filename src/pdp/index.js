@@ -3,19 +3,7 @@
  */
 
 const addOOSAlertToCCPDP = () => {
-  const scriptToInject = `
-    for (const dropdownOption of document.getElementsByClassName(
-      "js-unifiedropdown-option"
-    )) {
-      const SKU = dropdownOption.getAttribute("sku-value");
-
-      /** Adds OOS alert as necessary */
-      if (SKU) {
-        !BC.product.skusCollection[SKU].inventory &&
-          dropdownOption.classList.add("oos-alert");
-      }
-    }
-  `;
+  const scriptToInject = `for(const a of document.getElementsByClassName("js-unifiedropdown-option")){const b=a.getAttribute("sku-value");b&&!BC.product.skusCollection[b].inventory&&a.classList.add("oos-alert")}`;
   const scriptElem = new HTMLElem("script", null, null, scriptToInject);
 
   document.head.append(scriptElem);

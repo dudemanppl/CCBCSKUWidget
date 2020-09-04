@@ -1,6 +1,6 @@
 {
   "name": "CC/BC SKU Widget",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Instantly copy SKUs and check stock on the Competitive Cyclist and Backcountry websites",
   "author": "Tommy Liao",
   "manifest_version": 2,
@@ -19,18 +19,9 @@
         "https://www.competitivecyclist.com/*",
         "https://www.backcountry.com/*"
       ],
-      "css": ["src/shared/shared.css", "src/plp/plp.css", "src/pdp/pdp.css"],
-      "js": [
-        "src/shared/index.js",
-        "src/plp/dropdown/singleDropdownOption.js",
-        "src/plp/dropdown/dropdownOptions.js",
-        "src/plp/dropdown/BCDropdownCaret.js",
-        "src/plp/dropdown/dropdownContainer.js",
-        "src/plp/index.js",
-        "src/pdp/copySKUButton.js",
-        "src/pdp/index.js"
-      ]
+      "css": ["src/minified/minified.css"],
+      "js": ["src/minified/minified.js"]
     }
   ],
-  "background": { "scripts": ["src/shared/changeIcon.js"] }
+  "background": { "scripts": ["src/minified/miniChangeIcon.js"] }
 }
