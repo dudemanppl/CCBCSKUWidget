@@ -34,10 +34,10 @@
 /* BC PL enbiggener */
 
 .product.ui-product-listing .ui-pl-placeholder {
-  padding-top: 115%;
+  padding-top: 105%;
   margin-top: 0;
 }
 
 .ui-product-listing .ui-pl-link .ui-pl-img {
-  padding-top: 20px;
+  padding-top: 40px;
 }
