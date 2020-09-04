@@ -26,7 +26,7 @@ const addOOSAlertToCCPDP = () => {
  * Adds WMS/CopySKU buttons to PDP.
  */
 
-const addPDPButtons = () => {
+if (onPDP) {
   const cc = onCompetitiveCyclist;
   const productID = document.querySelector(
     '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
@@ -36,20 +36,7 @@ const addPDPButtons = () => {
     cc ? "add-to-cart" : "js-buybox-actions"
   )[0];
 
-  const nodesToAppendPDP = [new WMSLink(productID), new CopySKUButtonPDP()];
+  if (cc) addOOSAlertToCCPDP();
 
-  if (cc) {
-    addOOSAlertToCCPDP();
-  } else {
-    /** Adds container around each node on BC to match layout */
-    for (let node of nodesToAppendPDP) {
-      node = new HTMLElem("div", ["product-buybox__action"]).append(node);
-    }
-  }
-
-  targetLocation.append(...nodesToAppendPDP);
-};
-
-if (onPDP) {
-  addPDPButtons();
+  targetLocation.append(new WMSLink(productID), new CopySKUButtonPDP());
 }

@@ -38,16 +38,6 @@
   margin-top: 0;
 }
 
-/* BC purchase button restyling */
-
-.product-buybox.js-product-buybox .product-buybox__actions {
-  flex-wrap: wrap;
-  width: 320px;
-}
-
-.product-buybox__action .product-buybox__btn--cart {
-  width: 156px;
-  background-color: white;
-  border: 1px solid black;
-  color: #222;
+.ui-product-listing .ui-pl-link .ui-pl-img {
+  padding-top: 20px;
 }

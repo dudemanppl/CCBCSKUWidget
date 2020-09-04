@@ -1,4 +1,28 @@
 /**
+ * Sends request to BC API, returns array with information about given product
+ *
+ * @async
+ * @param {string} productID Product ID to look up item
+ * @return {array} Array of objects with item info
+ */
+
+const getItemInfo = async (productID) => {
+  try {
+    let res = await fetch(
+      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
+        onCompetitiveCyclist ? "competitivecyclist" : "bcs"
+      }`
+    );
+
+    res = await res.json();
+
+    return Promise.resolve(await res.products[0].skus);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+/**
  * Creates variant selector dropdown on PLP with price and stock information
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
@@ -33,28 +57,29 @@ class PLPSelectorDropdown extends HTMLElem {
       toggleCurrOptionClass();
     };
 
-    const productListingImg = productListing.getElementsByTagName("img")[0];
-    const productListingPrice = productListing.getElementsByClassName(
-      "js-pl-pricing"
-    )[0];
-
     getItemInfo(productID).then((products) => {
+      const productListingImg = productListing.getElementsByTagName("img")[0];
+      const productListingPrice = productListing.getElementsByClassName(
+        "js-pl-pricing"
+      )[0];
+
       for (let i = 0; i < products.length; i += 1) {
-        const product = products[i];
+        const currProduct = products[i];
+        const product = {
+          price: new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2,
+          }).format(currProduct.salePrice),
+          SKU: currProduct.ID,
+          outOfStock: !currProduct.availability.stockLevel,
+          variant: currProduct.title,
+          imageSrc: currProduct.image.url,
+        };
 
         newPLPSelectorDropdown.append(
           new PLPSelectorDropdownOption(
-            {
-              price: new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "USD",
-                minimumFractionDigits: 2,
-              }).format(product.salePrice),
-              SKU: product.ID,
-              outOfStock: !product.availability.stockLevel,
-              variant: product.title,
-              imageSrc: product.image.url,
-            },
+            product,
             state,
             currentOption,
             productListingImg,

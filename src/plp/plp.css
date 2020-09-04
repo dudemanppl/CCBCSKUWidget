@@ -6,12 +6,12 @@
   color: white;
 }
 .btn.link-to-wms.plp.bc:hover {
-  background-color: black;
+  background-color: #222;
   color: white;
 }
 
 .plp-dropdown-container:hover {
-  color: black;
+  color: #222;
 }
 
 .link-to-wms.plp {
@@ -51,7 +51,7 @@
 .product:hover .plp-dropdown-container.bc,
 .product:hover .link-to-wms.bc {
   border-color: #949494;
-  color: black;
+  color: #222;
 }
 
 .plp-dropdown-container {
@@ -61,7 +61,7 @@
   cursor: pointer;
   box-sizing: border-box;
   border-radius: 2px;
-  border: 1px solid black;
+  border: 1px solid #222;
   background-color: white;
 }
 
@@ -103,7 +103,7 @@
 }
 
 .plp-dropdown-current-option.copy-notif {
-  background-color: black;
+  background-color: #222;
   color: white;
   font-weight: 600;
   transition: 0.15s;
@@ -113,7 +113,7 @@
 .plp-dropdown-options {
   position: absolute;
   background-color: white;
-  border: 1px solid black;
+  border: 1px solid #222;
   box-sizing: border-box;
   border-radius: 2px;
   top: 36px;
@@ -146,7 +146,7 @@
   max-height: 36px;
   transition: 0.15s;
   height: 36px;
-  color: black;
+  color: #222;
 }
 
 .plp-dropdown-option-single.oos-alert::before {
@@ -173,5 +173,5 @@
 }
 
 .product:hover .bc-dropdown-caret {
-  fill: black;
+  fill: #222;
 }
