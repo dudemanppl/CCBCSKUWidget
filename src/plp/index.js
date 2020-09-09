@@ -68,7 +68,7 @@ const addPLPWidgets = () => {
     );
     const targetLocation = productListing.childNodes[2];
 
-    targetLocation.append(new PLPWidgetContainer(productID, targetLocation));
+    targetLocation.append(PLPWidgetContainer(productID, targetLocation));
   });
 };
 

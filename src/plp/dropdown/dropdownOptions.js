@@ -64,13 +64,14 @@ const PLPSelectorDropdown = (productID, currentOption, productListing) => {
 
     for (let i = 0; i < products.length; i += 1) {
       const currProduct = products[i];
+
       const product = {
         price: new Intl.NumberFormat("en-US", {
           style: "currency",
           currency: "USD",
           minimumFractionDigits: 2,
         }).format(currProduct.salePrice),
-        SKU: currProduct.ID,
+        SKU: currProduct.id,
         outOfStock: !currProduct.availability.stockLevel,
         variant: currProduct.title,
         imageSrc: currProduct.image.url,

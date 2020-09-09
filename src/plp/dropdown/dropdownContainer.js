@@ -42,7 +42,7 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
         productListing
       );
 
-      this.append(dropdownOptions);
+      newPLPSelectorDropdownContainer.append(dropdownOptions);
     }
   };
 

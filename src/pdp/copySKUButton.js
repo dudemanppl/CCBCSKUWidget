@@ -22,27 +22,27 @@ const CopySKUButtonPDP = () => {
 
   newCopySKUButtonPDP.setAttribute("type", "button");
 
-  newCopySKUButtonPDP.onmouseleave = () => {
-    this.textContent = "Copy SKU";
-    this.classList.remove("no-variant-selected");
+  newCopySKUButtonPDP.onmouseleave = ({ currentTarget: button }) => {
+    button.textContent = "Copy SKU";
+    button.classList.remove("no-variant-selected");
   };
 
-  newCopySKUButtonPDP.onclick = () => {
+  newCopySKUButtonPDP.onclick = ({ currentTarget: button }) => {
     const SKU = document.getElementsByClassName(
       "js-selected-product-variant"
     )[0].value;
 
     if (SKU) {
       navigator.clipboard.writeText(SKU);
-      this.textContent = "Copied!";
-      this.classList.add("flash");
+      button.textContent = "Copied!";
+      button.classList.add("flash");
 
       setTimeout(() => {
-        this.classList.remove("flash");
+        button.classList.remove("flash");
       }, 100);
     } else {
-      this.textContent = "Choose Item";
-      this.classList.add("no-variant-selected");
+      button.textContent = "Choose Item";
+      button.classList.add("no-variant-selected");
     }
   };
 

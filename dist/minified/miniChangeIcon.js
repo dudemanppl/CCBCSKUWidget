@@ -1,1 +1,1 @@
-chrome.runtime.onMessage.addListener(({onCompetitiveCyclist:a},{tab:{id:b}})=>{chrome.pageAction.show(b),a||chrome.pageAction.setIcon({path:"images/bc.png",tabId:b})});
+chrome.runtime.onMessage.addListener(({onCompetitiveCyclist:e},{tab:{id:t}})=>{chrome.pageAction.show(t),e||chrome.pageAction.setIcon({path:"images/bc.png",tabId:t})});
