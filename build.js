@@ -1,6 +1,7 @@
 import { minify } from "terser";
 import CleanCSS from "clean-css";
 import { readFileSync, writeFileSync, createWriteStream } from "fs";
+import archiver from "archiver";
 
 const contentScripts = [
   "src/shared/index.js",
@@ -57,7 +58,14 @@ const build = async () => {
 
   writeFileSync("dist/minified/minified.css", minifiedCSS);
 
-  const zipFile = createWriteStream("dist/CCBCSKUWidget.zip");
+  const output = createWriteStream("dist/CCBCSKUWidget.zip");
+  const archive = archiver("zip", {
+    zlib: { level: 9 },
+  });
+
+  archive.pipe(output);
+  archive.directory("dist/minified", false);
+  archive.finalize();
 };
 
 build();

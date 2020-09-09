@@ -6,7 +6,6 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "test": "jest",
     "build": "node build"
   },
   "devDependencies": {
