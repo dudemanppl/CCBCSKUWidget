@@ -16,25 +16,23 @@ chrome.runtime.sendMessage({ onCompetitiveCyclist });
  * @param {?string} [textContent] Text content inside new element
  */
 
-class HTMLElem {
-  constructor(tagName, classList, id, textContent) {
-    const newHTMLElem = document.createElement(tagName);
+const HTMLElem = (tagName, classList, id, textContent) => {
+  const newHTMLElem = document.createElement(tagName);
 
-    if (classList) {
-      newHTMLElem.classList.add(...classList);
-    }
-
-    if (id) {
-      newHTMLElem.id = id;
-    }
-
-    if (textContent) {
-      newHTMLElem.textContent = textContent;
-    }
-
-    return newHTMLElem;
+  if (classList) {
+    newHTMLElem.classList.add(...classList);
   }
-}
+
+  if (id) {
+    newHTMLElem.id = id;
+  }
+
+  if (textContent) {
+    newHTMLElem.textContent = textContent;
+  }
+
+  return newHTMLElem;
+};
 
 /**
  * Creates a button that links to WMS inventory page of desired product ID
@@ -42,28 +40,26 @@ class HTMLElem {
  * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
-class WMSLink extends HTMLElem {
-  constructor(productID) {
-    const newWMSLink = super(
-      "a",
-      [
-        ...(onPDP
-          ? [
-              "pdp",
-              onCompetitiveCyclist ? "btn--secondary" : "product-buybox__btn",
-            ]
-          : ["plp"]),
-        "link-to-wms",
-        "btn",
-        "btn-reset",
-        siteString,
-      ],
-      null,
-      "Go to WMS"
-    );
-    newWMSLink.setAttribute("type", "button");
-    newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+const WMSLink = (productID) => {
+  const newWMSLink = HTMLElem(
+    "a",
+    [
+      ...(onPDP
+        ? [
+            "pdp",
+            onCompetitiveCyclist ? "btn--secondary" : "product-buybox__btn",
+          ]
+        : ["plp"]),
+      "link-to-wms",
+      "btn",
+      "btn-reset",
+      siteString,
+    ],
+    null,
+    "Go to WMS"
+  );
+  newWMSLink.setAttribute("type", "button");
+  newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
-    return newWMSLink;
-  }
-}
+  return newWMSLink;
+};

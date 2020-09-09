@@ -29,67 +29,65 @@ const getItemInfo = async (productID) => {
  * @param {Element} productListing PLI product listing where widget was added
  */
 
-class PLPSelectorDropdown extends HTMLElem {
-  constructor(productID, currentOption, productListing) {
-    const newPLPSelectorDropdown = super("ul", [
-      "plp-dropdown-options",
-      siteString,
-    ]);
-    const state = { variantSelected: false };
-    let currentlySelectedOptionIdx;
+const PLPSelectorDropdown = (productID, currentOption, productListing) => {
+  const newPLPSelectorDropdown = HTMLElem("ul", [
+    "plp-dropdown-options",
+    siteString,
+  ]);
+  const state = { variantSelected: false };
+  let currentlySelectedOptionIdx;
 
-    /**
-     * @param {number} selectedIdx Index of currently selected option
-     */
+  /**
+   * @param {number} selectedIdx Index of currently selected option
+   */
 
-    const highlightCurrSelectedOption = (selectedIdx) => {
-      const toggleCurrOptionClass = () => {
-        newPLPSelectorDropdown.childNodes[
-          currentlySelectedOptionIdx
-        ].classList.toggle("curr-selected-option");
-      };
-
-      if (currentlySelectedOptionIdx >= 0) {
-        toggleCurrOptionClass();
-      }
-      currentlySelectedOptionIdx = selectedIdx;
-
-      toggleCurrOptionClass();
+  const highlightCurrSelectedOption = (selectedIdx) => {
+    const toggleCurrOptionClass = () => {
+      newPLPSelectorDropdown.childNodes[
+        currentlySelectedOptionIdx
+      ].classList.toggle("curr-selected-option");
     };
 
-    getItemInfo(productID).then((products) => {
-      const productListingImg = productListing.getElementsByTagName("img")[0];
-      const productListingPrice = productListing.getElementsByClassName(
-        "js-pl-pricing"
-      )[0];
+    if (currentlySelectedOptionIdx >= 0) {
+      toggleCurrOptionClass();
+    }
+    currentlySelectedOptionIdx = selectedIdx;
 
-      for (let i = 0; i < products.length; i += 1) {
-        const currProduct = products[i];
-        const product = {
-          price: new Intl.NumberFormat("en-US", {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-          }).format(currProduct.salePrice),
-          SKU: currProduct.id,
-          outOfStock: !currProduct.availability.stockLevel,
-          variant: currProduct.title,
-          imageSrc: currProduct.image.url,
-        };
+    toggleCurrOptionClass();
+  };
 
-        newPLPSelectorDropdown.append(
-          new PLPSelectorDropdownOption(
-            product,
-            state,
-            currentOption,
-            productListingImg,
-            productListingPrice,
-            () => highlightCurrSelectedOption(i)
-          )
-        );
-      }
-    });
+  getItemInfo(productID).then((products) => {
+    const productListingImg = productListing.getElementsByTagName("img")[0];
+    const productListingPrice = productListing.getElementsByClassName(
+      "js-pl-pricing"
+    )[0];
 
-    return newPLPSelectorDropdown;
-  }
-}
+    for (let i = 0; i < products.length; i += 1) {
+      const currProduct = products[i];
+      const product = {
+        price: new Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          minimumFractionDigits: 2,
+        }).format(currProduct.salePrice),
+        SKU: currProduct.ID,
+        outOfStock: !currProduct.availability.stockLevel,
+        variant: currProduct.title,
+        imageSrc: currProduct.image.url,
+      };
+
+      newPLPSelectorDropdown.append(
+        PLPSelectorDropdownOption(
+          product,
+          state,
+          currentOption,
+          productListingImg,
+          productListingPrice,
+          () => highlightCurrSelectedOption(i)
+        )
+      );
+    }
+  });
+
+  return newPLPSelectorDropdown;
+};

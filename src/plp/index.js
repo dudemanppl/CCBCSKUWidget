@@ -30,18 +30,16 @@ const deleteAllElemsOfClass = (elemClassName) => {
  * @param {Element} productListing PLI product listing where widget was added
  */
 
-class PLPWidgetContainer extends HTMLElem {
-  constructor(productID, productListing) {
-    const newPLPWidgetContainer = super("div", ["plp-widget-container"]);
+const PLPWidgetContainer = (productID, productListing) => {
+  const newPLPWidgetContainer = HTMLElem("div", ["plp-widget-container"]);
 
-    newPLPWidgetContainer.append(
-      new PLPSelectorDropdownContainer(productID, productListing),
-      new WMSLink(productID)
-    );
+  newPLPWidgetContainer.append(
+    PLPSelectorDropdownContainer(productID, productListing),
+    WMSLink(productID)
+  );
 
-    return newPLPWidgetContainer;
-  }
-}
+  return newPLPWidgetContainer;
+};
 
 /**
  * Adds SKU Widgets to DOM

@@ -14,78 +14,76 @@
  * @param {function} highlightCurrSelectedOption Function to change the highlighting of the currently selected variant
  */
 
-class PLPSelectorDropdownOption extends HTMLElem {
-  constructor(
-    { price, SKU, outOfStock, variant, imageSrc },
-    props,
-    currentOption,
-    productListingImg,
-    productListingPrice,
-    highlightCurrSelectedOption
-  ) {
-    const newPLPSelectorDropdownOption = super(
-      "li",
-      ["plp-dropdown-option-single"],
-      null,
-      `${variant} (${price})`
-    );
+const PLPSelectorDropdownOption = (
+  { price, SKU, outOfStock, variant, imageSrc },
+  props,
+  currentOption,
+  productListingImg,
+  productListingPrice,
+  highlightCurrSelectedOption
+) => {
+  const newPLPSelectorDropdownOption = HTMLElem(
+    "li",
+    ["plp-dropdown-option-single"],
+    null,
+    `${variant} (${price})`
+  );
 
-    /** Adds OOS alert as necessary*/
+  /** Adds OOS alert as necessary*/
 
-    if (outOfStock) newPLPSelectorDropdownOption.classList.add("oos-alert");
+  if (outOfStock) newPLPSelectorDropdownOption.classList.add("oos-alert");
 
-    const newImgSource = `https://content.${
-      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
-    }.com${imageSrc}`;
+  const newImgSource = `https://content.${
+    onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
+  }.com${imageSrc}`;
 
-    newPLPSelectorDropdownOption.onmouseenter = () => {
-      /** Changes image source if variant image changes */
-      if (productListingImg.src !== newImgSource) {
-        productListingImg.src = newImgSource;
+  newPLPSelectorDropdownOption.onmouseenter = () => {
+    /** Changes image source if variant image changes */
+    if (productListingImg.src !== newImgSource) {
+      productListingImg.src = newImgSource;
+    }
+  };
+
+  newPLPSelectorDropdownOption.onclick = () => {
+    highlightCurrSelectedOption();
+    /** Updates pricing shown if variant pricing changes */
+    if (
+      productListingPrice.firstChild.textContent !== price &&
+      !props.variantSelected
+    ) {
+      /** Removes current elements related to price if variant has not been selected yet */
+      while (productListingPrice.lastChild) {
+        productListingPrice.lastChild.remove();
       }
-    };
+      productListingPrice.append(
+        HTMLElem(
+          "span",
+          [
+            "ui-pl-pricing__high-price",
+            "ui-pl-pricing--price-retail",
+            "js-item-price-high",
+            "qa-item-price-high",
+          ],
+          null,
+          price
+        )
+      );
+      props.variantSelected = true;
+    } else {
+      productListingPrice.firstChild.textContent = price;
+    }
 
-    newPLPSelectorDropdownOption.onclick = () => {
-      highlightCurrSelectedOption();
-      /** Updates pricing shown if variant pricing changes */
-      if (
-        productListingPrice.firstChild.textContent !== price &&
-        !props.variantSelected
-      ) {
-        /** Removes current elements related to price if variant has not been selected yet */
-        while (productListingPrice.lastChild) {
-          productListingPrice.lastChild.remove();
-        }
-        productListingPrice.append(
-          new HTMLElem(
-            "span",
-            [
-              "ui-pl-pricing__high-price",
-              "ui-pl-pricing--price-retail",
-              "js-item-price-high",
-              "qa-item-price-high",
-            ],
-            null,
-            price
-          )
-        );
-        props.variantSelected = true;
-      } else {
-        productListingPrice.firstChild.textContent = price;
-      }
+    /** Copies SKU to clipboard */
+    navigator.clipboard.writeText(SKU);
+    /** Shows short notification of copy */
+    currentOption.classList.toggle("copy-notif");
+    currentOption.textContent = "SKU Copied!";
 
-      /** Copies SKU to clipboard */
-      navigator.clipboard.writeText(SKU);
-      /** Shows short notification of copy */
+    setTimeout(() => {
       currentOption.classList.toggle("copy-notif");
-      currentOption.textContent = "SKU Copied!";
+      currentOption.textContent = variant;
+    }, 300);
+  };
 
-      setTimeout(() => {
-        currentOption.classList.toggle("copy-notif");
-        currentOption.textContent = variant;
-      }, 300);
-    };
-
-    return newPLPSelectorDropdownOption;
-  }
-}
+  return newPLPSelectorDropdownOption;
+};

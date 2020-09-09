@@ -26,5 +26,5 @@ if (onPDP) {
 
   if (cc) addOOSAlertToCCPDP();
 
-  targetLocation.append(new WMSLink(productID), new CopySKUButtonPDP());
+  targetLocation.append(WMSLink(productID), CopySKUButtonPDP());
 }
