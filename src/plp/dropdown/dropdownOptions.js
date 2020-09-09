@@ -71,7 +71,7 @@ class PLPSelectorDropdown extends HTMLElem {
             currency: "USD",
             minimumFractionDigits: 2,
           }).format(currProduct.salePrice),
-          SKU: currProduct.ID,
+          SKU: currProduct.id,
           outOfStock: !currProduct.availability.stockLevel,
           variant: currProduct.title,
           imageSrc: currProduct.image.url,
