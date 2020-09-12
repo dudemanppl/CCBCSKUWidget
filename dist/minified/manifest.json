@@ -19,9 +19,9 @@
         "https://www.competitivecyclist.com/*",
         "https://www.backcountry.com/*"
       ],
-      "css": ["minified.css"],
-      "js": ["minified.js"]
+      "css": ["index.min.css"],
+      "js": ["index.min.js"]
     }
   ],
-  "background": { "scripts": ["miniChangeIcon.js"] }
+  "background": { "scripts": ["changeIcon.min.js"] }
 }

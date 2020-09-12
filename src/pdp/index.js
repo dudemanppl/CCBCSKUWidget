@@ -7,13 +7,13 @@ const addOOSAlertToCCPDP = () => {
     for (const variant of document.getElementsByClassName(
       "js-unifiedropdown-option"
     )) {
-      const SKU = variant.getAttribute("sku-value");
+      const SKU = variant.getAttribute("option");
       SKU &&
         !BC.product.skusCollection[SKU].inventory &&
         variant.classList.add("oos-alert");
     }
   };
-  
+
   const scriptElem = HTMLElem("script", null, null, scriptToInject.toString());
 
   document.head.append(scriptElem);
