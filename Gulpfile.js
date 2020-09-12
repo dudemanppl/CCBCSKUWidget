@@ -1,4 +1,4 @@
-const { src, dest, series, parallel } = require("gulp");
+const { src, dest, series, parallel, watch } = require("gulp");
 const cleanCSS = require("gulp-clean-css");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
@@ -59,12 +59,20 @@ const zipFiles = () => {
     .pipe(dest("dist"));
 };
 
-exports.default = series(
-  parallel(
-    minifyCSS,
-    minifyJSBackgroundScript,
-    minifyJSContentScripts,
-    compressImages
-  ),
+const build = series(
+  parallel(minifyCSS, minifyJSBackgroundScript, compressImages),
   zipFiles
 );
+
+const devWatchOpts = { ignoreInitial: false };
+
+const dev = () => {
+  watch("src/**/*.css", devWatchOpts, minifyCSS);
+  watch(contentScripts, devWatchOpts, minifyJSContentScripts);
+  watch("src/shared/changeIcon.js", devWatchOpts, minifyJSBackgroundScript);
+  watch("src/images/*.png", devWatchOpts, compressImages);
+};
+
+exports.dev = dev;
+
+exports.default = build;
