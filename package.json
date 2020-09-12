@@ -5,10 +5,10 @@
   "author": "Tommy Liao <tommyliao340@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "test": "jest"
   },
   "devDependencies": {
-    "archiver": "^5.0.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
