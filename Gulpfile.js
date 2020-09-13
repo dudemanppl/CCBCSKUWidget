@@ -80,8 +80,9 @@ const build = series(
   zipFiles
 );
 
-const dev = function () {
+const dev = () => {
   const devWatchOpts = { ignoreInitial: false };
+
   watch("src/**/*.css", devWatchOpts, minifyCSS);
   watch(contentScripts, devWatchOpts, minifyJSContentScripts);
   watch("src/shared/changeIcon.js", devWatchOpts, minifyJSBackgroundScript);
