@@ -1,4 +1,4 @@
-const { src, dest, series, parallel } = require("gulp");
+const { src, dest, series, parallel, watch } = require("gulp");
 const cleanCSS = require("gulp-clean-css");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
