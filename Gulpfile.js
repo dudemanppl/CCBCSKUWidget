@@ -5,6 +5,11 @@ const terser = require("gulp-terser");
 const rename = require("gulp-rename");
 const imagemin = require("gulp-imagemin");
 const zip = require("gulp-zip");
+const {
+  env: { NODE_ENV },
+} = require("process");
+
+const production = NODE_ENV === "production";
 
 const contentScripts = [
   "src/shared/index.js",
@@ -18,53 +23,71 @@ const contentScripts = [
 ];
 
 const terserOptions = {
-  mangle: {
-    toplevel: true,
-  },
-  compress: { ecma: 8 },
+  mangle: production ? { toplevel: true } : false,
+  compress: production ? { ecma: 8 } : false,
 };
 
 const destLocation = "dist/minified";
 
-const minifyCSS = () => {
-  return src("src/**/*.css")
+const minifyCSS = (cb) => {
+  src("src/**/*.css")
     .pipe(cleanCSS())
     .pipe(concat("index.min.css", { newLine: "" }))
     .pipe(dest(destLocation));
+
+  cb();
 };
 
-const minifyJSContentScripts = () => {
-  return src(contentScripts)
+const minifyJSContentScripts = (cb) => {
+  src(contentScripts)
     .pipe(concat("index.min.js", { newLine: "" }))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
+
+  cb();
 };
 
-const minifyJSBackgroundScript = () => {
-  return src("src/shared/changeIcon.js")
+const minifyJSBackgroundScript = (cb) => {
+  src("src/shared/changeIcon.js")
     .pipe(rename("changeIcon.min.js"))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
+
+  cb();
 };
 
-const compressImages = () => {
-  return src("src/images/*.png")
+const compressImages = (cb) => {
+  src("src/images/*.png")
     .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
     .pipe(dest(`${destLocation}/images`));
+
+  cb();
 };
 
-const zipFiles = () => {
-  return src("dist/minified/**")
-    .pipe(zip("CCBCSKUWidget.zip"))
-    .pipe(dest("dist"));
+const zipFiles = (cb) => {
+  src("dist/minified/**").pipe(zip("CCBCSKUWidget.zip")).pipe(dest("dist"));
+
+  cb();
 };
 
-exports.default = series(
+const build = series(
   parallel(
     minifyCSS,
-    minifyJSBackgroundScript,
     minifyJSContentScripts,
+    minifyJSBackgroundScript,
     compressImages
   ),
   zipFiles
 );
+
+const dev = function () {
+  const devWatchOpts = { ignoreInitial: false };
+  watch("src/**/*.css", devWatchOpts, minifyCSS);
+  watch(contentScripts, devWatchOpts, minifyJSContentScripts);
+  watch("src/shared/changeIcon.js", devWatchOpts, minifyJSBackgroundScript);
+  watch("src/images/*.png", devWatchOpts, compressImages);
+};
+
+exports.dev = dev;
+
+exports.default = build;

@@ -5,7 +5,9 @@
   "author": "Tommy Liao <tommyliao340@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "gulp": "gulp"
+    "build": "NODE_ENV=production gulp",
+    "dev": "NODE_ENV=development gulp dev",
+    "test": "jest"
   },
   "devDependencies": {
     "archiver": "^5.0.0",
