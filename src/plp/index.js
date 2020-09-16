@@ -43,7 +43,7 @@ const fixBCStyling = () => {
  * Creates main SKU Widget container for PLP
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
- * @param {Element} productListing PLI product listing where widget was added
+ * @param {Element} productListing PLP product listing where widget was added
  */
 
 const PLPWidgetContainer = (productID, productListing) => {
@@ -57,6 +57,12 @@ const PLPWidgetContainer = (productID, productListing) => {
   return newPLPWidgetContainer;
 };
 
+/**
+ * Adds single widget to the PLP
+ *
+ * @param {Element} productListing PLP product listing
+ */
+
 const addPLPSingleWidget = (productListing) => {
   const productID = productListing.parentElement.getAttribute(
     "data-product-id"
@@ -67,7 +73,7 @@ const addPLPSingleWidget = (productListing) => {
 };
 
 /**
- * Adds SKU Widgets to DOM
+ * Adds all widgets to DOM
  */
 
 const addAllPLPWidgets = () => {

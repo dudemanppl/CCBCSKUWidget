@@ -60,25 +60,32 @@ const classnamesForElem = (elem) => {
     classnames.push(...classes);
   };
 
-  add("btn", "btn-reset");
-
-  if (onPDP) {
-    if (onCompetitiveCyclist) {
-      add("btn--secondary");
-    } else {
-      add("product-buybox__btn");
-    }
-  }
-
-  if (elem === "WMSLink") {
-    add("link-to-wms");
+  if (elem === "WMSLink" || elem === "CopySKUButton") {
+    add("btn", "btn-reset");
     if (onPDP) {
       add("pdp");
+      if (onCompetitiveCyclist) {
+        add("btn--secondary");
+      } else {
+        add("product-buybox__btn");
+      }
     } else {
       add("plp");
     }
   }
 
+  if (elem === "WMSLink") {
+    add("link-to-wms");
+  }
+
+  if (elem === "PLPPrice") {
+    add(
+      "ui-pl-pricing__high-price",
+      "ui-pl-pricing--price-retail",
+      "js-item-price-high",
+      "qa-item-price-high"
+    );
+  }
+
   return classnames;
 };
-
