@@ -24,6 +24,22 @@ const deleteAllElemsOfClass = (elemClassName) => {
 };
 
 /**
+ * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension.
+ */
+
+const fixBCStyling = () => {
+  deleteAllElemsOfClass("js-pl-focus-trigger");
+  deleteAllElemsOfClass("js-pl-color-thumbs");
+  deleteAllElemsOfClass("js-pl-sizes-wrap");
+  runOnAllElemsofClass("js-pl-expandable", ({ style }) => {
+    style.top = "10px";
+    style.left = "10px";
+    style.right = "10px";
+    style.bottom = "10px";
+  });
+};
+
+/**
  * Creates main SKU Widget container for PLP
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
@@ -41,39 +57,28 @@ const PLPWidgetContainer = (productID, productListing) => {
   return newPLPWidgetContainer;
 };
 
+const addPLPSingleWidget = (productListing) => {
+  const productID = productListing.parentElement.getAttribute(
+    "data-product-id"
+  );
+  const targetLocation = productListing.childNodes[2];
+
+  targetLocation.append(PLPWidgetContainer(productID, targetLocation));
+};
+
 /**
  * Adds SKU Widgets to DOM
  */
 
-const addPLPWidgets = () => {
+const addAllPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
-    /**
-     * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension.
-     */
-
-    deleteAllElemsOfClass("js-pl-focus-trigger");
-    deleteAllElemsOfClass("js-pl-color-thumbs");
-    deleteAllElemsOfClass("js-pl-sizes-wrap");
-    runOnAllElemsofClass("js-pl-expandable", ({ style }) => {
-      style.top = "10px";
-      style.left = "10px";
-      style.right = "10px";
-      style.bottom = "10px";
-    });
+    fixBCStyling();
   }
-
-  runOnAllElemsofClass("js-pli-wrap", (productListing) => {
-    const productID = productListing.parentElement.getAttribute(
-      "data-product-id"
-    );
-    const targetLocation = productListing.childNodes[2];
-
-    targetLocation.append(PLPWidgetContainer(productID, targetLocation));
-  });
+  runOnAllElemsofClass("js-pli-wrap", addPLPSingleWidget);
 };
 
 if (onPLP) {
-  addPLPWidgets();
+  addAllPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
   const targetNode = document.getElementsByClassName(
@@ -81,6 +86,6 @@ if (onPLP) {
   )[0];
 
   new MutationObserver(() => {
-    addPLPWidgets();
+    addAllPLPWidgets();
   }).observe(targetNode, { childList: true });
 }

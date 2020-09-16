@@ -1,4 +1,4 @@
-const copySKUButtonPDPOnClick = ({ currentTarget: button }) => {
+const copySKUButtonOnClick = ({ currentTarget: button }) => {
   const SKU = document.getElementsByClassName("js-selected-product-variant")[0]
     .value;
 
@@ -16,14 +16,14 @@ const copySKUButtonPDPOnClick = ({ currentTarget: button }) => {
   }
 };
 
-const copySKUButtonPDPOnMouseLeave = ({ currentTarget: button }) => {
+const copySKUButtonOnMouseLeave = ({ currentTarget: button }) => {
   button.textContent = "Copy SKU";
   button.classList.remove("no-variant-selected");
 };
 
-const addMethodsToCopySKUButtonPDP = (copySKUButtonPDP) => {
-  copySKUButtonPDP.onmouseleave = copySKUButtonPDPOnMouseLeave;
-  copySKUButtonPDP.onclick = copySKUButtonPDPOnClick;
+const addMethodsToCopySKUButton = (copySKUButton) => {
+  copySKUButton.onmouseleave = copySKUButtonOnMouseLeave;
+  copySKUButton.onclick = copySKUButtonOnClick;
 };
 
 /**
@@ -32,16 +32,16 @@ const addMethodsToCopySKUButtonPDP = (copySKUButtonPDP) => {
  * @returns {Element}
  */
 
-const copySKUButtonPDP = () => {
-  const newCopySKUButtonPDP = HTMLElem(
+const copySKUButton = () => {
+  const newCopySKUButton = HTMLElem(
     "button",
-    classnamesForElem("CopySKUButtonPDP"),
+    classnamesForElem("CopySKUButton"),
     "copy-sku-button",
     "Copy SKU"
   );
-  newCopySKUButtonPDP.setAttribute("type", "button");
+  newCopySKUButton.setAttribute("type", "button");
 
-  addMethodsToCopySKUButtonPDP(newCopySKUButtonPDP);
+  addMethodsToCopySKUButton(newCopySKUButton);
 
-  return newCopySKUButtonPDP;
+  return newCopySKUButton;
 };

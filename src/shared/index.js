@@ -60,8 +60,9 @@ const classnamesForElem = (elem) => {
     classnames.push(...classes);
   };
 
+  add("btn", "btn-reset");
+
   if (onPDP) {
-    add("btn", "btn-reset");
     if (onCompetitiveCyclist) {
       add("btn--secondary");
     } else {
@@ -80,3 +81,4 @@ const classnamesForElem = (elem) => {
 
   return classnames;
 };
+

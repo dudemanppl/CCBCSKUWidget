@@ -29,10 +29,6 @@
   color: #222;
 }
 
-.link-to-wms.plp.cc {
-  font-size: 16px;
-}
-
 .plp-dropdown-container.cc::before {
   padding: 0 6px;
 }

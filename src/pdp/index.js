@@ -19,13 +19,15 @@ const addOOSAlertToCCPDP = () => {
   scriptElem.remove();
 };
 
-const [PDPTargetLocation] = document.getElementsByClassName(
-  onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
-);
+const PDPTargetLocation = () =>
+  document.getElementsByClassName(
+    onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
+  )[0];
 
-const PDPProductID = document.querySelector(
-  '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
-).value;
+const PDPProductID = () =>
+  document.querySelector(
+    '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
+  ).value;
 
 /**
  * Adds WMS/CopySKU buttons to PDP.
@@ -34,5 +36,5 @@ const PDPProductID = document.querySelector(
 if (onPDP) {
   if (onCompetitiveCyclist) addOOSAlertToCCPDP();
 
-  PDPTargetLocation.append(WMSLink(PDPProductID), copySKUButtonPDP());
+  PDPTargetLocation().append(WMSLink(PDPProductID()), copySKUButton());
 }
