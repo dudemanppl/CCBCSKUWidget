@@ -3,7 +3,7 @@
  */
 
 const addOOSAlertToCCPDP = () => {
-  const scriptToInject = () => {
+  const scriptToInject = `
     for (const variant of document.getElementsByClassName(
       "js-unifiedropdown-option"
     )) {
@@ -11,29 +11,28 @@ const addOOSAlertToCCPDP = () => {
       SKU &&
         !BC.product.skusCollection[SKU].inventory &&
         variant.classList.add("oos-alert");
-    }
-  };
-  const scriptElem = HTMLElem("script", null, null, scriptToInject.toString());
+    }`;
+
+  const scriptElem = HTMLElem("script", null, null, scriptToInject);
 
   document.head.append(scriptElem);
   scriptElem.remove();
 };
+
+const [PDPTargetLocation] = document.getElementsByClassName(
+  onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
+);
+
+const PDPProductID = document.querySelector(
+  '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
+).value;
 
 /**
  * Adds WMS/CopySKU buttons to PDP.
  */
 
 if (onPDP) {
-  const cc = onCompetitiveCyclist;
-  const productID = document.querySelector(
-    '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
-  ).value;
+  if (onCompetitiveCyclist) addOOSAlertToCCPDP();
 
-  const targetLocation = document.getElementsByClassName(
-    cc ? "add-to-cart" : "js-buybox-actions"
-  )[0];
-
-  if (cc) addOOSAlertToCCPDP();
-
-  targetLocation.append(WMSLink(productID), CopySKUButtonPDP());
+  PDPTargetLocation.append(WMSLink(PDPProductID), copySKUButtonPDP());
 }

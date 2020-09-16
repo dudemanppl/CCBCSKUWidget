@@ -43,18 +43,7 @@ const HTMLElem = (tagName, classList, id, textContent) => {
 const WMSLink = (productID) => {
   const newWMSLink = HTMLElem(
     "a",
-    [
-      ...(onPDP
-        ? [
-            "pdp",
-            onCompetitiveCyclist ? "btn--secondary" : "product-buybox__btn",
-          ]
-        : ["plp"]),
-      "link-to-wms",
-      "btn",
-      "btn-reset",
-      siteString,
-    ],
+    classnamesForElem("WMSLink"),
     null,
     "Go to WMS"
   );
@@ -62,4 +51,32 @@ const WMSLink = (productID) => {
   newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
   return newWMSLink;
+};
+
+const classnamesForElem = (elem) => {
+  const classnames = [siteString];
+
+  const add = (...classes) => {
+    classnames.push(...classes);
+  };
+
+  if (onPDP) {
+    add("btn", "btn-reset");
+    if (onCompetitiveCyclist) {
+      add("btn--secondary");
+    } else {
+      add("product-buybox__btn");
+    }
+  }
+
+  if (elem === "WMSLink") {
+    add("link-to-wms");
+    if (onPDP) {
+      add("pdp");
+    } else {
+      add("plp");
+    }
+  }
+
+  return classnames;
 };
