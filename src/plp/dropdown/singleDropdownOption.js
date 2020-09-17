@@ -64,8 +64,7 @@ const addMethodsToPLPSelectorDropdownOption = (
   { price, SKU, outOfStock, variant, imageSrc },
   props,
   currentOption,
-  productListingImg,
-  productListingPrice,
+  [productListingImg, productListingPrice],
   highlightCurrSelectedOption
 ) => {
   /** Adds OOS alert as necessary*/
