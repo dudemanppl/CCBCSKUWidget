@@ -1,24 +1,24 @@
-const copySKUButtonOnClick = ({ currentTarget: button }) => {
+const copySKUButtonOnClick = ({ currentTarget: copySKUButton }) => {
   const SKU = document.getElementsByClassName("js-selected-product-variant")[0]
     .value;
 
   if (SKU) {
     navigator.clipboard.writeText(SKU);
-    button.textContent = "Copied!";
-    button.classList.add("flash");
+    copySKUButton.textContent = "Copied!";
+    copySKUButton.classList.add("flash");
 
     setTimeout(() => {
-      button.classList.remove("flash");
+      copySKUButton.classList.remove("flash");
     }, 100);
   } else {
-    button.textContent = "Choose Item";
-    button.classList.add("no-variant-selected");
+    copySKUButton.textContent = "Choose Item";
+    copySKUButton.classList.add("no-variant-selected");
   }
 };
 
-const copySKUButtonOnMouseLeave = ({ currentTarget: button }) => {
-  button.textContent = "Copy SKU";
-  button.classList.remove("no-variant-selected");
+const copySKUButtonOnMouseLeave = ({ currentTarget: copySKUButton }) => {
+  copySKUButton.textContent = "Copy SKU";
+  copySKUButton.classList.remove("no-variant-selected");
 };
 
 const addMethodsToCopySKUButton = (copySKUButton) => {
