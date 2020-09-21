@@ -32,7 +32,6 @@ const anonFuncToStr = (func) => func.toString().slice(5, -1);
 const invokeFuncInWindow = (func) => {
   const scriptElem = HTMLElem("script", null, null, anonFuncToStr(func));
 
-  console.log(func);
   document.head.append(scriptElem);
   scriptElem.remove();
 };

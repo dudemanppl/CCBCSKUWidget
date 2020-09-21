@@ -39,6 +39,10 @@ const fixBCStyling = () => {
   });
 };
 
+const CCNewTabFix = ({ currentTarget }) => {
+  window.open(currentTarget.getAttribute("data-url"));
+};
+
 /**
  * Creates main SKU Widget container for PLP
  *
@@ -64,11 +68,12 @@ const PLPWidgetContainer = (productID, productListing) => {
  */
 
 const addPLPSingleWidget = (productListing) => {
-  const productID = productListing.parentElement.getAttribute(
-    "data-product-id"
-  );
-  const targetLocation = productListing.childNodes[2];
+  const productID = productListing.getAttribute("data-product-id");
+  const targetLocation = productListing.firstChild.childNodes[2];
 
+  if (onCompetitiveCyclist) {
+    targetLocation.onauxclick = CCNewTabFix;
+  }
   targetLocation.append(PLPWidgetContainer(productID, targetLocation));
 };
 
@@ -80,18 +85,26 @@ const addAllPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
-  runOnAllElemsofClass("js-pli-wrap", addPLPSingleWidget);
+  runOnAllElemsofClass("js-product-listing", addPLPSingleWidget);
+};
+
+/**
+ * @return {Element} Node to observe for changes on the PLP
+ */
+
+const nodeToObservePLP = () => {
+  const [nodeToObserve] = document.getElementsByClassName(
+    onCompetitiveCyclist ? "js-inner-body" : "inner-body"
+  );
+
+  return nodeToObserve;
 };
 
 if (onPLP) {
   addAllPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
-  const targetNode = document.getElementsByClassName(
-    onCompetitiveCyclist ? "js-inner-body" : "inner-body"
-  )[0];
-
-  new MutationObserver(() => {
-    addAllPLPWidgets();
-  }).observe(targetNode, { childList: true });
+  new MutationObserver(addAllPLPWidgets).observe(nodeToObservePLP(), {
+    childList: true,
+  });
 }
