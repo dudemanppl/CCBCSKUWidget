@@ -16,9 +16,9 @@ const contentScripts = [
   "src/pdp/copySKUButton.js",
   "src/pdp/index.js",
   "src/plp/dropdown/BCDropdownCaret.js",
-  "src/plp/dropdown/dropdownContainer.js",
-  "src/plp/dropdown/dropdownOptions.js",
-  "src/plp/dropdown/singleDropdownOption.js",
+  "src/plp/dropdown/container.js",
+  "src/plp/dropdown/dropdown.js",
+  "src/plp/dropdown/singleOption.js",
   "src/plp/index.js",
 ];
 

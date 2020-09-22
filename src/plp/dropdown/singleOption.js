@@ -5,7 +5,7 @@
  * @param {string} price Sale price of an item
  */
 
-const updatePricing__PLP = (productListingPrice, props, price) => {
+const updatePricingPLP = (productListingPrice, props, price) => {
   if (
     productListingPrice.firstChild.textContent !== price &&
     !props.variantSelected
@@ -32,7 +32,7 @@ const updatePricing__PLP = (productListingPrice, props, price) => {
  * @param {string} SKU Child SKU of an item
  */
 
-const copySKU__PLP = (currentOption, variant, SKU) => {
+const copySKUPLP = (currentOption, variant, SKU) => {
   /** Copies SKU to clipboard */
   navigator.clipboard.writeText(SKU);
   /** Shows short notification of copy */
@@ -84,8 +84,8 @@ const addMethodsToPLPSelectorDropdownOption = (
 
   PLPSelectorDropdownOption.onclick = () => {
     highlightCurrSelectedOption();
-    updatePricing__PLP(productListingPrice, props, price);
-    copySKU__PLP(currentOption, variant, SKU);
+    updatePricingPLP(productListingPrice, props, price);
+    copySKUPLP(currentOption, variant, SKU);
   };
 };
 

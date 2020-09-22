@@ -1,4 +1,4 @@
-.plp-dropdown-container.cc::before {
+.plp-dropdown-container.cc::after {
   position: absolute;
 }
 
@@ -29,7 +29,7 @@
   color: #222;
 }
 
-.plp-dropdown-container.cc::before {
+.plp-dropdown-container.cc::after {
   padding: 0 6px;
 }
 
@@ -71,7 +71,7 @@
   color: #555;
 }
 
-.plp-dropdown-container.cc::before {
+.plp-dropdown-container.cc::after {
   content: "";
   font-family: ccicons;
   font-size: 24px;
@@ -145,7 +145,7 @@
   color: #222;
 }
 
-.plp-dropdown-option-single.oos-alert::before {
+.plp-dropdown-option-single.oos-alert::after {
   margin: 0 10px;
   font-size: 16px;
   padding-right: 5px;

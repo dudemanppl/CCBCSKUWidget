@@ -2,7 +2,7 @@
   background-color: lightgray;
 }
 
-.oos-alert::before {
+.oos-alert::after {
   content: "OOS";
   color: red;
   float: right;
@@ -34,7 +34,7 @@
 /* BC PLI enbiggener */
 
 .product.ui-product-listing .ui-pl-placeholder {
-  padding-bottom: 85px;
+  padding-bottom: 90px;
   margin-top: 0;
 }
 
