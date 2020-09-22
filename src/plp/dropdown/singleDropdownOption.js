@@ -18,6 +18,7 @@ const updatePricing__PLP = (productListingPrice, props, price) => {
     productListingPrice.append(
       HTMLElem("span", classnamesForElem("PLPPrice"), null, price)
     );
+
     props.variantSelected = true;
   } else {
     productListingPrice.firstChild.textContent = price;
