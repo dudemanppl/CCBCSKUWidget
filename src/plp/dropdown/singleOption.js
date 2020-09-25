@@ -5,7 +5,7 @@
  * @param {string} price Sale price of an item
  */
 
-const updatePricingPLP = (productListingPrice, props, price) => {
+const updatePricingPLP = (productListingPrice, props, price, siteInfo) => {
   if (
     productListingPrice.firstChild.textContent !== price &&
     !props.variantSelected
@@ -16,7 +16,7 @@ const updatePricingPLP = (productListingPrice, props, price) => {
     }
 
     productListingPrice.append(
-      HTMLElem("span", classnamesForElem("PLPPrice"), null, price)
+      HTMLElem("span", classnamesForElem("PLPPrice", siteInfo), null, price)
     );
 
     props.variantSelected = true;
@@ -66,14 +66,15 @@ const addMethodsToPLPSelectorDropdownOption = (
   props,
   currentOption,
   [productListingImg, productListingPrice],
-  highlightCurrSelectedOption
+  highlightCurrSelectedOption,
+  siteInfo
 ) => {
   /** Adds OOS alert as necessary*/
   if (outOfStock) PLPSelectorDropdownOption.classList.add("oos-alert");
 
   PLPSelectorDropdownOption.onmouseenter = () => {
     const newImgSource = `https://content.${
-      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
+      siteInfo.onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
     }.com${imageSrc}`;
 
     /** Changes image source if variant image changes */

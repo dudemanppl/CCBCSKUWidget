@@ -6,7 +6,7 @@
  * @return {array} Array of objects with item info
  */
 
-const getItemInfo = async (productID) => {
+const getItemInfo = async (productID, { onCompetitiveCyclist }) => {
   try {
     let res = await fetch(
       `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
@@ -111,14 +111,19 @@ const getProductListingElems = (productListing) => {
  * @return {Element}
  */
 
-const PLPSelectorDropdown = (productID, currentOption, productListing) => {
+const PLPSelectorDropdown = (
+  productID,
+  currentOption,
+  productListing,
+  siteInfo
+) => {
   const newPLPSelectorDropdown = HTMLElem("ul", [
     "plp-dropdown-options",
-    siteString,
+    siteInfo.siteString,
   ]);
   const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
 
-  getItemInfo(productID).then((products) => {
+  getItemInfo(productID, siteInfo).then((products) => {
     for (let i = 0; i < products.length; i += 1) {
       newPLPSelectorDropdown.append(
         PLPSelectorDropdownOption(
@@ -126,7 +131,8 @@ const PLPSelectorDropdown = (productID, currentOption, productListing) => {
           state,
           currentOption,
           getProductListingElems(productListing),
-          () => highlightCurrSelectedOption(newPLPSelectorDropdown, i, state)
+          () => highlightCurrSelectedOption(newPLPSelectorDropdown, i, state),
+          siteInfo
         )
       );
     }

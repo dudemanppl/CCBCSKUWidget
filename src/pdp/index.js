@@ -40,9 +40,9 @@ const invokeFuncInWindow = (func) => {
  * @return {Element} Target location to add PDP buttons to
  */
 
-const PDPTargetLocation = () => {
+const PDPTargetLocation = (siteInfo) => {
   const [targetLocation] = document.getElementsByClassName(
-    onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
+    siteInfo.onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
   );
 
   return targetLocation;
@@ -67,5 +67,8 @@ const PDPProductID = () => {
 if (onPDP) {
   if (onCompetitiveCyclist) invokeFuncInWindow(addOOSAlertToCCPDP);
 
-  PDPTargetLocation().append(WMSLink(PDPProductID()), copySKUButton());
+  PDPTargetLocation(siteInfo).append(
+    WMSLink(PDPProductID(), siteInfo),
+    copySKUButton(siteInfo)
+  );
 }

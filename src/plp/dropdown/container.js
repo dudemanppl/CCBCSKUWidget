@@ -13,12 +13,13 @@ const PLPDropdownOpened = (target) => {
 /**
  * @param {Event} event From event handler
  * @param {string} productID Parent SKU for item from CC/BC catalog
- * @param {Element} productListing PLI product listing where widget was added
+ * @param {Element} productListing PLI product listing where widget was
  */
 
-const openPLPDropdownOptions = (event, productID, productListing) => {
+const openPLPDropdownOptions = (event, productID, productListing, siteInfo) => {
+
   /** Prevents PDP reroute on CC */
-  if (onCompetitiveCyclist) event.stopPropagation();
+  if (siteInfo.onCompetitiveCyclist) event.stopPropagation();
 
   const { currentTarget } = event;
   const { firstChild: currentOption, lastChild } = currentTarget;
@@ -28,7 +29,7 @@ const openPLPDropdownOptions = (event, productID, productListing) => {
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
-      PLPSelectorDropdown(productID, currentOption, productListing)
+      PLPSelectorDropdown(productID, currentOption, productListing, siteInfo)
     );
   }
 };
@@ -56,12 +57,13 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
 const handleDropdownOptions = (
   productID,
   productListing,
-  PLPSelectorDropdownContainer
+  PLPSelectorDropdownContainer,
+  siteInfo
 ) => {
   /** Initialize with no value to return a falsy value */
 
   PLPSelectorDropdownContainer.onclick = (event) =>
-    openPLPDropdownOptions(event, productID, productListing);
+    openPLPDropdownOptions(event, productID, productListing, siteInfo);
 
   productListing.onmouseleave = () =>
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
@@ -70,7 +72,7 @@ const handleDropdownOptions = (
 /**
  * @return {Element}
  */
-const PLPDropdownCurrentOption = () => {
+const PLPDropdownCurrentOption = (siteString) => {
   return HTMLElem(
     "div",
     ["plp-dropdown-current-option", siteString],
@@ -84,22 +86,29 @@ const PLPDropdownCurrentOption = () => {
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
  * @param {Element} productListing PLI product listing where widget was added
+ * @param {object} siteInfo Information about the current website visited
  * @return {Element}
  */
 
-const PLPSelectorDropdownContainer = (...args) => {
+const PLPSelectorDropdownContainer = (productID, productListing, siteInfo) => {
+  const { siteString, onCompetitiveCyclist } = siteInfo;
   const newPLPSelectorDropdownContainer = HTMLElem("div", [
     "plp-dropdown-container",
     siteString,
   ]);
 
-  newPLPSelectorDropdownContainer.append(PLPDropdownCurrentOption());
+  newPLPSelectorDropdownContainer.append(PLPDropdownCurrentOption(siteString));
   /** Adds caret to BC PLP dropdown to mimic BC PDP */
   if (!onCompetitiveCyclist) {
     newPLPSelectorDropdownContainer.append(BCDropdownCaret());
   }
 
-  handleDropdownOptions(...args, newPLPSelectorDropdownContainer);
+  handleDropdownOptions(
+    productID,
+    productListing,
+    newPLPSelectorDropdownContainer,
+    siteInfo
+  );
 
   return newPLPSelectorDropdownContainer;
 };

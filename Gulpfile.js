@@ -3,6 +3,7 @@ const cleanCSS = require("gulp-clean-css");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
 const rename = require("gulp-rename");
+const replace = require("gulp-replace");
 const imagemin = require("gulp-imagemin");
 const zip = require("gulp-zip");
 const {
@@ -41,6 +42,7 @@ const minifyCSS = (cb) => {
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
     .pipe(concat("index.min.js", { newLine: "" }))
+    .pipe(replace(/^.*module.*$/gm, ""))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
 

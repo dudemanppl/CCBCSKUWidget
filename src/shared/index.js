@@ -1,11 +1,16 @@
-const onCompetitiveCyclist =
-  window.location.host === "www.competitivecyclist.com";
-const siteString = onCompetitiveCyclist ? "cc" : "bc";
-const onPLP = document.getElementsByClassName("search-results").length;
-const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
+const siteInfo = {
+  onCompetitiveCyclist: window.location.host === "www.competitivecyclist.com",
+  siteString:
+    window.location.host === "www.competitivecyclist.com" ? "cc" : "bc",
+  onPLP: document.getElementsByClassName("search-results").length,
+  onPDP: document.getElementsByClassName("js-kraken-pdp-body").length,
+};
+const { onCompetitiveCyclist, onPLP, onPDP } = siteInfo;
 
 /** Changes icon to goat logo when on BC */
-chrome.runtime.sendMessage({ onCompetitiveCyclist });
+if (onPLP || onPDP) {
+  chrome.runtime.sendMessage({ onCompetitiveCyclist });
+}
 
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
@@ -40,21 +45,22 @@ const HTMLElem = (tagName, classList, id, textContent) => {
  * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
-const WMSLink = (productID) => {
+const WMSLink = (productID, siteInfo) => {
   const newWMSLink = HTMLElem(
     "a",
-    classnamesForElem("WMSLink"),
+    classnamesForElem("WMSLink", siteInfo),
     null,
     "Go to WMS"
   );
+
   newWMSLink.setAttribute("type", "button");
   newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
   return newWMSLink;
 };
 
-const classnamesForElem = (elem) => {
-  const classnames = [siteString];
+const classnamesForElem = (elem, siteInfo) => {
+  const classnames = [siteInfo.siteString];
 
   const add = (...classes) => {
     classnames.push(...classes);
@@ -62,9 +68,9 @@ const classnamesForElem = (elem) => {
 
   if (elem === "WMSLink" || elem === "CopySKUButton") {
     add("btn", "btn-reset");
-    if (onPDP) {
+    if (siteInfo.onPDP) {
       add("pdp");
-      if (onCompetitiveCyclist) {
+      if (siteInfo.onCompetitiveCyclist) {
         add("btn--secondary");
       } else {
         add("product-buybox__btn");
@@ -89,3 +95,5 @@ const classnamesForElem = (elem) => {
 
   return classnames;
 };
+
+module.exports = { HTMLElem, WMSLink, classnamesForElem };

@@ -50,12 +50,12 @@ const CCNewTabFix = ({ currentTarget }) => {
  * @param {Element} productListing PLP product listing where widget was added
  */
 
-const PLPWidgetContainer = (productID, productListing) => {
+const PLPWidgetContainer = (productID, productListing, siteInfo) => {
   const newPLPWidgetContainer = HTMLElem("div", ["plp-widget-container"]);
 
   newPLPWidgetContainer.append(
-    PLPSelectorDropdownContainer(productID, productListing),
-    WMSLink(productID)
+    PLPSelectorDropdownContainer(productID, productListing, siteInfo),
+    WMSLink(productID, siteInfo)
   );
 
   return newPLPWidgetContainer;
@@ -67,25 +67,30 @@ const PLPWidgetContainer = (productID, productListing) => {
  * @param {Element} productListing PLP product listing
  */
 
-const addPLPSingleWidget = (productListing) => {
+const addPLPSingleWidget = (productListing, siteInfo) => {
   const productID = productListing.getAttribute("data-product-id");
   const targetLocation = productListing.firstChild.childNodes[2];
 
-  if (onCompetitiveCyclist) {
+  if (siteInfo.onCompetitiveCyclist) {
     targetLocation.onauxclick = CCNewTabFix;
   }
-  targetLocation.append(PLPWidgetContainer(productID, targetLocation));
+
+  targetLocation.append(
+    PLPWidgetContainer(productID, targetLocation, siteInfo)
+  );
 };
 
 /**
  * Adds all widgets to DOM
  */
 
-const addAllPLPWidgets = () => {
+const addAllPLPWidgets = (siteInfo) => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
-  runOnAllElemsofClass("js-product-listing", addPLPSingleWidget);
+  runOnAllElemsofClass("js-product-listing", (productListing) =>
+    addPLPSingleWidget(productListing, siteInfo)
+  );
 };
 
 /**
@@ -101,10 +106,13 @@ const nodeToObservePLP = () => {
 };
 
 if (onPLP) {
-  addAllPLPWidgets();
+  addAllPLPWidgets(siteInfo);
 
   /** Watches for changes on SPA to rerender PLP widgets */
-  new MutationObserver(addAllPLPWidgets).observe(nodeToObservePLP(), {
-    childList: true,
-  });
+  new MutationObserver(() => addAllPLPWidgets(siteInfo)).observe(
+    nodeToObservePLP(),
+    {
+      childList: true,
+    }
+  );
 }
