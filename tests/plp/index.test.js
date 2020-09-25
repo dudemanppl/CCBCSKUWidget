@@ -126,43 +126,41 @@ describe("fixBCStyling", () => {
         HTMLElem("div", ["js-pl-expandable"])
       );
     }
+    fixBCStyling();
   });
 
   afterEach(clearBody);
 
   test("should delete elements with class of js-pl-focus-trigger", () => {
-    fixBCStyling();
     expect(document.getElementsByClassName("js-pl-focus-trigger")).toHaveLength(
       0
     );
   });
 
   test("should delete elements with class of js-pl-color-thumbs", () => {
-    fixBCStyling();
     expect(document.getElementsByClassName("js-pl-color-thumbs")).toHaveLength(
       0
     );
   });
 
   test("should delete elements with class of js-pl-sizes-wrap", () => {
-    fixBCStyling();
     expect(document.getElementsByClassName("js-pl-sizes-wrap")).toHaveLength(0);
   });
 
-  // describe("should change styling of elements with class of js-pl-expandable to have a top, right, bottom, and left of 10px", () => {
-  //   fixBCStyling();
-  //   console.log(document.getElementsByClassName("js-pl-expandable")[0].style);
+  test("should change styling of elements with class of js-pl-expandable to have a top, right, bottom, and left of 10px", () => {
+    const [
+      {
+        style: { top, right, bottom, left },
+      },
+    ] = document.getElementsByClassName("js-pl-expandable");
 
-  //   describe.each(["top", "right", "bottom", "left"])("", (position) => {
-  //     test(`${position} should be 10px`, () => {
-  //       const offset = document.getElementsByClassName("js-pl-expandable")[0]
-  //         .style[position];
-
-  //       expect(offset).toBe("10px");
-  //     });
-  //   });
-  // });
+    expect(top).toBe("10px");
+    expect(right).toBe("10px");
+    expect(bottom).toBe("10px");
+    expect(left).toBe("10px");
+  });
 });
+
 describe("CCNewTabFix", () => {
   test("nice", () => {});
 });
