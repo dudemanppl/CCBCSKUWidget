@@ -60,15 +60,5 @@ const PDPProductID = () => {
   return productID;
 };
 
-/**
- * Adds WMS/CopySKU buttons to PDP.
- */
 
-if (onPDP) {
-  if (onCompetitiveCyclist) invokeFuncInWindow(addOOSAlertToCCPDP);
 
-  PDPTargetLocation(siteInfo).append(
-    WMSLink(PDPProductID(), siteInfo),
-    copySKUButton(siteInfo)
-  );
-}

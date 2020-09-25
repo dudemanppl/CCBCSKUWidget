@@ -21,6 +21,7 @@ const contentScripts = [
   "src/plp/dropdown/dropdown.js",
   "src/plp/dropdown/singleOption.js",
   "src/plp/index.js",
+  "src/index.js",
 ];
 
 const terserOptions = {
@@ -41,8 +42,8 @@ const minifyCSS = (cb) => {
 
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
+    .pipe(replace(/module[\s\S]+/, ""))
     .pipe(concat("index.min.js", { newLine: "" }))
-    .pipe(replace(/^.*module.*$/gm, ""))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
 

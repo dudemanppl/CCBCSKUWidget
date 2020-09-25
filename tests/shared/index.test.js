@@ -16,7 +16,7 @@ describe("HTMLElem", () => {
     });
 
     test("should not have any classes", () => {
-      expect([...emptyDiv.classList]).toStrictEqual([]);
+      expect([...emptyDiv.classList]).toEqual([]);
     });
 
     test("should not have an ID", () => {
@@ -36,7 +36,7 @@ describe("HTMLElem", () => {
     });
 
     test("should have one class", () => {
-      expect([...singleClassDiv.classList]).toStrictEqual(["class1"]);
+      expect([...singleClassDiv.classList]).toEqual(["class1"]);
     });
 
     test("should not have an ID", () => {
@@ -45,6 +45,10 @@ describe("HTMLElem", () => {
 
     test("should not have any text", () => {
       expect(singleClassDiv.textContent).toBeFalsy();
+    });
+
+    test("should throw error when given non array value for classList", () => {
+      expect(() => HTMLElem("div", "class1")).toThrow("Expected an array");
     });
   });
 
@@ -56,10 +60,7 @@ describe("HTMLElem", () => {
     });
 
     test("should have multiple classes", () => {
-      expect([...multipleClassDiv.classList]).toStrictEqual([
-        "class1",
-        "class2",
-      ]);
+      expect([...multipleClassDiv.classList]).toEqual(["class1", "class2"]);
     });
 
     test("should not have an ID", () => {
@@ -79,7 +80,7 @@ describe("HTMLElem", () => {
     });
 
     test("should not have any classes", () => {
-      expect([...divWithId.classList]).toStrictEqual([]);
+      expect([...divWithId.classList]).toEqual([]);
     });
 
     test("should have an ID", () => {
@@ -99,7 +100,7 @@ describe("HTMLElem", () => {
     });
 
     test("should not have any classes", () => {
-      expect([...divWithId.classList]).toStrictEqual([]);
+      expect([...divWithId.classList]).toEqual([]);
     });
 
     test("should not have an ID", () => {
@@ -119,7 +120,7 @@ describe("HTMLElem", () => {
     });
 
     test("should have multiple classes", () => {
-      expect([...divWithId.classList]).toStrictEqual(["class1", "class2"]);
+      expect([...divWithId.classList]).toEqual(["class1", "class2"]);
     });
 
     test("should have an ID", () => {
@@ -151,7 +152,7 @@ describe("WMSLink", () => {
       });
 
       test("should have correct classes", () => {
-        expect([...CCPDPWMSLink.classList]).toStrictEqual([
+        expect([...CCPDPWMSLink.classList]).toEqual([
           "cc",
           "btn",
           "btn-reset",
@@ -164,7 +165,6 @@ describe("WMSLink", () => {
       test("should have text content of 'Go to WMS'", () => {
         expect(CCPDPWMSLink.textContent).toBe("Go to WMS");
       });
-
     });
 
     describe("Backcountry", () => {
@@ -182,7 +182,7 @@ describe("WMSLink", () => {
       });
 
       test("should have correct classes", () => {
-        expect([...BCPDPWMSLink.classList]).toStrictEqual([
+        expect([...BCPDPWMSLink.classList]).toEqual([
           "bc",
           "btn",
           "btn-reset",
@@ -216,7 +216,7 @@ describe("WMSLink", () => {
       });
 
       test("should have correct classes", () => {
-        expect([...CCPLPWMSLink.classList]).toStrictEqual([
+        expect([...CCPLPWMSLink.classList]).toEqual([
           "cc",
           "btn",
           "btn-reset",
@@ -245,7 +245,7 @@ describe("WMSLink", () => {
       });
 
       test("should have correct classes", () => {
-        expect([...BCPLPWMSLink.classList]).toStrictEqual([
+        expect([...BCPLPWMSLink.classList]).toEqual([
           "bc",
           "btn",
           "btn-reset",
@@ -276,7 +276,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(CCPDPWMSLinkClassnames).toStrictEqual([
+          expect(CCPDPWMSLinkClassnames).toEqual([
             "cc",
             "btn",
             "btn-reset",
@@ -298,7 +298,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(CCPDPCopySKUClassnames).toStrictEqual([
+          expect(CCPDPCopySKUClassnames).toEqual([
             "cc",
             "btn",
             "btn-reset",
@@ -321,7 +321,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(BCPDPWMSLinkClassnames).toStrictEqual([
+          expect(BCPDPWMSLinkClassnames).toEqual([
             "bc",
             "btn",
             "btn-reset",
@@ -342,7 +342,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(BCPDPCopySKUClassnames).toStrictEqual([
+          expect(BCPDPCopySKUClassnames).toEqual([
             "bc",
             "btn",
             "btn-reset",
@@ -369,7 +369,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(CCPDPWMSLinkClassnames).toStrictEqual([
+          expect(CCPDPWMSLinkClassnames).toEqual([
             "cc",
             "btn",
             "btn-reset",
@@ -390,7 +390,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(CCPDPCopySKUClassnames).toStrictEqual([
+          expect(CCPDPCopySKUClassnames).toEqual([
             "cc",
             "ui-pl-pricing__high-price",
             "ui-pl-pricing--price-retail",
@@ -413,7 +413,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(BCPDPWMSLinkClassnames).toStrictEqual([
+          expect(BCPDPWMSLinkClassnames).toEqual([
             "bc",
             "btn",
             "btn-reset",
@@ -434,7 +434,7 @@ describe("classnamesForElem", () => {
         });
 
         test("should return correct classes", () => {
-          expect(BCPDPCopySKUClassnames).toStrictEqual([
+          expect(BCPDPCopySKUClassnames).toEqual([
             "bc",
             "ui-pl-pricing__high-price",
             "ui-pl-pricing--price-retail",

@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_ENV=production gulp",
     "dev": "NODE_ENV=development gulp dev",
-    "test": "jest --collectCoverage --silent"
+    "test": "jest --collectCoverage"
   },
   "devDependencies": {
     "gulp": "^4.0.2",

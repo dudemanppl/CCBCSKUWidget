@@ -1,12 +1,14 @@
 const siteInfo = {
   onCompetitiveCyclist: window.location.host === "www.competitivecyclist.com",
   siteString:
+    /* istanbul ignore next */
     window.location.host === "www.competitivecyclist.com" ? "cc" : "bc",
   onPLP: document.getElementsByClassName("search-results").length,
   onPDP: document.getElementsByClassName("js-kraken-pdp-body").length,
 };
 const { onCompetitiveCyclist, onPLP, onPDP } = siteInfo;
 
+/* istanbul ignore next */
 /** Changes icon to goat logo when on BC */
 if (onPLP || onPDP) {
   chrome.runtime.sendMessage({ onCompetitiveCyclist });
@@ -16,7 +18,7 @@ if (onPLP || onPDP) {
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name
- * @param {?array} [classList] Array of desired classes to add.
+ * @param {?array|string} [classList] Desired classes to add.
  * @param {?string} [id] Id for HTML element
  * @param {?string} [textContent] Text content inside new element
  */
@@ -25,7 +27,11 @@ const HTMLElem = (tagName, classList, id, textContent) => {
   const newHTMLElem = document.createElement(tagName);
 
   if (classList) {
-    newHTMLElem.classList.add(...classList);
+    if (Array.isArray(classList)) {
+      newHTMLElem.classList.add(...classList);
+    } else {
+      throw new TypeError("Expected an array");
+    }
   }
 
   if (id) {

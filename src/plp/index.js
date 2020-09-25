@@ -5,7 +5,7 @@
  * @callback func
  */
 
-const runOnAllElemsofClass = (elemClassName, func) => {
+const runOnAllElemsOfClass = (elemClassName, func) => {
   const elems = [...document.getElementsByClassName(elemClassName)];
 
   for (const elem of elems) {
@@ -20,7 +20,7 @@ const runOnAllElemsofClass = (elemClassName, func) => {
  */
 
 const deleteAllElemsOfClass = (elemClassName) => {
-  runOnAllElemsofClass(elemClassName, (elem) => elem.remove());
+  runOnAllElemsOfClass(elemClassName, (elem) => elem.remove());
 };
 
 /**
@@ -31,11 +31,11 @@ const fixBCStyling = () => {
   deleteAllElemsOfClass("js-pl-focus-trigger");
   deleteAllElemsOfClass("js-pl-color-thumbs");
   deleteAllElemsOfClass("js-pl-sizes-wrap");
-  runOnAllElemsofClass("js-pl-expandable", ({ style }) => {
+  runOnAllElemsOfClass("js-pl-expandable", ({ style }) => {
     style.top = "10px";
-    style.left = "10px";
     style.right = "10px";
     style.bottom = "10px";
+    style.left = "10px";
   });
 };
 
@@ -88,7 +88,7 @@ const addAllPLPWidgets = (siteInfo) => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
-  runOnAllElemsofClass("js-product-listing", (productListing) =>
+  runOnAllElemsOfClass("js-product-listing", (productListing) =>
     addPLPSingleWidget(productListing, siteInfo)
   );
 };
@@ -105,14 +105,13 @@ const nodeToObservePLP = () => {
   return nodeToObserve;
 };
 
-if (onPLP) {
-  addAllPLPWidgets(siteInfo);
-
-  /** Watches for changes on SPA to rerender PLP widgets */
-  new MutationObserver(() => addAllPLPWidgets(siteInfo)).observe(
-    nodeToObservePLP(),
-    {
-      childList: true,
-    }
-  );
-}
+module.exports = {
+  runOnAllElemsOfClass,
+  deleteAllElemsOfClass,
+  CCNewTabFix,
+  fixBCStyling,
+  PLPWidgetContainer,
+  addPLPSingleWidget,
+  addAllPLPWidgets,
+  nodeToObservePLP,
+};
