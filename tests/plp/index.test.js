@@ -162,9 +162,22 @@ describe("fixBCStyling", () => {
 });
 
 describe("CCNewTabFix", () => {
-  test("nice", () => {});
+  const event = { currentTarget: HTMLElem("div") };
+  event.currentTarget.setAttribute("data-url", "https://www.google.com/");
+
+  test("should open new window from data-url attribute", () => {
+    {
+      global.open = jest.fn();
+      CCNewTabFix(event);
+
+      expect(global.open).toHaveBeenCalledWith("https://www.google.com/");
+    }
+  });
 });
+
 describe("PLPWidgetContainer", () => {
+  // const container = PLPWidgetContainer("KSK000I")
+
   test("nice", () => {});
 });
 describe("addPLPSingleWidget", () => {

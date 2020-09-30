@@ -27,3 +27,5 @@ const BCDropdownCaret = () => {
 
   return newBCDropdownCaret;
 };
+
+module.exports = { BCDropdownCaret };
