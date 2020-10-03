@@ -16,11 +16,7 @@ const PLPDropdownOpened = (target) => {
  * @param {Element} productListing PLI product listing where widget was
  */
 
-const openPLPDropdownOptions = (event, productID, productListing, siteInfo) => {
-
-  /** Prevents PDP reroute on CC */
-  if (siteInfo.onCompetitiveCyclist) event.stopPropagation();
-
+const openPLPDropdownOptions = (event, productID, productListing) => {
   const { currentTarget } = event;
   const { firstChild: currentOption, lastChild } = currentTarget;
 
@@ -29,7 +25,7 @@ const openPLPDropdownOptions = (event, productID, productListing, siteInfo) => {
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
-      PLPSelectorDropdown(productID, currentOption, productListing, siteInfo)
+      PLPSelectorDropdown(productID, currentOption, productListing)
     );
   }
 };
@@ -57,13 +53,12 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
 const handleDropdownOptions = (
   productID,
   productListing,
-  PLPSelectorDropdownContainer,
-  siteInfo
+  PLPSelectorDropdownContainer
 ) => {
   /** Initialize with no value to return a falsy value */
 
   PLPSelectorDropdownContainer.onclick = (event) =>
-    openPLPDropdownOptions(event, productID, productListing, siteInfo);
+    openPLPDropdownOptions(event, productID, productListing);
 
   productListing.onmouseleave = () =>
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
@@ -86,12 +81,10 @@ const PLPDropdownCurrentOption = (siteString) => {
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
  * @param {Element} productListing PLI product listing where widget was added
- * @param {object} siteInfo Information about the current website visited
  * @return {Element}
  */
 
-const PLPSelectorDropdownContainer = (productID, productListing, siteInfo) => {
-  const { siteString, onCompetitiveCyclist } = siteInfo;
+const PLPSelectorDropdownContainer = (productID, productListing) => {
   const newPLPSelectorDropdownContainer = HTMLElem("div", [
     "plp-dropdown-container",
     siteString,
@@ -106,8 +99,7 @@ const PLPSelectorDropdownContainer = (productID, productListing, siteInfo) => {
   handleDropdownOptions(
     productID,
     productListing,
-    newPLPSelectorDropdownContainer,
-    siteInfo
+    newPLPSelectorDropdownContainer
   );
 
   return newPLPSelectorDropdownContainer;

@@ -32,10 +32,10 @@ const addMethodsToCopySKUButton = (copySKUButton) => {
  * @returns {Element}
  */
 
-const copySKUButton = (siteInfo) => {
+const copySKUButton = () => {
   const newCopySKUButton = HTMLElem(
     "button",
-    classnamesForElem("CopySKUButton", siteInfo),
+    classnamesForElem("CopySKUButton"),
     "copy-sku-button",
     "Copy SKU"
   );

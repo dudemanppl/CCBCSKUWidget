@@ -3,7 +3,7 @@ const cleanCSS = require("gulp-clean-css");
 const concat = require("gulp-concat");
 const terser = require("gulp-terser");
 const rename = require("gulp-rename");
-const replace = require("gulp-replace");
+const removeCode = require("gulp-remove-code");
 const imagemin = require("gulp-imagemin");
 const zip = require("gulp-zip");
 const {
@@ -13,6 +13,7 @@ const {
 const production = NODE_ENV === "production";
 
 const contentScripts = [
+  "src/index.js",
   "src/shared/index.js",
   "src/pdp/copySKUButton.js",
   "src/pdp/index.js",
@@ -21,11 +22,14 @@ const contentScripts = [
   "src/plp/dropdown/dropdown.js",
   "src/plp/dropdown/singleOption.js",
   "src/plp/index.js",
-  "src/index.js",
 ];
 
 const terserOptions = {
-  mangle: production ? { toplevel: true } : false,
+  mangle: production
+    ? {
+        toplevel: true,
+      }
+    : false,
   compress: production ? { ecma: 8 } : false,
 };
 
@@ -42,7 +46,7 @@ const minifyCSS = (cb) => {
 
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
-    .pipe(replace(/module[\s\S]+/, ""))
+    .pipe(removeCode({ production: true }))
     .pipe(concat("index.min.js", { newLine: "" }))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));

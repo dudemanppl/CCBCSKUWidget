@@ -5,23 +5,22 @@
  * @param {string} price Sale price of an item
  */
 
-const updatePricingPLP = (productListingPrice, props, price, siteInfo) => {
-  if (
-    productListingPrice.firstChild.textContent !== price &&
-    !props.variantSelected
-  ) {
+const updatePricingPLP = (productListingPrice, props, price) => {
+  const { variantSelected } = props;
+
+  if (productListingPrice.firstChild.textContent !== price && variantSelected) {
+    productListingPrice.firstChild.textContent = price;
+  } else if (!variantSelected) {
     /** Removes current elements related to price if variant has not been selected yet */
     while (productListingPrice.lastChild) {
       productListingPrice.lastChild.remove();
     }
 
     productListingPrice.append(
-      HTMLElem("span", classnamesForElem("PLPPrice", siteInfo), null, price)
+      HTMLElem("span", classnamesForElem("PLPPrice"), null, price)
     );
 
     props.variantSelected = true;
-  } else {
-    productListingPrice.firstChild.textContent = price;
   }
 };
 
@@ -66,15 +65,14 @@ const addMethodsToPLPSelectorDropdownOption = (
   props,
   currentOption,
   [productListingImg, productListingPrice],
-  highlightCurrSelectedOption,
-  siteInfo
+  highlightCurrSelectedOption
 ) => {
   /** Adds OOS alert as necessary*/
   if (outOfStock) PLPSelectorDropdownOption.classList.add("oos-alert");
 
   PLPSelectorDropdownOption.onmouseenter = () => {
     const newImgSource = `https://content.${
-      siteInfo.onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
+      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
     }.com${imageSrc}`;
 
     /** Changes image source if variant image changes */
@@ -113,3 +111,12 @@ const PLPSelectorDropdownOption = (product, ...params) => {
 
   return newPLPSelectorDropdownOption;
 };
+
+//removeIf(production)
+module.exports = {
+  updatePricingPLP,
+  copySKUPLP,
+  addMethodsToPLPSelectorDropdownOption,
+  PLPSelectorDropdownOption,
+};
+//endRemoveIf(production)

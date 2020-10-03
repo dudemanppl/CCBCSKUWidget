@@ -28,4 +28,6 @@ const BCDropdownCaret = () => {
   return newBCDropdownCaret;
 };
 
+//removeIf(production)
 module.exports = { BCDropdownCaret };
+//endRemoveIf(production)

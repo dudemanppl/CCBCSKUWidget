@@ -39,10 +39,6 @@ const fixBCStyling = () => {
   });
 };
 
-const CCNewTabFix = ({ currentTarget }) => {
-  window.open(currentTarget.getAttribute("data-url"));
-};
-
 /**
  * Creates main SKU Widget container for PLP
  *
@@ -50,12 +46,12 @@ const CCNewTabFix = ({ currentTarget }) => {
  * @param {Element} productListing PLP product listing where widget was added
  */
 
-const PLPWidgetContainer = (productID, productListing, siteInfo) => {
+const PLPWidgetContainer = (productID, productListing) => {
   const newPLPWidgetContainer = HTMLElem("div", ["plp-widget-container"]);
 
   newPLPWidgetContainer.append(
-    PLPSelectorDropdownContainer(productID, productListing, siteInfo),
-    WMSLink(productID, siteInfo)
+    PLPSelectorDropdownContainer(productID, productListing),
+    WMSLink(productID)
   );
 
   return newPLPWidgetContainer;
@@ -67,29 +63,23 @@ const PLPWidgetContainer = (productID, productListing, siteInfo) => {
  * @param {Element} productListing PLP product listing
  */
 
-const addPLPSingleWidget = (productListing, siteInfo) => {
+const addPLPSingleWidget = (productListing) => {
   const productID = productListing.getAttribute("data-product-id");
-  const targetLocation = productListing.firstChild.childNodes[2];
+  const targetLocation = productListing.firstChild;
 
-  if (siteInfo.onCompetitiveCyclist) {
-    targetLocation.onauxclick = CCNewTabFix;
-  }
-
-  targetLocation.append(
-    PLPWidgetContainer(productID, targetLocation, siteInfo)
-  );
+  targetLocation.append(PLPWidgetContainer(productID, targetLocation));
 };
 
 /**
  * Adds all widgets to DOM
  */
 
-const addAllPLPWidgets = (siteInfo) => {
+const addAllPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
   runOnAllElemsOfClass("js-product-listing", (productListing) =>
-    addPLPSingleWidget(productListing, siteInfo)
+    addPLPSingleWidget(productListing)
   );
 };
 
@@ -105,6 +95,16 @@ const nodeToObservePLP = () => {
   return nodeToObserve;
 };
 
+if (onPLP) {
+  addAllPLPWidgets();
+
+  /** Watches for changes on SPA to rerender PLP widgets */
+  new MutationObserver(() => addAllPLPWidgets()).observe(nodeToObservePLP(), {
+    childList: true,
+  });
+}
+
+//removeIf(production)
 module.exports = {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,
@@ -115,3 +115,4 @@ module.exports = {
   addAllPLPWidgets,
   nodeToObservePLP,
 };
+//endRemoveIf(production)

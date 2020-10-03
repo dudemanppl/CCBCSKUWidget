@@ -1,19 +1,3 @@
-const siteInfo = {
-  onCompetitiveCyclist: window.location.host === "www.competitivecyclist.com",
-  siteString:
-    /* istanbul ignore next */
-    window.location.host === "www.competitivecyclist.com" ? "cc" : "bc",
-  onPLP: document.getElementsByClassName("search-results").length,
-  onPDP: document.getElementsByClassName("js-kraken-pdp-body").length,
-};
-const { onCompetitiveCyclist, onPLP, onPDP } = siteInfo;
-
-/* istanbul ignore next */
-/** Changes icon to goat logo when on BC */
-if (onPLP || onPDP) {
-  chrome.runtime.sendMessage({ onCompetitiveCyclist });
-}
-
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
@@ -51,10 +35,10 @@ const HTMLElem = (tagName, classList, id, textContent) => {
  * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
-const WMSLink = (productID, siteInfo) => {
+const WMSLink = (productID) => {
   const newWMSLink = HTMLElem(
     "a",
-    classnamesForElem("WMSLink", siteInfo),
+    classnamesForElem("WMSLink"),
     null,
     "Go to WMS"
   );
@@ -65,8 +49,8 @@ const WMSLink = (productID, siteInfo) => {
   return newWMSLink;
 };
 
-const classnamesForElem = (elem, siteInfo) => {
-  const classnames = [siteInfo.siteString];
+const classnamesForElem = (elem) => {
+  const classnames = [siteString];
 
   const add = (...classes) => {
     classnames.push(...classes);
@@ -74,9 +58,9 @@ const classnamesForElem = (elem, siteInfo) => {
 
   if (elem === "WMSLink" || elem === "CopySKUButton") {
     add("btn", "btn-reset");
-    if (siteInfo.onPDP) {
+    if (onPDP) {
       add("pdp");
-      if (siteInfo.onCompetitiveCyclist) {
+      if (onCompetitiveCyclist) {
         add("btn--secondary");
       } else {
         add("product-buybox__btn");
@@ -102,4 +86,6 @@ const classnamesForElem = (elem, siteInfo) => {
   return classnames;
 };
 
+//removeIf(production)
 module.exports = { HTMLElem, WMSLink, classnamesForElem };
+//endRemoveIf(production)

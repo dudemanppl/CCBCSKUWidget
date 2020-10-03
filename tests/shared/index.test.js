@@ -1,11 +1,14 @@
-const {
-  HTMLElem,
-  WMSLink,
-  classnamesForElem,
-} = require("../../src/shared/index");
+const { HTMLElem, classnamesForElem, WMSLink } = require("../../src/shared");
 
-const onCC = { onCompetitiveCyclist: true, siteString: "cc" };
-const onBC = { onCompetitiveCyclist: false, siteString: "bc" };
+const onCC = () => {
+  global.siteString = "cc";
+  global.onCompetitiveCyclist = true;
+};
+
+const onBC = () => {
+  global.siteString = "bc";
+  global.onCompetitiveCyclist = false;
+};
 
 describe("HTMLElem", () => {
   describe("empty element", () => {
@@ -135,13 +138,12 @@ describe("HTMLElem", () => {
 
 describe("WMSLink", () => {
   describe("PDP", () => {
-    const onPDP = true;
+    global.onPDP = true;
 
     describe("Competitive Cyclist", () => {
-      const CCPDPWMSLink = WMSLink("KSK000I", {
-        ...onCC,
-        onPDP,
-      });
+      onCC();
+
+      const CCPDPWMSLink = WMSLink("KSK000I");
 
       test("should be an anchor element", () => {
         expect(CCPDPWMSLink.tagName).toBe("A");
@@ -168,10 +170,8 @@ describe("WMSLink", () => {
     });
 
     describe("Backcountry", () => {
-      const BCPDPWMSLink = WMSLink("KSK000I", {
-        ...onBC,
-        onPDP,
-      });
+      onBC();
+      const BCPDPWMSLink = WMSLink("KSK000I");
 
       test("should be an anchor element", () => {
         expect(BCPDPWMSLink.tagName).toBe("A");
@@ -196,16 +196,18 @@ describe("WMSLink", () => {
         expect(BCPDPWMSLink.textContent).toBe("Go to WMS");
       });
     });
+    global.onPDP = false;
   });
 
   describe("PLP", () => {
-    const onPDP = false;
+    global.onPLP = true;
 
     describe("Competitive Cyclist", () => {
-      const CCPLPWMSLink = WMSLink("KSK000I", {
-        ...onCC,
-        onPDP,
-      });
+      onCC();
+
+      onCC();
+
+      const CCPLPWMSLink = WMSLink("KSK000I");
 
       test("should be an anchor element", () => {
         expect(CCPLPWMSLink.tagName).toBe("A");
@@ -231,10 +233,9 @@ describe("WMSLink", () => {
     });
 
     describe("Backcountry", () => {
-      const BCPLPWMSLink = WMSLink("KSK000I", {
-        ...onBC,
-        onPDP,
-      });
+      onBC();
+
+      const BCPLPWMSLink = WMSLink("KSK000I");
 
       test("should be an anchor element", () => {
         expect(BCPLPWMSLink.tagName).toBe("A");
@@ -258,18 +259,19 @@ describe("WMSLink", () => {
         expect(BCPLPWMSLink.textContent).toBe("Go to WMS");
       });
     });
+    global.onPLP = false;
   });
 });
 
 describe("classnamesForElem", () => {
   describe("PDP", () => {
-    const onPDP = true;
+    global.onPDP = true;
+
     describe("Competitive Cyclist", () => {
+      onCC();
+
       describe("WMSLink", () => {
-        const CCPDPWMSLinkClassnames = classnamesForElem("WMSLink", {
-          ...onCC,
-          onPDP,
-        });
+        const CCPDPWMSLinkClassnames = classnamesForElem("WMSLink");
 
         test("should return an array", () => {
           expect(CCPDPWMSLinkClassnames).toBeInstanceOf(Array);
@@ -288,10 +290,7 @@ describe("classnamesForElem", () => {
       });
 
       describe("CopySKUButton", () => {
-        const CCPDPCopySKUClassnames = classnamesForElem("CopySKUButton", {
-          ...onCC,
-          onPDP,
-        });
+        const CCPDPCopySKUClassnames = classnamesForElem("CopySKUButton");
 
         test("should return an array", () => {
           expect(CCPDPCopySKUClassnames).toBeInstanceOf(Array);
@@ -310,11 +309,9 @@ describe("classnamesForElem", () => {
     });
 
     describe("Backcountry", () => {
+      onBC();
       describe("WMSLink", () => {
-        const BCPDPWMSLinkClassnames = classnamesForElem("WMSLink", {
-          ...onBC,
-          onPDP,
-        });
+        const BCPDPWMSLinkClassnames = classnamesForElem("WMSLink");
 
         test("should return an array", () => {
           expect(BCPDPWMSLinkClassnames).toBeInstanceOf(Array);
@@ -331,11 +328,9 @@ describe("classnamesForElem", () => {
           ]);
         });
       });
+
       describe("CopySKUButton", () => {
-        const BCPDPCopySKUClassnames = classnamesForElem("CopySKUButton", {
-          ...onBC,
-          onPDP,
-        });
+        const BCPDPCopySKUClassnames = classnamesForElem("CopySKUButton");
 
         test("should return an array", () => {
           expect(BCPDPCopySKUClassnames).toBeInstanceOf(Array);
@@ -352,17 +347,17 @@ describe("classnamesForElem", () => {
         });
       });
     });
+    global.onPDP = false;
   });
 
   describe("PLP", () => {
-    const onPDP = false;
+    global.onPLP = true;
 
     describe("Competitive Cyclist", () => {
+      onCC();
+
       describe("WMSLink", () => {
-        const CCPDPWMSLinkClassnames = classnamesForElem("WMSLink", {
-          ...onCC,
-          onPDP,
-        });
+        const CCPDPWMSLinkClassnames = classnamesForElem("WMSLink");
 
         test("should return an array", () => {
           expect(CCPDPWMSLinkClassnames).toBeInstanceOf(Array);
@@ -380,10 +375,7 @@ describe("classnamesForElem", () => {
       });
 
       describe("PLPPrice", () => {
-        const CCPDPCopySKUClassnames = classnamesForElem("PLPPrice", {
-          ...onCC,
-          onPDP,
-        });
+        const CCPDPCopySKUClassnames = classnamesForElem("PLPPrice");
 
         test("should return an array", () => {
           expect(CCPDPCopySKUClassnames).toBeInstanceOf(Array);
@@ -402,11 +394,9 @@ describe("classnamesForElem", () => {
     });
 
     describe("Backcountry", () => {
+      onBC();
       describe("WMSLink", () => {
-        const BCPDPWMSLinkClassnames = classnamesForElem("WMSLink", {
-          ...onBC,
-          onPDP,
-        });
+        const BCPDPWMSLinkClassnames = classnamesForElem("WMSLink");
 
         test("should return an array", () => {
           expect(BCPDPWMSLinkClassnames).toBeInstanceOf(Array);
@@ -424,10 +414,7 @@ describe("classnamesForElem", () => {
       });
 
       describe("PLPPrice", () => {
-        const BCPDPCopySKUClassnames = classnamesForElem("PLPPrice", {
-          ...onBC,
-          onPDP,
-        });
+        const BCPDPCopySKUClassnames = classnamesForElem("PLPPrice");
 
         test("should return an array", () => {
           expect(BCPDPCopySKUClassnames).toBeInstanceOf(Array);

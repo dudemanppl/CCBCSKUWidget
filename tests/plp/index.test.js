@@ -1,3 +1,6 @@
+global.onPLP = false;
+global.onCompetitiveCyclist = true;
+
 const {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,

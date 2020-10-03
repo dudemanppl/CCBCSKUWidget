@@ -1,25 +1,32 @@
+const fetchJson = async (url) => {
+  const response = await fetch(url);
+
+  return await response.json();
+};
+
+const getItemInfo = async (productID) => {
+  return await fetchJson(
+    `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
+      onCompetitiveCyclist ? "competitivecyclist" : "bcs"
+    }`
+  );
+};
+
 /**
- * Sends request to BC API, returns array with information about given product
+ * Returns array of variants for a product id
  *
- * @async
- * @param {string} productID Product ID to look up item
- * @return {array} Array of objects with item info
+ * @param {string} productID Parent SKU for item from CC/BC catalog
+ * @return {array}
  */
 
-const getItemInfo = async (productID, { onCompetitiveCyclist }) => {
-  try {
-    let res = await fetch(
-      `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
-        onCompetitiveCyclist ? "competitivecyclist" : "bcs"
-      }`
-    );
+const getVariants = async (productID) => {
+  const itemInfo = await getItemInfo(productID);
 
-    res = await res.json();
+  const {
+    products: [{ skus: variants }],
+  } = itemInfo;
 
-    return Promise.resolve(await res.products[0].skus);
-  } catch (err) {
-    console.log(err);
-  }
+  return variants;
 };
 
 /**
@@ -104,39 +111,73 @@ const getProductListingElems = (productListing) => {
 };
 
 /**
- * Creates variant selector dropdown on PLP with price and stock information
+ *
+ * @param {object} product Object containing info about an item
+ * @param {number} index Index of the current item
+ * @param {Element} currentOption Reference to HTML elem with the current option chosen
+ * @param {Element} productListing PLI product listing where widget was
+ * @param {Object} state Observable properties that control behavior of component
+ * @param {Element} PLPSelectorDropdownOption Single PLP selector dropdown option
+ */
+
+const addSingleDropdownOption = (
+  product,
+  index,
+  currentOption,
+  productListing,
+  state,
+  PLPSelectorDropdown
+) => {
+  PLPSelectorDropdown.append(
+    PLPSelectorDropdownOption(
+      formatProduct(product),
+      state,
+      currentOption,
+      getProductListingElems(productListing),
+      () => highlightCurrSelectedOption(PLPSelectorDropdown, index, state)
+    )
+  );
+};
+
+/**
+ * Adds all options to the dropdown
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
- * @param {Element} productListing PLI product listing where widget was added
+ */
+
+const addAllDropdownOptions = (productID, ...args) => {
+  getVariants(productID).then((variants) => {
+    for (let i = 0; i < variants.length; i += 1) {
+      addSingleDropdownOption(variants[i], i, ...args);
+    }
+  });
+};
+
+/**
+ * Creates variant selector dropdown on PLP with price and stock information
+ *
  * @return {Element}
  */
 
-const PLPSelectorDropdown = (
-  productID,
-  currentOption,
-  productListing,
-  siteInfo
-) => {
+const PLPSelectorDropdown = (...args) => {
   const newPLPSelectorDropdown = HTMLElem("ul", [
     "plp-dropdown-options",
-    siteInfo.siteString,
+    siteString,
   ]);
   const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
 
-  getItemInfo(productID, siteInfo).then((products) => {
-    for (let i = 0; i < products.length; i += 1) {
-      newPLPSelectorDropdown.append(
-        PLPSelectorDropdownOption(
-          formatProduct(products[i]),
-          state,
-          currentOption,
-          getProductListingElems(productListing),
-          () => highlightCurrSelectedOption(newPLPSelectorDropdown, i, state),
-          siteInfo
-        )
-      );
-    }
-  });
+  addAllDropdownOptions(...args, state, newPLPSelectorDropdown);
 
   return newPLPSelectorDropdown;
 };
+
+//removeIf(production)
+module.exports = {
+  getItemInfo,
+  usdString,
+  formatProduct,
+  highlightCurrSelectedOption,
+  getProductListingElems,
+  PLPSelectorDropdown,
+};
+//endRemoveIf(production)

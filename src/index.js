@@ -1,20 +1,9 @@
-if (onPDP) {
-  if (onCompetitiveCyclist) invokeFuncInWindow(addOOSAlertToCCPDP);
+/** Initializes global variables */
 
-  PDPTargetLocation(siteInfo).append(
-    WMSLink(PDPProductID(), siteInfo),
-    copySKUButton(siteInfo)
-  );
-}
+const onCompetitiveCyclist =
+  window.location.host === "www.competitivecyclist.com";
+const siteString = onCompetitiveCyclist ? "cc" : "bc";
+const onPLP = document.getElementsByClassName("search-results").length;
+const onPDP = document.getElementsByClassName("js-kraken-pdp-body").length;
 
-if (onPLP) {
-  addAllPLPWidgets(siteInfo);
-
-  /** Watches for changes on SPA to rerender PLP widgets */
-  new MutationObserver(() => addAllPLPWidgets(siteInfo)).observe(
-    nodeToObservePLP(),
-    {
-      childList: true,
-    }
-  );
-}
+chrome.runtime.sendMessage({ onCompetitiveCyclist });
