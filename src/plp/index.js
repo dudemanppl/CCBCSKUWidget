@@ -108,7 +108,6 @@ if (onPLP) {
 module.exports = {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,
-  CCNewTabFix,
   fixBCStyling,
   PLPWidgetContainer,
   addPLPSingleWidget,

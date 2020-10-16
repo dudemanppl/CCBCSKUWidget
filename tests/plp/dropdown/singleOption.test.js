@@ -1,9 +1,4 @@
-const { HTMLElem, classnamesForElem } = require("../../../src/shared/index");
-
-global.HTMLElem = HTMLElem;
-global.classnamesForElem = classnamesForElem;
 global.onPLP = true;
-global.siteString = "cc";
 
 const {
   updatePricingPLP,
@@ -137,7 +132,7 @@ describe("addMethodsToPLPSelectorDropdownOption", () => {
     imageSrc: "testImgSrc",
   };
   const props = { variantSelected: false };
-  
+
   // const singleOption = PLPSelectorDropdownOption()
 });
 

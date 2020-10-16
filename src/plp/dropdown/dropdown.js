@@ -1,22 +1,38 @@
+/**
+ * Returns JSON response of HTTP get request 
+ * 
+ * @param {string} url URL to send request to
+ * @return {Object}
+ */
+
 const fetchJson = async (url) => {
   const response = await fetch(url);
+  const json = response.json();
 
-  return await response.json();
+  return json;
 };
 
+/**
+ * Returns item information for a product ID from CC/BC catalog 
+ * 
+ * @param {string} productID Parent SKU for item from CC/BC catalog
+ * @return {Object}
+ */
+
 const getItemInfo = async (productID) => {
-  return await fetchJson(
-    `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
-      onCompetitiveCyclist ? "competitivecyclist" : "bcs"
-    }`
-  );
+  const url = `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
+    onCompetitiveCyclist ? "competitivecyclist" : "bcs"
+  }`;
+  const itemInfo = await fetchJson(url);
+
+  return itemInfo;
 };
 
 /**
  * Returns array of variants for a product id
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
- * @return {array}
+ * @return {Object[]}
  */
 
 const getVariants = async (productID) => {
@@ -173,7 +189,9 @@ const PLPSelectorDropdown = (...args) => {
 
 //removeIf(production)
 module.exports = {
+  fetchJson,
   getItemInfo,
+  getVariants,
   usdString,
   formatProduct,
   highlightCurrSelectedOption,

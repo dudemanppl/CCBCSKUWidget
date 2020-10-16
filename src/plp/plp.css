@@ -62,6 +62,7 @@
 }
 
 .plp-dropdown-container.bc {
+  width: 85%;
   border-radius: 4px;
   border-color: #efefef;
 }
@@ -94,7 +95,7 @@
 }
 
 .plp-dropdown-current-option.bc {
-  width: calc(90% - 46px);
+  width: calc(85% - 46px);
   border-radius: 4px 0 0 4px;
 }
 

@@ -29,7 +29,6 @@ const openPLPDropdownOptions = (event, productID, productListing) => {
     );
   }
 };
-
 /**
  * @param {Element} PLPSelectorDropdownContainer
  */

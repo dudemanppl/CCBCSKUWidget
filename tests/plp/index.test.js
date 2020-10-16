@@ -1,10 +1,8 @@
 global.onPLP = false;
-global.onCompetitiveCyclist = true;
 
 const {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,
-  CCNewTabFix,
   fixBCStyling,
   PLPWidgetContainer,
   addPLPSingleWidget,
@@ -12,7 +10,6 @@ const {
   nodeToObservePLP,
 } = require("../../src/plp/index");
 
-const { HTMLElem } = require("../../src/shared/index");
 
 const clearBody = () => (document.body.innerHTML = "");
 
@@ -161,20 +158,6 @@ describe("fixBCStyling", () => {
     expect(right).toBe("10px");
     expect(bottom).toBe("10px");
     expect(left).toBe("10px");
-  });
-});
-
-describe("CCNewTabFix", () => {
-  const event = { currentTarget: HTMLElem("div") };
-  event.currentTarget.setAttribute("data-url", "https://www.google.com/");
-
-  test("should open new window from data-url attribute", () => {
-    {
-      global.open = jest.fn();
-      CCNewTabFix(event);
-
-      expect(global.open).toHaveBeenCalledWith("https://www.google.com/");
-    }
   });
 });
 
