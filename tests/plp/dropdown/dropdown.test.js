@@ -3,15 +3,13 @@ const {
   getItemInfo,
   getVariants,
   usdString,
-  formatProduct,
+  formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
   getProductListingElems,
-  addSingleDropdownOption,
-  addAllDropdownOptions,
+  dropdownOptions,
   PLPSelectorDropdown,
 } = require("../../../src/plp/dropdown/dropdown");
-const { HTMLElem } = require("../../../src/shared");
 
 const createMockDropdown = () => {
   const div = HTMLElem("div");
@@ -106,9 +104,9 @@ describe("usdString", () => {
   });
 });
 
-describe("formatProduct", () => {
+describe("formatVariant", () => {
   const [firstVariant] = variantsResponse;
-  const result = formatProduct(firstVariant);
+  const result = formatVariant(firstVariant);
 
   test("should return an object", () => {
     expect(result).toBeInstanceOf(Object);
@@ -221,6 +219,11 @@ describe("getProductListingElems", () => {
   });
 });
 
-describe('addSingleDropdownOption',()=>{
-  
+describe("dropdownOptions", () => {
+  global.getVariants = () => variantsResponse;
+
+  test('test', ()=>{
+
+    expect('test').toBe('test')
+  })
 });

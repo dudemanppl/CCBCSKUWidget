@@ -5,8 +5,7 @@
  * @return {boolean}
  */
 
-const PLPDropdownOpened = (target) => {
-  const [elementClass] = target.classList;
+const PLPDropdownOpened = ({ classList: [elementClass] }) => {
   return elementClass === "plp-dropdown-options";
 };
 
@@ -16,7 +15,7 @@ const PLPDropdownOpened = (target) => {
  * @param {Element} productListing PLI product listing where widget was
  */
 
-const openPLPDropdownOptions = (event, productID, productListing) => {
+const openPLPDropdownOptions = async (event, productID, productListing) => {
   const { currentTarget } = event;
   const { firstChild: currentOption, lastChild } = currentTarget;
 
@@ -25,7 +24,7 @@ const openPLPDropdownOptions = (event, productID, productListing) => {
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
-      PLPSelectorDropdown(productID, currentOption, productListing)
+      await PLPSelectorDropdown(productID, currentOption, productListing)
     );
   }
 };

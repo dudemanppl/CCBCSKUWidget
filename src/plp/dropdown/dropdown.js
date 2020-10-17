@@ -66,7 +66,7 @@ const usdString = (num) =>
  * @return {Object}
  */
 
-const formatProduct = ({
+const formatVariant = ({
   salePrice,
   id,
   availability: { stockLevel },
@@ -102,6 +102,14 @@ const toggleCurrOptionClass = (PLPSelectorDropdown, state) => {
  * @param {number} newlySelectectedIdx Index of newly selected option
  */
 
+/**
+ * Highlights the selected option on a PLP dropdown
+ *
+ * @param {Element} PLPSelectorDropdown
+ * @param {Object} state
+ * @param {number} newlySelectectedIdx Index of newly selected option
+ */
+
 const highlightCurrSelectedOption = (
   PLPSelectorDropdown,
   state,
@@ -134,26 +142,23 @@ const getProductListingElems = (productListing) => {
 };
 
 /**
+ * Adds all options to the dropdown
  *
- * @param {Object} product Object containing info about an item
- * @param {number} index Index of the current item
- * @param {Element} currentOption Reference to HTML elem with the current option chosen
- * @param {Element} productListing PLI product listing where widget was
- * @param {Object} state Observable properties that control behavior of component
- * @param {Element} PLPSelectorDropdownOption Single PLP selector dropdown option
+ * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
-const addSingleDropdownOption = (
-  product,
-  index,
+const dropdownOptions = async (
+  productID,
   currentOption,
   productListing,
   state,
   PLPSelectorDropdown
 ) => {
-  PLPSelectorDropdown.append(
+  const variants = await getVariants(productID);
+
+  return variants.map((variant, index) =>
     PLPSelectorDropdownOption(
-      formatProduct(product),
+      formatVariant(variant),
       state,
       currentOption,
       getProductListingElems(productListing),
@@ -163,33 +168,21 @@ const addSingleDropdownOption = (
 };
 
 /**
- * Adds all options to the dropdown
- *
- * @param {string} productID Parent SKU for item from CC/BC catalog
- */
-
-const addAllDropdownOptions = (productID, ...args) => {
-  getVariants(productID).then((variants) => {
-    for (let i = 0; i < variants.length; i += 1) {
-      addSingleDropdownOption(variants[i], i, ...args);
-    }
-  });
-};
-
-/**
  * Creates variant selector dropdown on PLP with price and stock information
  *
  * @return {Element}
  */
 
-const PLPSelectorDropdown = (...args) => {
+const PLPSelectorDropdown = async (...args) => {
   const newPLPSelectorDropdown = HTMLElem("ul", [
     "plp-dropdown-options",
     siteString,
   ]);
   const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
 
-  addAllDropdownOptions(...args, state, newPLPSelectorDropdown);
+  const options = await dropdownOptions(...args, state, newPLPSelectorDropdown);
+
+  newPLPSelectorDropdown.append(...options);
 
   return newPLPSelectorDropdown;
 };
@@ -200,12 +193,11 @@ module.exports = {
   getItemInfo,
   getVariants,
   usdString,
-  formatProduct,
+  formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
   getProductListingElems,
-  addSingleDropdownOption,
-  addAllDropdownOptions,
+  dropdownOptions,
   PLPSelectorDropdown,
 };
 //endRemoveIf(production)
