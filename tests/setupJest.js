@@ -8,6 +8,10 @@ global.classnamesForElem = classnamesForElem;
 
 global.onCompetitiveCyclist = true;
 global.siteString = "cc";
+global.onPLP = false;
+global.onPDP = false;
+
+global.clearBody = () => (document.body.innerHTML = "");
 
 global.variantsResponse = [
   {

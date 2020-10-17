@@ -1,6 +1,6 @@
 /**
- * Returns JSON response of HTTP get request 
- * 
+ * Returns JSON response of HTTP get request
+ *
  * @param {string} url URL to send request to
  * @return {Object}
  */
@@ -13,8 +13,8 @@ const fetchJson = async (url) => {
 };
 
 /**
- * Returns item information for a product ID from CC/BC catalog 
- * 
+ * Returns item information for a product ID from CC/BC catalog
+ *
  * @param {string} productID Parent SKU for item from CC/BC catalog
  * @return {Object}
  */
@@ -62,8 +62,8 @@ const usdString = (num) =>
 /**
  * Formats a product to be more easily usable
  *
- * @param {object} product Original product to take values from
- * @return {object}
+ * @param {Object} product Original product to take values from
+ * @return {Object}
  */
 
 const formatProduct = ({
@@ -83,31 +83,38 @@ const formatProduct = ({
 };
 
 /**
- * Highlights the currently selected option on a PLP dropdown
+ * Toggles classname of given element to highlight/unhighlight it
  *
  * @param {Element} PLPSelectorDropdown
- * @param {number} selectedIdx Index of currently selected option
- * @param {object} state Current state of parent component
+ * @param {Object} state Current state of parent component
  * @param {number} state.currentlySelectedOptionIdx Index of the currently selected option
+ */
+
+const toggleCurrOptionClass = (PLPSelectorDropdown, state) => {
+  PLPSelectorDropdown.childNodes[
+    state.currentlySelectedOptionIdx
+  ].classList.toggle("curr-selected-option");
+};
+
+/**
+ * Highlights the selected option on a PLP dropdown
+ *
+ * @param {number} newlySelectectedIdx Index of newly selected option
  */
 
 const highlightCurrSelectedOption = (
   PLPSelectorDropdown,
-  selectedIdx,
-  state
+  state,
+  newlySelectectedIdx
 ) => {
-  const toggleCurrOptionClass = () => {
-    PLPSelectorDropdown.childNodes[
-      state.currentlySelectedOptionIdx
-    ].classList.toggle("curr-selected-option");
-  };
+  if (newlySelectectedIdx !== state.currentlySelectedOptionIdx) {
+    if (state.currentlySelectedOptionIdx >= 0) {
+      toggleCurrOptionClass(PLPSelectorDropdown, state);
+    }
 
-  if (state.currentlySelectedOptionIdx >= 0) {
-    toggleCurrOptionClass();
+    state.currentlySelectedOptionIdx = newlySelectectedIdx;
+    toggleCurrOptionClass(PLPSelectorDropdown, state);
   }
-
-  state.currentlySelectedOptionIdx = selectedIdx;
-  toggleCurrOptionClass();
 };
 
 /**
@@ -128,7 +135,7 @@ const getProductListingElems = (productListing) => {
 
 /**
  *
- * @param {object} product Object containing info about an item
+ * @param {Object} product Object containing info about an item
  * @param {number} index Index of the current item
  * @param {Element} currentOption Reference to HTML elem with the current option chosen
  * @param {Element} productListing PLI product listing where widget was
@@ -150,7 +157,7 @@ const addSingleDropdownOption = (
       state,
       currentOption,
       getProductListingElems(productListing),
-      () => highlightCurrSelectedOption(PLPSelectorDropdown, index, state)
+      () => highlightCurrSelectedOption(PLPSelectorDropdown, state, index)
     )
   );
 };
@@ -194,8 +201,11 @@ module.exports = {
   getVariants,
   usdString,
   formatProduct,
+  toggleCurrOptionClass,
   highlightCurrSelectedOption,
   getProductListingElems,
+  addSingleDropdownOption,
+  addAllDropdownOptions,
   PLPSelectorDropdown,
 };
 //endRemoveIf(production)

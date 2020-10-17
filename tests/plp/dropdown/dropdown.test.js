@@ -4,12 +4,31 @@ const {
   getVariants,
   usdString,
   formatProduct,
+  toggleCurrOptionClass,
   highlightCurrSelectedOption,
   getProductListingElems,
+  addSingleDropdownOption,
+  addAllDropdownOptions,
   PLPSelectorDropdown,
 } = require("../../../src/plp/dropdown/dropdown");
+const { HTMLElem } = require("../../../src/shared");
 
-global.onCompetitiveCyclist = true;
+const createMockDropdown = () => {
+  const div = HTMLElem("div");
+
+  div.append(div.cloneNode(), div.cloneNode(), div.cloneNode());
+
+  return div;
+};
+
+const getClassesFromMockDropdown = ({
+  firstChild: {
+    classList: [firstClass],
+  },
+  lastChild: {
+    classList: [lastClass],
+  },
+}) => [firstClass, lastClass];
 
 describe("fetchJson", () => {
   test("should return http response in json", async () => {
@@ -127,6 +146,81 @@ describe("formatProduct", () => {
   });
 });
 
-describe('highlightCurrSelectedOption',()=>{
+describe("toggleCurrOptionClass", () => {
+  const mockDropdown = createMockDropdown();
+  const state = { currentlySelectedOptionIdx: 0 };
+
+  test("should add 'curr-selected-option' class", () => {
+    toggleCurrOptionClass(mockDropdown, state);
+    const [firstClass, lastClass] = getClassesFromMockDropdown(mockDropdown);
+
+    expect(firstClass).toBe("curr-selected-option");
+    expect(lastClass).toBeUndefined();
+  });
+
+  test("should remove 'curr-selected-option' class", () => {
+    toggleCurrOptionClass(mockDropdown, state);
+    const [firstClass, lastClass] = getClassesFromMockDropdown(mockDropdown);
+
+    expect(firstClass).toBeUndefined();
+    expect(lastClass).toBeUndefined();
+  });
+});
+
+describe("highlightCurrSelectedOption", () => {
+  const mockDropdown = createMockDropdown();
+  const state = { currentlySelectedOptionIdx: -1 };
+
+  test("should change state to the newly selected index when it has not been invoked before", () => {
+    highlightCurrSelectedOption(mockDropdown, state, 0);
+    const [firstClass, lastClass] = getClassesFromMockDropdown(mockDropdown);
+
+    expect(state.currentlySelectedOptionIdx).toBe(0);
+    expect(firstClass).toBe("curr-selected-option");
+    expect(lastClass).toBeUndefined();
+  });
+
+  test("should change state to the newly selected index", () => {
+    highlightCurrSelectedOption(mockDropdown, state, 2);
+    const [firstClass, lastClass] = getClassesFromMockDropdown(mockDropdown);
+
+    expect(state.currentlySelectedOptionIdx).toBe(2);
+    expect(firstClass).toBeUndefined();
+    expect(lastClass).toBe("curr-selected-option");
+  });
+
+  test("should not invoked if same option is selected", () => {
+    const toggleCurrOptionClass = jest.fn();
+    highlightCurrSelectedOption(mockDropdown, state, 2);
+    const [firstClass, lastClass] = getClassesFromMockDropdown(mockDropdown);
+
+    expect(state.currentlySelectedOptionIdx).toBe(2);
+    expect(firstClass).toBeUndefined();
+    expect(lastClass).toBe("curr-selected-option");
+    expect(toggleCurrOptionClass).not.toBeCalled();
+  });
+});
+
+describe("getProductListingElems", () => {
+  const productListing = HTMLElem("div");
+  const productListingImg = HTMLElem("img");
+  const productListingPrice = HTMLElem("div", ["js-pl-pricing"]);
+
+  productListing.append(productListingImg, productListingPrice);
+
+  const [imgElem, priceElem] = getProductListingElems(productListing);
+
+  test("should get productListingImg", () => {
+    expect(imgElem).toEqual(productListingImg);
+    expect(imgElem).toBeInstanceOf(HTMLElement);
+  });
+
+  test("should get productListingPrice", () => {
+    expect(priceElem).toEqual(productListingPrice);
+    expect(priceElem).toBeInstanceOf(HTMLElement);
+  });
+});
+
+describe('addSingleDropdownOption',()=>{
   
-})
+});

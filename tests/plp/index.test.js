@@ -1,5 +1,3 @@
-global.onPLP = false;
-
 const {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,
@@ -9,9 +7,6 @@ const {
   addAllPLPWidgets,
   nodeToObservePLP,
 } = require("../../src/plp/index");
-
-
-const clearBody = () => (document.body.innerHTML = "");
 
 describe("runOnAllElemsOfClass", () => {
   beforeEach(clearBody);
