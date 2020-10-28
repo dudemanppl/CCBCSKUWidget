@@ -147,6 +147,7 @@ const getProductListingElems = (productListing) => {
  * @param {string} productID Parent SKU for item from CC/BC catalog
  */
 
+/* istanbul ignore next */
 const dropdownOptions = async (
   productID,
   currentOption,

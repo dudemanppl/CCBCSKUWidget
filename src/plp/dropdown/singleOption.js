@@ -81,6 +81,7 @@ const addMethodsToPLPSelectorDropdownOption = (
     }
   };
 
+  /* istanbul ignore next */
   PLPSelectorDropdownOption.onclick = () => {
     highlightCurrSelectedOption();
     updatePricingPLP(productListingPrice, props, price);

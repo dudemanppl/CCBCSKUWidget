@@ -301,3 +301,11 @@ global.CCResponse = {
 
 global.CCResponse.products[0].description =
   "<p>While the cyclists at Team Sky are more renowned for their legs than their brains, the latter do occasionally play a significant role in cycling. Case in point is Stannard's surgical dismantling of an apparently invincible Ettix-Quickstep at Omloop. Given that cycling is often equal parts cunning and strength, the pros at Sky rely on Kask's Protone Helmet to keep their strategic organ in top shape so it can effectively direct their energies when frantic finales send all the blood rushing to the legs.</p>\n\n<p>Tactical engines like Stannard's are protected by an in-mold construction of a polycarbonate shell bonded with an EPS foam body, all of which is built on a frame designed to let the helmet absorb impact while still maintaining enough structural integrity to see you safely through the duration of a crash.</p>\n\n<p>While safety is a helmet's first (and usually last) job, there are certain benchmarks that today's industry expects top-end protectives to meet. The current frontrunner in this category is aerodynamics, and the Kask ran the Protone through the expected wind-tunnel paces in order to design a model that dodges the wind whether you're head-on in the drops or in virtually any other cycling posture imaginable.</p>\n\n<p>The second consideration is cooling, and unlike many of its competitors, the Protone doesn't sacrifice ventilation for aerodynamics. In addition to the immediately obvious vents and rear exhaust port, the Protone incorporates Coolmax padding. Coolmax padding equates to more efficient moisture transfer and evaporation to complement your body's natural cooling process. They're also odor-resistant, removable, and contribute to the comfortable, personalized fit of the floating Octo Fit cradle and corresponding ECO Chinstrap.</p>";
+
+global.formattedProduct = {
+  price: "$299.95",
+  SKU: "KSK000I-WHT-S",
+  outOfStock: false,
+  variant: "White1, S",
+  imageSrc: "/images/items/medium/KSK/KSK000I/WHT.jpg",
+};

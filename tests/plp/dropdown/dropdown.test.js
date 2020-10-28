@@ -11,6 +11,10 @@ const {
   PLPSelectorDropdown,
 } = require("../../../src/plp/dropdown/dropdown");
 
+const {
+  PLPSelectorDropdownOption,
+} = require("../../../src/plp/dropdown/singleOption");
+
 const createMockDropdown = () => {
   const div = HTMLElem("div");
 
@@ -220,10 +224,24 @@ describe("getProductListingElems", () => {
 });
 
 describe("dropdownOptions", () => {
-  global.getVariants = () => variantsResponse;
+  global.PLPSelectorDropdownOption = PLPSelectorDropdownOption;
 
-  test('test', ()=>{
+  const productID = "KSK000I";
+  const currentOption = HTMLElem("div");
+  const productListing = HTMLElem("div");
+  const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
+  const PLPSelectorDropdown = HTMLElem("div");
+  const args = [
+    productID,
+    currentOption,
+    productListing,
+    state,
+    PLPSelectorDropdown,
+  ];
+  fetch.once(JSON.stringify(CCResponse));
+  const options = (async () => await dropdownOptions(...args))();
 
-    expect('test').toBe('test')
-  })
+  test("test", () => {
+    console.log(options);
+  });
 });

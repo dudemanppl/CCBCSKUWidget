@@ -1,5 +1,8 @@
 global.onPLP = true;
 
+// const {
+//   highlightCurrSelectedOption,
+// } = require("../../../src/plp/dropdown/dropdown");
 const {
   updatePricingPLP,
   copySKUPLP,
@@ -124,16 +127,98 @@ describe("copySKUPLP", () => {
 });
 
 describe("addMethodsToPLPSelectorDropdownOption", () => {
-  const product = {
-    price: "testPrice",
-    SKU: "testSku",
-    outOfStock: false,
-    variant: "testVariant",
-    imageSrc: "testImgSrc",
-  };
-  const props = { variantSelected: false };
+  const mockDropdownOption = (productListingImg, outOfStock = true) => {
+    const PLPSelectorDropdownOption = HTMLElem("div");
+    const props = { variantSelected: false };
+    const currentOption = HTMLElem("div");
+    const productListingPrice = HTMLElem("div");
+    const highlightCurrSelectedOption = jest.fn();
 
-  // const singleOption = PLPSelectorDropdownOption()
+    addMethodsToPLPSelectorDropdownOption(
+      PLPSelectorDropdownOption,
+      { ...formattedProduct, outOfStock },
+      props,
+      currentOption,
+      [productListingImg, productListingPrice],
+      highlightCurrSelectedOption
+    );
+
+    PLPSelectorDropdownOption.onclick = jest.fn();
+
+    return PLPSelectorDropdownOption;
+  };
+
+  describe("out of stock alert", () => {
+    test("should add 'oos-alert' class when variant is out of stock", () => {
+      const dropdownOption = mockDropdownOption(HTMLElem("img"));
+
+      expect(dropdownOption.classList[0]).toBe("oos-alert");
+    });
+
+    test("should not add 'oos-alert' class when variant is in stock", () => {
+      const dropdownOption = mockDropdownOption(HTMLElem("img"), false);
+
+      expect(dropdownOption.classList).toHaveLength(0);
+    });
+  });
+
+  describe("mouse enter handling", () => {
+    describe("Competitive Cyclist", () => {
+      const productListingImg = HTMLElem("img");
+      const dropdownOption = mockDropdownOption(productListingImg);
+      dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+
+      test("should get correct image source", () => {
+        expect(productListingImg.src).toBe(
+          "https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg"
+        );
+      });
+    });
+
+    describe("Backcountry", () => {
+      global.onCompetitiveCyclist = false;
+      const productListingImg = HTMLElem("img");
+      const dropdownOption = mockDropdownOption(productListingImg);
+      dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+
+      test("should get correct image source", () => {
+        expect(productListingImg.src).toBe(
+          "https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHT.jpg"
+        );
+      });
+    });
+  });
+
+  test("mouse click handling", () => {
+    const dropdownOption = mockDropdownOption(HTMLElem("img"));
+    dropdownOption.click();
+
+    expect(dropdownOption.onclick).toHaveBeenCalled();
+  });
 });
 
-describe("PLPSelectorDropdownOption", () => {});
+describe("PLPSelectorDropdownOption", () => {
+  const otherParams = [
+    { variantSelected: false },
+    HTMLElem("div"),
+    [HTMLElem("div"), HTMLElem("div")],
+    jest.fn(),
+  ];
+
+  const dropdownOption = PLPSelectorDropdownOption(
+    formattedProduct,
+    ...otherParams
+  );
+
+  test("should show correct variant and price", () => {
+    expect(dropdownOption.textContent).toBe("White1, S ($299.95)");
+  });
+
+  test("should be a list item", () => {
+    expect(dropdownOption.tagName).toBe("LI");
+  });
+
+  test("should have correct className", () => {
+    expect(dropdownOption.classList[0]).toBe("plp-dropdown-option-single");
+  });
+});
