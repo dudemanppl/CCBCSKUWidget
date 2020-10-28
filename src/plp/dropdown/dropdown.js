@@ -52,12 +52,15 @@ const getVariants = async (productID) => {
  * @return {string} In form of $xx.xx
  */
 
-const usdString = (num) =>
-  new Intl.NumberFormat("en-US", {
+const usdString = (num) => {
+  const usdString = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
     minimumFractionDigits: 2,
   }).format(num);
+
+  return usdString;
+};
 
 /**
  * Formats a product to be more easily usable
@@ -73,13 +76,15 @@ const formatVariant = ({
   title,
   image: { url },
 }) => {
-  return {
+  const formattedVariant = {
     price: usdString(salePrice),
     SKU: id,
     outOfStock: !stockLevel,
     variant: title,
     imageSrc: url,
   };
+
+  return formattedVariant;
 };
 
 /**
@@ -132,13 +137,15 @@ const highlightCurrSelectedOption = (
  * @return {array}
  */
 
-const getProductListingElems = (productListing) => {
+const productListingElems = (productListing) => {
   const [productListingImg] = productListing.getElementsByTagName("img");
   const [productListingPrice] = productListing.getElementsByClassName(
     "js-pl-pricing"
   );
 
-  return [productListingImg, productListingPrice];
+  const productListingElems = [productListingImg, productListingPrice];
+
+  return productListingElems;
 };
 
 /**
@@ -148,6 +155,7 @@ const getProductListingElems = (productListing) => {
  */
 
 /* istanbul ignore next */
+
 const dropdownOptions = async (
   productID,
   currentOption,
@@ -157,15 +165,17 @@ const dropdownOptions = async (
 ) => {
   const variants = await getVariants(productID);
 
-  return variants.map((variant, index) =>
+  const dropdownOptions = variants.map((variant, index) =>
     PLPSelectorDropdownOption(
       formatVariant(variant),
       state,
       currentOption,
-      getProductListingElems(productListing),
+      productListingElems(productListing),
       () => highlightCurrSelectedOption(PLPSelectorDropdown, state, index)
     )
   );
+
+  return dropdownOptions;
 };
 
 /**
@@ -174,11 +184,13 @@ const dropdownOptions = async (
  * @return {Element}
  */
 
+/* istanbul ignore next */
 const PLPSelectorDropdown = async (...args) => {
   const newPLPSelectorDropdown = HTMLElem("ul", [
     "plp-dropdown-options",
     siteString,
   ]);
+
   const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
 
   const options = await dropdownOptions(...args, state, newPLPSelectorDropdown);
@@ -197,8 +209,6 @@ module.exports = {
   formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
-  getProductListingElems,
-  dropdownOptions,
-  PLPSelectorDropdown,
+  productListingElems,
 };
 //endRemoveIf(production)

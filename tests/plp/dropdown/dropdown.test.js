@@ -6,14 +6,8 @@ const {
   formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
-  getProductListingElems,
-  dropdownOptions,
-  PLPSelectorDropdown,
+  productListingElems,
 } = require("../../../src/plp/dropdown/dropdown");
-
-const {
-  PLPSelectorDropdownOption,
-} = require("../../../src/plp/dropdown/singleOption");
 
 const createMockDropdown = () => {
   const div = HTMLElem("div");
@@ -203,14 +197,14 @@ describe("highlightCurrSelectedOption", () => {
   });
 });
 
-describe("getProductListingElems", () => {
+describe("productListingElems", () => {
   const productListing = HTMLElem("div");
   const productListingImg = HTMLElem("img");
   const productListingPrice = HTMLElem("div", ["js-pl-pricing"]);
 
   productListing.append(productListingImg, productListingPrice);
 
-  const [imgElem, priceElem] = getProductListingElems(productListing);
+  const [imgElem, priceElem] = productListingElems(productListing);
 
   test("should get productListingImg", () => {
     expect(imgElem).toEqual(productListingImg);
@@ -220,28 +214,5 @@ describe("getProductListingElems", () => {
   test("should get productListingPrice", () => {
     expect(priceElem).toEqual(productListingPrice);
     expect(priceElem).toBeInstanceOf(HTMLElement);
-  });
-});
-
-describe("dropdownOptions", () => {
-  global.PLPSelectorDropdownOption = PLPSelectorDropdownOption;
-
-  const productID = "KSK000I";
-  const currentOption = HTMLElem("div");
-  const productListing = HTMLElem("div");
-  const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
-  const PLPSelectorDropdown = HTMLElem("div");
-  const args = [
-    productID,
-    currentOption,
-    productListing,
-    state,
-    PLPSelectorDropdown,
-  ];
-  fetch.once(JSON.stringify(CCResponse));
-  const options = (async () => await dropdownOptions(...args))();
-
-  test("test", () => {
-    console.log(options);
   });
 });
