@@ -42,7 +42,7 @@ describe("getItemInfo", () => {
 
   describe("Competitive Cyclist", () => {
     test("should be invoked with correct site query", async () => {
-      const url = await getItemInfo("KSK000I");
+      const url = await getItemInfo(testSKU);
 
       expect(url).toBe(
         "https://api.backcountry.com/v1/products/KSK000I?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=competitivecyclist"
@@ -53,7 +53,7 @@ describe("getItemInfo", () => {
   describe("Backcountry", () => {
     test("should be invoked with correct site query", async () => {
       global.onCompetitiveCyclist = false;
-      const url = await getItemInfo("KSK000I");
+      const url = await getItemInfo(testSKU);
 
       expect(url).toBe(
         "https://api.backcountry.com/v1/products/KSK000I?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=bcs"
@@ -68,7 +68,7 @@ describe("getVariants", () => {
       global.onCompetitiveCyclist = true;
       fetch.once(JSON.stringify(CCResponse));
 
-      const variants = await getVariants("KSK000I");
+      const variants = await getVariants(testSKU);
 
       expect(variants).toEqual(variantsResponse);
     });
@@ -79,7 +79,7 @@ describe("getVariants", () => {
       global.onCompetitiveCyclist = false;
       fetch.once(JSON.stringify(BCResponse));
 
-      const variants = await getVariants("KSK000I");
+      const variants = await getVariants(testSKU);
 
       expect(variants).toEqual(variantsResponse);
     });

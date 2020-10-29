@@ -95,6 +95,7 @@ const nodeToObservePLP = () => {
   return nodeToObserve;
 };
 
+/* istanbul ignore next */
 if (onPLP) {
   addAllPLPWidgets();
 

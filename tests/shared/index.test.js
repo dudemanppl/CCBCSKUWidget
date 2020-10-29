@@ -143,7 +143,7 @@ describe("WMSLink", () => {
     describe("Competitive Cyclist", () => {
       onCC();
 
-      const CCPDPWMSLink = WMSLink("KSK000I");
+      const CCPDPWMSLink = WMSLink(testSKU);
 
       test("should be an anchor element", () => {
         expect(CCPDPWMSLink.tagName).toBe("A");
@@ -171,7 +171,7 @@ describe("WMSLink", () => {
 
     describe("Backcountry", () => {
       onBC();
-      const BCPDPWMSLink = WMSLink("KSK000I");
+      const BCPDPWMSLink = WMSLink(testSKU);
 
       test("should be an anchor element", () => {
         expect(BCPDPWMSLink.tagName).toBe("A");
@@ -207,7 +207,7 @@ describe("WMSLink", () => {
 
       onCC();
 
-      const CCPLPWMSLink = WMSLink("KSK000I");
+      const CCPLPWMSLink = WMSLink(testSKU);
 
       test("should be an anchor element", () => {
         expect(CCPLPWMSLink.tagName).toBe("A");
@@ -235,7 +235,7 @@ describe("WMSLink", () => {
     describe("Backcountry", () => {
       onBC();
 
-      const BCPLPWMSLink = WMSLink("KSK000I");
+      const BCPLPWMSLink = WMSLink(testSKU);
 
       test("should be an anchor element", () => {
         expect(BCPLPWMSLink.tagName).toBe("A");

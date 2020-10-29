@@ -102,3 +102,12 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
 
   return newPLPSelectorDropdownContainer;
 };
+
+// removeIf(production)
+module.exports = {
+  PLPDropdownOpened,
+  closePLPDropdownOptions,
+  handleDropdownOptions,
+  PLPSelectorDropdownContainer,
+};
+// endRemoveIf(production)

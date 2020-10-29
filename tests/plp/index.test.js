@@ -6,7 +6,19 @@ const {
   addPLPSingleWidget,
   addAllPLPWidgets,
   nodeToObservePLP,
-} = require("../../src/plp/index");
+} = require("../../src/plp");
+
+const {
+  PLPSelectorDropdownContainer,
+} = require("../../src/plp/dropdown/container");
+
+const { WMSLink } = require("../../src/shared/index");
+
+const { BCDropdownCaret } = require("../../src/plp/dropdown/BCDropdownCaret");
+
+global.PLPSelectorDropdownContainer = PLPSelectorDropdownContainer;
+global.WMSLink = WMSLink;
+global.BCDropdownCaret = BCDropdownCaret;
 
 describe("runOnAllElemsOfClass", () => {
   beforeEach(clearBody);
@@ -157,16 +169,103 @@ describe("fixBCStyling", () => {
 });
 
 describe("PLPWidgetContainer", () => {
-  // const container = PLPWidgetContainer("KSK000I")
+  const productListing = HTMLElem("div");
 
-  test("nice", () => {});
+  const container = PLPWidgetContainer(testSKU, productListing);
+
+  test("should have correct class", () => {
+    expect(container.classList[0]).toBe("plp-widget-container");
+  });
+
+  test("should be a div element", () => {
+    expect(container.tagName).toBe("DIV");
+  });
+
+  test("should have two children", () => {
+    expect(container.children).toHaveLength(2);
+  });
+
+  test("first child should be a PLPSelectorDropdownContainer", () => {
+    expect(container.firstChild.classList[0]).toBe("plp-dropdown-container");
+  });
+
+  test("second child should be a WMSLink", () => {
+    expect([...container.lastChild.classList]).toEqual(
+      expect.arrayContaining(["link-to-wms"])
+    );
+  });
 });
+
+const mockProductListing = () => {
+  const productListing = HTMLElem("div");
+  productListing.setAttribute("data-product-id", testSKU);
+  productListing.append(HTMLElem("div"));
+
+  return productListing;
+};
+
 describe("addPLPSingleWidget", () => {
-  test("nice", () => {});
+  const productListing = mockProductListing();
+
+  addPLPSingleWidget(productListing);
+
+  const widget = productListing.firstChild.firstChild;
+
+  test("should be added to the correct place", () => {
+    expect(widget.classList[0]).toBe("plp-widget-container");
+  });
 });
+
 describe("addAllPLPWidgets", () => {
-  test("nice", () => {});
+  beforeEach(() => {
+    for (let i = 0; i < 10; i += 1) {
+      const mockListingContainer = HTMLElem("div", ["js-product-listing"]);
+      mockListingContainer.append(mockProductListing());
+
+      document.body.append(mockListingContainer);
+    }
+  });
+
+  afterEach(clearBody);
+
+  test("should be added to all PLP product listings on Competitive Cyclist", () => {
+    addAllPLPWidgets();
+
+    expect(
+      document.getElementsByClassName("plp-widget-container")
+    ).toHaveLength(10);
+  });
+
+  test("should be added to all PLP product listings on Backcountry", () => {
+    global.onCompetitiveCyclist = false;
+    addAllPLPWidgets();
+
+    expect(
+      document.getElementsByClassName("plp-widget-container")
+    ).toHaveLength(10);
+  });
 });
+
 describe("nodeToObservePLP", () => {
-  test("nice", () => {});
+  beforeEach(() => {
+    document.body.append(
+      HTMLElem("div", ["js-inner-body"]),
+      HTMLElem("div", ["inner-body"])
+    );
+  });
+
+  afterEach(clearBody);
+
+  test("should return correct node on Competitive Cyclist", () => {
+    const node = nodeToObservePLP();
+
+    expect(node.classList[0]).toBe("js-inner-body");
+  });
+
+  test("should return correct node on Competitive Cyclist", () => {
+    global.onCompetitiveCyclist = false;
+    const node = nodeToObservePLP();
+
+    expect(node.classList[0]).toBe("inner-body");
+  });
 });
