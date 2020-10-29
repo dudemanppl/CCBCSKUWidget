@@ -16,6 +16,21 @@ global.clearBody = () => {
   global.onCompetitiveCyclist = true;
 };
 
+global.mockProductListing = () => {
+  const productListing = HTMLElem("div");
+  productListing.setAttribute("data-product-id", testSKU);
+  productListing.append(HTMLElem("div"));
+
+  return productListing;
+};
+
+global.mockDropdownContainer = () => {
+  const mockDropdownContainer = HTMLElem("div");
+  mockDropdownContainer.append(HTMLElem("div", ["plp-dropdown-options"]));
+
+  return mockDropdownContainer;
+};
+
 global.testSKU = "KSK000I";
 
 global.variantsResponse = [

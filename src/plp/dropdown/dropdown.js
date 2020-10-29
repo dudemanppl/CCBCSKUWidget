@@ -210,5 +210,6 @@ module.exports = {
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
   productListingElems,
+  PLPSelectorDropdown,
 };
 //endRemoveIf(production)

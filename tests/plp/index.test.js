@@ -196,13 +196,7 @@ describe("PLPWidgetContainer", () => {
   });
 });
 
-const mockProductListing = () => {
-  const productListing = HTMLElem("div");
-  productListing.setAttribute("data-product-id", testSKU);
-  productListing.append(HTMLElem("div"));
 
-  return productListing;
-};
 
 describe("addPLPSingleWidget", () => {
   const productListing = mockProductListing();

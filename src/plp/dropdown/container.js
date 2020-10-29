@@ -28,6 +28,7 @@ const openPLPDropdownOptions = async (event, productID, productListing) => {
     );
   }
 };
+
 /**
  * @param {Element} PLPSelectorDropdownContainer
  */
@@ -53,8 +54,6 @@ const handleDropdownOptions = (
   productListing,
   PLPSelectorDropdownContainer
 ) => {
-  /** Initialize with no value to return a falsy value */
-
   PLPSelectorDropdownContainer.onclick = (event) =>
     openPLPDropdownOptions(event, productID, productListing);
 
@@ -65,7 +64,8 @@ const handleDropdownOptions = (
 /**
  * @return {Element}
  */
-const PLPDropdownCurrentOption = (siteString) => {
+
+const PLPDropdownCurrentOption = () => {
   return HTMLElem(
     "div",
     ["plp-dropdown-current-option", siteString],
@@ -88,7 +88,7 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
     siteString,
   ]);
 
-  newPLPSelectorDropdownContainer.append(PLPDropdownCurrentOption(siteString));
+  newPLPSelectorDropdownContainer.append(PLPDropdownCurrentOption());
   /** Adds caret to BC PLP dropdown to mimic BC PDP */
   if (!onCompetitiveCyclist) {
     newPLPSelectorDropdownContainer.append(BCDropdownCaret());
@@ -106,8 +106,10 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
 // removeIf(production)
 module.exports = {
   PLPDropdownOpened,
+  openPLPDropdownOptions,
   closePLPDropdownOptions,
   handleDropdownOptions,
+  PLPDropdownCurrentOption,
   PLPSelectorDropdownContainer,
 };
 // endRemoveIf(production)
