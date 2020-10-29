@@ -12,10 +12,14 @@ const { PLPSelectorDropdown } = require("../../../src/plp/dropdown/dropdown");
 const {
   PLPSelectorDropdownOption,
 } = require("../../../src/plp/dropdown/singleOption");
-const { HTMLElem } = require("../../../src/shared");
+
+const {
+  BCDropdownCaret,
+} = require("../../../src/plp/dropdown/BCDropdownCaret");
 
 global.PLPSelectorDropdown = PLPSelectorDropdown;
 global.PLPSelectorDropdownOption = PLPSelectorDropdownOption;
+global.BCDropdownCaret = BCDropdownCaret;
 
 describe("PLPDropdownOpened", () => {
   test("should return true when dropdown has been opened", () => {
@@ -124,8 +128,98 @@ describe("handleDropdownOptions", () => {
 });
 
 describe("PLPDropdownCurrentOption", () => {
+  describe("Competitive Cyclist", () => {
+    const ccCurrentOption = PLPDropdownCurrentOption();
 
+    test("should be a div element", () => {
+      expect(ccCurrentOption.tagName).toBe("DIV");
+    });
 
+    test("should have correct classes", () => {
+      expect([...ccCurrentOption.classList]).toEqual([
+        "plp-dropdown-current-option",
+        "cc",
+      ]);
+    });
+
+    test("should have correct inner text", () => {
+      expect(ccCurrentOption.textContent).toBe("Select option");
+    });
+  });
+
+  describe("Backcountry", () => {
+    test("should have correct classes", () => {
+      global.siteString = "bc";
+      const bcCurrentOption = PLPDropdownCurrentOption();
+
+      expect([...bcCurrentOption.classList]).toEqual([
+        "plp-dropdown-current-option",
+        "bc",
+      ]);
+      global.siteString = "cc";
+    });
+  });
 });
 
-describe("PLPSelectorDropdownContainer", () => {});
+describe("PLPSelectorDropdownContainer", () => {
+  describe("Competitive Cyclist", () => {
+    const ccDropdownContainer = PLPSelectorDropdownContainer(
+      testSKU,
+      mockProductListing()
+    );
+
+    const { firstChild, lastChild } = ccDropdownContainer;
+
+    test("should be a div element", () => {
+      expect(ccDropdownContainer.tagName).toBe("DIV");
+    });
+
+    test("should have correct classes", () => {
+      expect([...ccDropdownContainer.classList]).toEqual([
+        "plp-dropdown-container",
+        "cc",
+      ]);
+    });
+
+    test("should have correct children", () => {
+      const currentOption = PLPDropdownCurrentOption();
+
+      expect(firstChild).toEqual(currentOption);
+      expect(lastChild).not.toBe(currentOption);
+    });
+  });
+
+  describe("Backcountry", () => {
+    global.siteString = "bc";
+    global.onCompetitiveCyclist = false;
+    const bcDropdownContainer = PLPSelectorDropdownContainer(
+      testSKU,
+      mockProductListing()
+    );
+
+    const { firstChild, lastChild } = bcDropdownContainer;
+
+    test("should be a div element", () => {
+      expect(bcDropdownContainer.tagName).toBe("DIV");
+    });
+
+    test("should have correct classes", () => {
+      expect([...bcDropdownContainer.classList]).toEqual([
+        "plp-dropdown-container",
+        "bc",
+      ]);
+    });
+
+    test("should have correct children", () => {
+      global.siteString = "bc";
+      const currentOption = PLPDropdownCurrentOption();
+      const caret = BCDropdownCaret();
+
+      expect(firstChild).toEqual(currentOption);
+      expect(lastChild).toEqual(caret);
+    });
+  });
+
+  global.siteString = "cc";
+  global.onCompetitiveCyclist = true;
+});
