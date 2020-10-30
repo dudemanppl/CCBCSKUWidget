@@ -54,7 +54,7 @@ describe("updatePricingPLP", () => {
     const props = { variantSelected: false };
 
     updatePricingPLP(productListingPrice, props, "$11.00");
-    updatePricingPLP(productListingPrice, props, "$12.00");
+    updatePricingPLP(productListingPrice, props, "$11.00");
 
     const priceElem = productListingPrice.firstChild;
 
@@ -67,7 +67,7 @@ describe("updatePricingPLP", () => {
     });
 
     test("should have changed the textContent", () => {
-      expect(priceElem.textContent).toBe("$12.00");
+      expect(priceElem.textContent).toBe("$11.00");
     });
 
     test("should only have one child", () => {
