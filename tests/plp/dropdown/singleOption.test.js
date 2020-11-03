@@ -54,7 +54,8 @@ describe("updatePricingPLP", () => {
     const props = { variantSelected: false };
 
     updatePricingPLP(productListingPrice, props, "$11.00");
-    updatePricingPLP(productListingPrice, props, "$11.00");
+    updatePricingPLP(productListingPrice, props, "$12.00");
+    updatePricingPLP(productListingPrice, props, "$12.00");
 
     const priceElem = productListingPrice.firstChild;
 
@@ -67,7 +68,7 @@ describe("updatePricingPLP", () => {
     });
 
     test("should have changed the textContent", () => {
-      expect(priceElem.textContent).toBe("$11.00");
+      expect(priceElem.textContent).toBe("$12.00");
     });
 
     test("should only have one child", () => {
@@ -127,7 +128,11 @@ describe("copySKUPLP", () => {
 });
 
 describe("addMethodsToPLPSelectorDropdownOption", () => {
-  const mockDropdownOption = (productListingImg, outOfStock = true) => {
+  const mockDropdownOption = (
+    productListingImg,
+    outOfStock = true,
+    imageSrc = "/images/items/medium/KSK/KSK000I/WHT.jpg"
+  ) => {
     const PLPSelectorDropdownOption = HTMLElem("div");
     const props = { variantSelected: false };
     const currentOption = HTMLElem("div");
@@ -136,7 +141,7 @@ describe("addMethodsToPLPSelectorDropdownOption", () => {
 
     addMethodsToPLPSelectorDropdownOption(
       PLPSelectorDropdownOption,
-      { ...formattedProduct, outOfStock },
+      { ...formattedProduct, outOfStock, imageSrc },
       props,
       currentOption,
       [productListingImg, productListingPrice],
@@ -165,25 +170,63 @@ describe("addMethodsToPLPSelectorDropdownOption", () => {
   describe("mouse enter handling", () => {
     describe("Competitive Cyclist", () => {
       const productListingImg = HTMLElem("img");
-      const dropdownOption = mockDropdownOption(productListingImg);
-      dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+      let dropdownOption, otherOption;
+
+      beforeAll(() => {
+        dropdownOption = mockDropdownOption(productListingImg);
+        otherOption = mockDropdownOption(
+          productListingImg,
+          true,
+          "/images/items/medium/KSK/KSK000I/WHIA.jpg"
+        );
+      });
 
       test("should get correct image source", () => {
+        dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+
         expect(productListingImg.src).toBe(
           "https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg"
+        );
+      });
+
+      test("should change to new image source if another variant has a mouse enter event", () => {
+        dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+        otherOption.dispatchEvent(new MouseEvent("mouseenter"));
+
+        expect(productListingImg.src).toBe(
+          "https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHIA.jpg"
         );
       });
     });
 
     describe("Backcountry", () => {
-      global.onCompetitiveCyclist = false;
       const productListingImg = HTMLElem("img");
-      const dropdownOption = mockDropdownOption(productListingImg);
-      dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+      let dropdownOption, otherOption;
+
+      beforeAll(() => {
+        global.onCompetitiveCyclist = false;
+        dropdownOption = mockDropdownOption(productListingImg);
+        otherOption = mockDropdownOption(
+          productListingImg,
+          true,
+          "/images/items/medium/KSK/KSK000I/WHIA.jpg"
+        );
+      });
 
       test("should get correct image source", () => {
+        dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+
         expect(productListingImg.src).toBe(
           "https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHT.jpg"
+        );
+      });
+
+      test("should change to new image source if another variant has a mouse enter event", () => {
+        dropdownOption.dispatchEvent(new MouseEvent("mouseenter"));
+        otherOption.dispatchEvent(new MouseEvent("mouseenter"));
+
+        expect(productListingImg.src).toBe(
+          "https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHIA.jpg"
         );
       });
     });

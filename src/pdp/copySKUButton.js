@@ -45,3 +45,12 @@ const copySKUButton = () => {
 
   return newCopySKUButton;
 };
+
+//removeIf(production)
+module.exports = {
+  copySKUButtonOnClick,
+  copySKUButtonOnMouseLeave,
+  addMethodsToCopySKUButton,
+  copySKUButton
+};
+//endRemoveIf(production)

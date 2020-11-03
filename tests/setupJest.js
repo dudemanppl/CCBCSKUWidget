@@ -16,9 +16,9 @@ global.clearBody = () => {
   global.onCompetitiveCyclist = true;
 };
 
-global.mockProductListing = () => {
+global.mockProductListing = (SKU = testSKU) => {
   const productListing = HTMLElem("div");
-  productListing.setAttribute("data-product-id", testSKU);
+  productListing.setAttribute("data-product-id", SKU);
   productListing.append(HTMLElem("div"));
 
   return productListing;
