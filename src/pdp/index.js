@@ -60,8 +60,19 @@ const PDPProductID = () => {
   return productID;
 };
 
+/* istanbul ignore next */
 if (onPDP) {
   if (onCompetitiveCyclist) invokeFuncInWindow(addOOSAlertToCCPDP);
 
   PDPTargetLocation().append(WMSLink(PDPProductID()), copySKUButton());
 }
+
+// removeIf(production)
+module.exports = {
+  addOOSAlertToCCPDP,
+  anonFuncToStr,
+  invokeFuncInWindow,
+  PDPTargetLocation,
+  PDPProductID,
+};
+// endRemoveIf(production)
