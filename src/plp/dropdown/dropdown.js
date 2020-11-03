@@ -21,7 +21,7 @@ const fetchJson = async (url) => {
 
 const getItemInfo = async (productID) => {
   const url = `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
-    onCompetitiveCyclist ? "competitivecyclist" : "bcs"
+    onCompetitiveCyclist ? 'competitivecyclist' : 'bcs'
   }`;
   const itemInfo = await fetchJson(url);
 
@@ -53,9 +53,9 @@ const getVariants = async (productID) => {
  */
 
 const usdString = (num) => {
-  const usdString = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
+  const usdString = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
     minimumFractionDigits: 2,
   }).format(num);
 
@@ -98,7 +98,7 @@ const formatVariant = ({
 const toggleCurrOptionClass = (PLPSelectorDropdown, state) => {
   PLPSelectorDropdown.childNodes[
     state.currentlySelectedOptionIdx
-  ].classList.toggle("curr-selected-option");
+  ].classList.toggle('curr-selected-option');
 };
 
 /**
@@ -138,9 +138,9 @@ const highlightCurrSelectedOption = (
  */
 
 const productListingElems = (productListing) => {
-  const [productListingImg] = productListing.getElementsByTagName("img");
+  const [productListingImg] = productListing.getElementsByTagName('img');
   const [productListingPrice] = productListing.getElementsByClassName(
-    "js-pl-pricing"
+    'js-pl-pricing'
   );
 
   const productListingElems = [productListingImg, productListingPrice];
@@ -186,8 +186,8 @@ const dropdownOptions = async (
 
 /* istanbul ignore next */
 const PLPSelectorDropdown = async (...args) => {
-  const newPLPSelectorDropdown = HTMLElem("ul", [
-    "plp-dropdown-options",
+  const newPLPSelectorDropdown = HTMLElem('ul', [
+    'plp-dropdown-options',
     siteString,
   ]);
 
@@ -200,7 +200,7 @@ const PLPSelectorDropdown = async (...args) => {
   return newPLPSelectorDropdown;
 };
 
-//removeIf(production)
+// removeIf(production)
 module.exports = {
   fetchJson,
   getItemInfo,
@@ -212,4 +212,4 @@ module.exports = {
   productListingElems,
   PLPSelectorDropdown,
 };
-//endRemoveIf(production)
+// endRemoveIf(production)

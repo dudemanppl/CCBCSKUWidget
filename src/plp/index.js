@@ -28,14 +28,14 @@ const deleteAllElemsOfClass = (elemClassName) => {
  */
 
 const fixBCStyling = () => {
-  deleteAllElemsOfClass("js-pl-focus-trigger");
-  deleteAllElemsOfClass("js-pl-color-thumbs");
-  deleteAllElemsOfClass("js-pl-sizes-wrap");
-  runOnAllElemsOfClass("js-pl-expandable", ({ style }) => {
-    style.top = "10px";
-    style.right = "10px";
-    style.bottom = "10px";
-    style.left = "10px";
+  deleteAllElemsOfClass('js-pl-focus-trigger');
+  deleteAllElemsOfClass('js-pl-color-thumbs');
+  deleteAllElemsOfClass('js-pl-sizes-wrap');
+  runOnAllElemsOfClass('js-pl-expandable', ({ style }) => {
+    style.top = '10px';
+    style.right = '10px';
+    style.bottom = '10px';
+    style.left = '10px';
   });
 };
 
@@ -47,7 +47,7 @@ const fixBCStyling = () => {
  */
 
 const PLPWidgetContainer = (productID, productListing) => {
-  const newPLPWidgetContainer = HTMLElem("div", ["plp-widget-container"]);
+  const newPLPWidgetContainer = HTMLElem('div', ['plp-widget-container']);
 
   newPLPWidgetContainer.append(
     PLPSelectorDropdownContainer(productID, productListing),
@@ -64,7 +64,7 @@ const PLPWidgetContainer = (productID, productListing) => {
  */
 
 const addPLPSingleWidget = (productListing) => {
-  const productID = productListing.getAttribute("data-product-id");
+  const productID = productListing.getAttribute('data-product-id');
   const targetLocation = productListing.firstChild;
 
   targetLocation.append(PLPWidgetContainer(productID, targetLocation));
@@ -78,7 +78,7 @@ const addAllPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
-  runOnAllElemsOfClass("js-product-listing", (productListing) =>
+  runOnAllElemsOfClass('js-product-listing', (productListing) =>
     addPLPSingleWidget(productListing)
   );
 };
@@ -89,7 +89,7 @@ const addAllPLPWidgets = () => {
 
 const nodeToObservePLP = () => {
   const [nodeToObserve] = document.getElementsByClassName(
-    onCompetitiveCyclist ? "js-inner-body" : "inner-body"
+    onCompetitiveCyclist ? 'js-inner-body' : 'inner-body'
   );
 
   return nodeToObserve;
@@ -105,7 +105,7 @@ if (onPLP) {
   });
 }
 
-//removeIf(production)
+// removeIf(production)
 module.exports = {
   runOnAllElemsOfClass,
   deleteAllElemsOfClass,
@@ -115,4 +115,4 @@ module.exports = {
   addAllPLPWidgets,
   nodeToObservePLP,
 };
-//endRemoveIf(production)
+// endRemoveIf(production)

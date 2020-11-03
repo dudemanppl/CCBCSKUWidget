@@ -6,7 +6,7 @@
  */
 
 const PLPDropdownOpened = ({ classList: [elementClass] }) => {
-  return elementClass === "plp-dropdown-options";
+  return elementClass === 'plp-dropdown-options';
 };
 
 /**
@@ -20,7 +20,7 @@ const openPLPDropdownOptions = async (event, productID, productListing) => {
   const { firstChild: currentOption, lastChild } = currentTarget;
 
   if (PLPDropdownOpened(lastChild)) {
-    lastChild.classList.toggle("hidden");
+    lastChild.classList.toggle('hidden');
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
@@ -37,7 +37,7 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
   const { lastChild } = PLPSelectorDropdownContainer;
 
   if (PLPDropdownOpened(lastChild)) {
-    lastChild.classList.add("hidden");
+    lastChild.classList.add('hidden');
   }
 };
 
@@ -67,10 +67,10 @@ const handleDropdownOptions = (
 
 const PLPDropdownCurrentOption = () => {
   return HTMLElem(
-    "div",
-    ["plp-dropdown-current-option", siteString],
+    'div',
+    ['plp-dropdown-current-option', siteString],
     null,
-    "Select option"
+    'Select option'
   );
 };
 
@@ -83,8 +83,8 @@ const PLPDropdownCurrentOption = () => {
  */
 
 const PLPSelectorDropdownContainer = (productID, productListing) => {
-  const newPLPSelectorDropdownContainer = HTMLElem("div", [
-    "plp-dropdown-container",
+  const newPLPSelectorDropdownContainer = HTMLElem('div', [
+    'plp-dropdown-container',
     siteString,
   ]);
 

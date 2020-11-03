@@ -6,12 +6,12 @@
 
 const addOOSAlertToCCPDP = () => {
   for (const dropdownOption of document.getElementsByClassName(
-    "js-unifiedropdown-option"
+    'js-unifiedropdown-option'
   )) {
-    const SKU = dropdownOption.getAttribute("sku-value");
+    const SKU = dropdownOption.getAttribute('sku-value');
 
     if (SKU && !BC.product.skusCollection[SKU].inventory) {
-      dropdownOption.classList.add("oos-alert");
+      dropdownOption.classList.add('oos-alert');
     }
   }
 };
@@ -30,7 +30,7 @@ const anonFuncToStr = (func) => func.toString().slice(5, -1);
  */
 
 const invokeFuncInWindow = (func) => {
-  const scriptElem = HTMLElem("script", null, null, anonFuncToStr(func));
+  const scriptElem = HTMLElem('script', null, null, anonFuncToStr(func));
 
   document.head.append(scriptElem);
   scriptElem.remove();
@@ -42,7 +42,7 @@ const invokeFuncInWindow = (func) => {
 
 const PDPTargetLocation = () => {
   const [targetLocation] = document.getElementsByClassName(
-    onCompetitiveCyclist ? "add-to-cart" : "js-buybox-actions"
+    onCompetitiveCyclist ? 'add-to-cart' : 'js-buybox-actions'
   );
 
   return targetLocation;

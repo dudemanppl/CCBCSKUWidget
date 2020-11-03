@@ -17,7 +17,7 @@ const updatePricingPLP = (productListingPrice, props, price) => {
     }
 
     productListingPrice.append(
-      HTMLElem("span", classnamesForElem("PLPPrice"), null, price)
+      HTMLElem('span', classnamesForElem('PLPPrice'), null, price)
     );
 
     props.variantSelected = true;
@@ -35,11 +35,11 @@ const copySKUPLP = (currentOption, variant, SKU) => {
   /** Copies SKU to clipboard */
   navigator.clipboard.writeText(SKU);
   /** Shows short notification of copy */
-  currentOption.classList.toggle("copy-notif");
-  currentOption.textContent = "SKU Copied!";
+  currentOption.classList.toggle('copy-notif');
+  currentOption.textContent = 'SKU Copied!';
 
   setTimeout(() => {
-    currentOption.classList.toggle("copy-notif");
+    currentOption.classList.toggle('copy-notif');
     currentOption.textContent = variant;
   }, 300);
 };
@@ -67,12 +67,12 @@ const addMethodsToPLPSelectorDropdownOption = (
   [productListingImg, productListingPrice],
   highlightCurrSelectedOption
 ) => {
-  /** Adds OOS alert as necessary*/
-  if (outOfStock) PLPSelectorDropdownOption.classList.add("oos-alert");
+  /** Adds OOS alert as necessary */
+  if (outOfStock) PLPSelectorDropdownOption.classList.add('oos-alert');
 
   PLPSelectorDropdownOption.onmouseenter = () => {
     const newImgSource = `https://content.${
-      onCompetitiveCyclist ? "competitivecyclist" : "backcountry"
+      onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
     }.com${imageSrc}`;
 
     /** Changes image source if variant image changes */
@@ -98,8 +98,8 @@ const addMethodsToPLPSelectorDropdownOption = (
 const PLPSelectorDropdownOption = (product, ...params) => {
   const { variant, price } = product;
   const newPLPSelectorDropdownOption = HTMLElem(
-    "li",
-    ["plp-dropdown-option-single"],
+    'li',
+    ['plp-dropdown-option-single'],
     null,
     `${variant} (${price})`
   );
@@ -113,11 +113,11 @@ const PLPSelectorDropdownOption = (product, ...params) => {
   return newPLPSelectorDropdownOption;
 };
 
-//removeIf(production)
+// removeIf(production)
 module.exports = {
   updatePricingPLP,
   copySKUPLP,
   addMethodsToPLPSelectorDropdownOption,
   PLPSelectorDropdownOption,
 };
-//endRemoveIf(production)
+// endRemoveIf(production)

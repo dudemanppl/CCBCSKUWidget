@@ -14,7 +14,7 @@ const HTMLElem = (tagName, classList, id, textContent) => {
     if (Array.isArray(classList)) {
       newHTMLElem.classList.add(...classList);
     } else {
-      throw new TypeError("Expected an array");
+      throw new TypeError('Expected an array');
     }
   }
 
@@ -37,13 +37,13 @@ const HTMLElem = (tagName, classList, id, textContent) => {
 
 const WMSLink = (productID) => {
   const newWMSLink = HTMLElem(
-    "a",
-    classnamesForElem("WMSLink"),
+    'a',
+    classnamesForElem('WMSLink'),
     null,
-    "Go to WMS"
+    'Go to WMS'
   );
 
-  newWMSLink.setAttribute("type", "button");
+  newWMSLink.setAttribute('type', 'button');
   newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
   return newWMSLink;
@@ -56,36 +56,36 @@ const classnamesForElem = (elem) => {
     classnames.push(...classes);
   };
 
-  if (elem === "WMSLink" || elem === "CopySKUButton") {
-    add("btn", "btn-reset");
+  if (elem === 'WMSLink' || elem === 'CopySKUButton') {
+    add('btn', 'btn-reset');
     if (onPDP) {
-      add("pdp");
+      add('pdp');
       if (onCompetitiveCyclist) {
-        add("btn--secondary");
+        add('btn--secondary');
       } else {
-        add("product-buybox__btn");
+        add('product-buybox__btn');
       }
     } else {
-      add("plp");
+      add('plp');
     }
   }
 
-  if (elem === "WMSLink") {
-    add("link-to-wms");
+  if (elem === 'WMSLink') {
+    add('link-to-wms');
   }
 
-  if (elem === "PLPPrice") {
+  if (elem === 'PLPPrice') {
     add(
-      "ui-pl-pricing__high-price",
-      "ui-pl-pricing--price-retail",
-      "js-item-price-high",
-      "qa-item-price-high"
+      'ui-pl-pricing__high-price',
+      'ui-pl-pricing--price-retail',
+      'js-item-price-high',
+      'qa-item-price-high'
     );
   }
 
   return classnames;
 };
 
-//removeIf(production)
+// removeIf(production)
 module.exports = { HTMLElem, WMSLink, classnamesForElem };
-//endRemoveIf(production)
+// endRemoveIf(production)
