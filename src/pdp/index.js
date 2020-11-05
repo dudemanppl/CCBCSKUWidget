@@ -17,22 +17,23 @@ const addOOSAlertToCCPDP = () => {
 };
 
 /**
- * @param {function} func Anonymous ES6 function with no args
+ * @param {function} func Minified anonymous ES6 function with no args
  * @return {string}
  */
 
 const anonFuncToStr = (func) => func.toString().slice(5, -1);
 
 /**
- * Invokes an anonymous function that requires window context then removes traces of it
+ * Invokes a minified anonymous function that requires window context then removes traces of it
  *
- * @param {function} func Anonymous ES6 function with no args
+ * @param {function} func Minified anonymous ES6 function with no args
  */
 
 const invokeFuncInWindow = (func) => {
   const scriptElem = HTMLElem('script', null, null, anonFuncToStr(func));
 
   document.head.append(scriptElem);
+
   scriptElem.remove();
 };
 

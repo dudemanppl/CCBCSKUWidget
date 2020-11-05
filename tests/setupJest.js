@@ -33,6 +33,10 @@ global.mockDropdownContainer = () => {
 
 global.testSKU = 'KSK000I';
 
+global.testFullSKU = 'KSK000I-WHT-S';
+
+global.testVariant = 'White1, S';
+
 global.variantsResponse = [
   {
     image: {

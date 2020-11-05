@@ -83,17 +83,15 @@ describe('updatePricingPLP', () => {
 });
 
 describe('copySKUPLP', () => {
-  const variant = 'testVariant';
-  const SKU = 'testSKU';
   global.navigator.clipboard = { writeText: jest.fn() };
 
   describe('Immediately after invocation', () => {
     const currentOption = HTMLElem('div');
 
-    copySKUPLP(currentOption, variant, SKU);
+    copySKUPLP(currentOption, testVariant, testFullSKU);
 
     test('should copy SKU to clipboard', () => {
-      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(SKU);
+      expect(navigator.clipboard.writeText).toHaveBeenCalledWith(testFullSKU);
     });
 
     test("should have added class of 'copy-notif'", () => {
@@ -109,7 +107,7 @@ describe('copySKUPLP', () => {
     const currentOption = HTMLElem('div');
     beforeEach(() => {
       jest.useFakeTimers();
-      copySKUPLP(currentOption, variant, SKU);
+      copySKUPLP(currentOption, testVariant, testFullSKU);
       jest.runAllTimers();
     });
 
@@ -118,7 +116,7 @@ describe('copySKUPLP', () => {
     });
 
     test('should have original textContent', () => {
-      expect(currentOption.textContent).toBe(variant);
+      expect(currentOption.textContent).toBe(testVariant);
     });
   });
 });
