@@ -49,7 +49,7 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
  * @param {Element} PLPSelectorDropdownContainer
  */
 
-const handleDropdownOptions = (
+const dropdownContainerEventHandlers = (
   productID,
   productListing,
   PLPSelectorDropdownContainer
@@ -57,8 +57,9 @@ const handleDropdownOptions = (
   PLPSelectorDropdownContainer.onclick = (event) =>
     openPLPDropdownOptions(event, productID, productListing);
 
-  productListing.onmouseleave = () =>
+  productListing.onmouseleave = () => {
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
+  };
 };
 
 /**
@@ -94,7 +95,7 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
     newPLPSelectorDropdownContainer.append(BCDropdownCaret());
   }
 
-  handleDropdownOptions(
+  dropdownContainerEventHandlers(
     productID,
     productListing,
     newPLPSelectorDropdownContainer
@@ -108,7 +109,7 @@ module.exports = {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
-  handleDropdownOptions,
+  dropdownContainerEventHandlers,
   PLPDropdownCurrentOption,
   PLPSelectorDropdownContainer,
 };

@@ -2,7 +2,7 @@ const {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
-  handleDropdownOptions,
+  dropdownContainerEventHandlers,
   PLPDropdownCurrentOption,
   PLPSelectorDropdownContainer,
 } = require('../../../src/plp/dropdown/container');
@@ -92,7 +92,7 @@ describe('closePLPDropdownOptions', () => {
   });
 });
 
-describe('handleDropdownOptions', () => {
+describe('dropdownContainerEventHandlers', () => {
   const productListing = mockProductListing();
   const PLPSelectorDropdownContainer = mockDropdownContainer();
 
@@ -100,7 +100,7 @@ describe('handleDropdownOptions', () => {
     expect(PLPSelectorDropdownContainer.onclick).toBeFalsy();
     expect(productListing.onmouseleave).toBeFalsy();
 
-    handleDropdownOptions(
+    dropdownContainerEventHandlers(
       testSKU,
       productListing,
       PLPSelectorDropdownContainer

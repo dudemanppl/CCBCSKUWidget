@@ -59,7 +59,7 @@ const copySKUPLP = (currentOption, variant, SKU) => {
  * @param {function} highlightCurrSelectedOption Function to change the highlighting of the currently selected variant
  */
 
-const addMethodsToPLPSelectorDropdownOption = (
+singleOptionEventHandlers = (
   PLPSelectorDropdownOption,
   { price, SKU, outOfStock, variant, imageSrc },
   props,
@@ -104,11 +104,7 @@ const PLPSelectorDropdownOption = (product, ...params) => {
     `${variant} (${price})`
   );
 
-  addMethodsToPLPSelectorDropdownOption(
-    newPLPSelectorDropdownOption,
-    product,
-    ...params
-  );
+  singleOptionEventHandlers(newPLPSelectorDropdownOption, product, ...params);
 
   return newPLPSelectorDropdownOption;
 };
@@ -117,7 +113,7 @@ const PLPSelectorDropdownOption = (product, ...params) => {
 module.exports = {
   updatePricingPLP,
   copySKUPLP,
-  addMethodsToPLPSelectorDropdownOption,
+  singleOptionEventHandlers,
   PLPSelectorDropdownOption,
 };
 // endRemoveIf(production)
