@@ -2,7 +2,7 @@
   background-color: lightgray;
 }
 
-.oos-alert::before {
+.oos-alert::after {
   content: "OOS";
   color: red;
   float: right;
@@ -31,13 +31,13 @@
   width: calc(100% - 35px);
 }
 
-/* BC PL enbiggener */
+/* BC PLI enbiggener */
 
 .product.ui-product-listing .ui-pl-placeholder {
-  padding-top: 105%;
+  padding-bottom: 90px;
   margin-top: 0;
 }
 
 .ui-product-listing .ui-pl-link .ui-pl-img {
-  padding-top: 40px;
+  padding-top: 30px;
 }

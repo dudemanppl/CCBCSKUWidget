@@ -1,40 +1,79 @@
 /**
  * Changes styling of dropdown options to reflect OOS status on CC PDP
+ *
+ * ONLY WORKS IN WINDOW CONTEXT
  */
 
 const addOOSAlertToCCPDP = () => {
-  const scriptToInject = () => {
-    for (const variant of document.getElementsByClassName(
-      "js-unifiedropdown-option"
-    )) {
-      const SKU = variant.getAttribute("option");
-      SKU &&
-        !BC.product.skusCollection[SKU].inventory &&
-        variant.classList.add("oos-alert");
-    }
-  };
+  for (const dropdownOption of document.getElementsByClassName(
+    'js-unifiedropdown-option'
+  )) {
+    const SKU = dropdownOption.getAttribute('sku-value');
 
-  const scriptElem = HTMLElem("script", null, null, scriptToInject.toString());
+    if (SKU && !BC.product.skusCollection[SKU].inventory) {
+      dropdownOption.classList.add('oos-alert');
+    }
+  }
+};
+
+/**
+ * @param {function} func Minified anonymous ES6 function with no args
+ * @return {string}
+ */
+
+const anonFuncToStr = (func) => func.toString().slice(5, -1);
+
+/**
+ * Invokes a minified anonymous function that requires window context then removes traces of it
+ *
+ * @param {function} func Minified anonymous ES6 function with no args
+ */
+
+const invokeFuncInWindow = (func) => {
+  const scriptElem = HTMLElem('script', null, null, anonFuncToStr(func));
 
   document.head.append(scriptElem);
+
   scriptElem.remove();
 };
 
 /**
- * Adds WMS/CopySKU buttons to PDP.
+ * @return {Element} Target location to add PDP buttons to
  */
 
-if (onPDP) {
-  const cc = onCompetitiveCyclist;
-  const productID = document.querySelector(
+const PDPTargetLocation = () => {
+  const [targetLocation] = document.getElementsByClassName(
+    onCompetitiveCyclist ? 'add-to-cart' : 'js-buybox-actions'
+  );
+
+  return targetLocation;
+};
+
+/**
+ * @return {string} Parent SKU of the PDP shown
+ */
+
+const PDPProductID = () => {
+  const { value: productID } = document.querySelector(
     '[name ="/atg/commerce/order/purchase/CartModifierFormHandler.productId"]'
-  ).value;
+  );
 
-  const targetLocation = document.getElementsByClassName(
-    cc ? "add-to-cart" : "js-buybox-actions"
-  )[0];
+  return productID;
+};
 
-  if (cc) addOOSAlertToCCPDP();
+/* istanbul ignore next */
+if (onPDP) {
+  if (onCompetitiveCyclist) invokeFuncInWindow(addOOSAlertToCCPDP);
 
-  targetLocation.append(WMSLink(productID), CopySKUButtonPDP());
+  PDPTargetLocation().append(WMSLink(PDPProductID()), copySKUButton());
 }
+
+// removeIf(production)
+module.exports = {
+  addOOSAlertToCCPDP,
+  anonFuncToStr,
+  invokeFuncInWindow,
+  PDPTargetLocation,
+  PDPProductID,
+};
+// endRemoveIf(production)

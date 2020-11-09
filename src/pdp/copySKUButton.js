@@ -1,50 +1,56 @@
+const copySKUButtonOnClick = ({ currentTarget: copySKUButton }) => {
+  const SKU = document.getElementsByClassName('js-selected-product-variant')[0]
+    .value;
+
+  if (SKU) {
+    navigator.clipboard.writeText(SKU);
+    copySKUButton.textContent = 'Copied!';
+    copySKUButton.classList.add('flash');
+
+    setTimeout(() => {
+      copySKUButton.classList.remove('flash');
+    }, 100);
+  } else {
+    copySKUButton.textContent = 'Choose Item';
+    copySKUButton.classList.add('no-variant-selected');
+  }
+};
+
+const copySKUButtonOnMouseLeave = ({ currentTarget: copySKUButton }) => {
+  copySKUButton.textContent = 'Copy SKU';
+  copySKUButton.classList.remove('no-variant-selected');
+};
+
+const addMethodsToCopySKUButton = (copySKUButton) => {
+  copySKUButton.onmouseleave = copySKUButtonOnMouseLeave;
+  copySKUButton.onclick = copySKUButtonOnClick;
+};
+
 /**
  * Creates a button to copy the full SKU of the selected variant on the PDP
  *
- * @param {string} [id] Id for HTML element.
- * @param {array} [classList] Array of desired classes to add.
+ * @returns {Element}
  */
 
-const CopySKUButtonPDP = () => {
-  const newCopySKUButtonPDP = HTMLElem(
-    "button",
-    [
-      ...(onCompetitiveCyclist
-        ? ["btn--secondary", "buy-box__compare-btn"]
-        : ["product-buybox__btn"]),
-      "btn",
-      "btn-reset",
-      siteString,
-    ],
-    "copy-sku-button",
-    "Copy SKU"
+const copySKUButton = () => {
+  const newCopySKUButton = HTMLElem(
+    'button',
+    classnamesForElem('CopySKUButton'),
+    'copy-sku-button',
+    'Copy SKU'
   );
+  newCopySKUButton.setAttribute('type', 'button');
 
-  newCopySKUButtonPDP.setAttribute("type", "button");
+  addMethodsToCopySKUButton(newCopySKUButton);
 
-  newCopySKUButtonPDP.onmouseleave = ({ currentTarget: button }) => {
-    button.textContent = "Copy SKU";
-    button.classList.remove("no-variant-selected");
-  };
-
-  newCopySKUButtonPDP.onclick = ({ currentTarget: button }) => {
-    const SKU = document.getElementsByClassName(
-      "js-selected-product-variant"
-    )[0].value;
-
-    if (SKU) {
-      navigator.clipboard.writeText(SKU);
-      button.textContent = "Copied!";
-      button.classList.add("flash");
-
-      setTimeout(() => {
-        button.classList.remove("flash");
-      }, 100);
-    } else {
-      button.textContent = "Choose Item";
-      button.classList.add("no-variant-selected");
-    }
-  };
-
-  return newCopySKUButtonPDP;
+  return newCopySKUButton;
 };
+
+// removeIf(production)
+module.exports = {
+  copySKUButtonOnClick,
+  copySKUButtonOnMouseLeave,
+  addMethodsToCopySKUButton,
+  copySKUButton,
+};
+// endRemoveIf(production)
