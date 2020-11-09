@@ -191,9 +191,7 @@ const PLPSelectorDropdown = async (...args) => {
     siteString,
   ]);
 
-  const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
-
-  const options = await dropdownOptions(...args, state, newPLPSelectorDropdown);
+  const options = await dropdownOptions(...args, newPLPSelectorDropdown);
 
   newPLPSelectorDropdown.append(...options);
 

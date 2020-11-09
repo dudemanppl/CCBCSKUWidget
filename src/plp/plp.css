@@ -82,7 +82,7 @@
   border-left: 1px solid #ccc;
 }
 
-.plp-dropdown-current-option {
+.plp-dropdown-curr-selected-variant {
   position: absolute;
   width: calc(90% - 50px);
   height: 34px;
@@ -94,12 +94,12 @@
   background-color: white;
 }
 
-.plp-dropdown-current-option.bc {
+.plp-dropdown-curr-selected-variant.bc {
   width: calc(85% - 46px);
   border-radius: 4px 0 0 4px;
 }
 
-.plp-dropdown-current-option.copy-notif {
+.plp-dropdown-curr-selected-variant.copy-notif {
   background-color: #222;
   color: white;
   font-weight: 600;
