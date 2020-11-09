@@ -15,7 +15,12 @@ const PLPDropdownOpened = ({ classList: [elementClass] }) => {
  * @param {Element} productListing PLI product listing where widget was
  */
 
-const openPLPDropdownOptions = async (event, productID, productListing) => {
+const openPLPDropdownOptions = async (
+  event,
+  productID,
+  productListing,
+  state
+) => {
   const { currentTarget } = event;
   const { firstChild: currentOption, lastChild } = currentTarget;
 
@@ -24,7 +29,7 @@ const openPLPDropdownOptions = async (event, productID, productListing) => {
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
-      await PLPSelectorDropdown(productID, currentOption, productListing)
+      await PLPSelectorDropdown(productID, currentOption, productListing, state)
     );
   }
 };
@@ -49,26 +54,29 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
  * @param {Element} PLPSelectorDropdownContainer
  */
 
-const handleDropdownOptions = (
+const dropdownContainerEventHandlers = (
   productID,
   productListing,
-  PLPSelectorDropdownContainer
+  PLPSelectorDropdownContainer,
+  state
 ) => {
   PLPSelectorDropdownContainer.onclick = (event) =>
-    openPLPDropdownOptions(event, productID, productListing);
+    openPLPDropdownOptions(event, productID, productListing, state);
 
-  productListing.onmouseleave = () =>
+  productListing.onmouseleave = () => {
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
+  };
 };
 
 /**
+ * Creates element that lists the currently selected variant
  * @return {Element}
  */
 
-const PLPDropdownCurrentOption = () => {
+const PLPDropdownCurrSelectedVariant = () => {
   return HTMLElem(
     'div',
-    ['plp-dropdown-current-option', siteString],
+    ['plp-dropdown-curr-selected-variant', siteString],
     null,
     'Select option'
   );
@@ -88,16 +96,19 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
     siteString,
   ]);
 
-  newPLPSelectorDropdownContainer.append(PLPDropdownCurrentOption());
+  const state = { variantSelected: false, currentlySelectedOptionIdx: -1 };
+
+  newPLPSelectorDropdownContainer.append(PLPDropdownCurrSelectedVariant());
   /** Adds caret to BC PLP dropdown to mimic BC PDP */
   if (!onCompetitiveCyclist) {
     newPLPSelectorDropdownContainer.append(BCDropdownCaret());
   }
 
-  handleDropdownOptions(
+  dropdownContainerEventHandlers(
     productID,
     productListing,
-    newPLPSelectorDropdownContainer
+    newPLPSelectorDropdownContainer,
+    state
   );
 
   return newPLPSelectorDropdownContainer;
@@ -108,8 +119,8 @@ module.exports = {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
-  handleDropdownOptions,
-  PLPDropdownCurrentOption,
+  dropdownContainerEventHandlers,
+  PLPDropdownCurrSelectedVariant,
   PLPSelectorDropdownContainer,
 };
 // endRemoveIf(production)

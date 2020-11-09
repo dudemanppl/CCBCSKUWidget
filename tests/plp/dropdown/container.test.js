@@ -2,8 +2,8 @@ const {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
-  handleDropdownOptions,
-  PLPDropdownCurrentOption,
+  dropdownContainerEventHandlers,
+  PLPDropdownCurrSelectedVariant,
   PLPSelectorDropdownContainer,
 } = require('../../../src/plp/dropdown/container');
 
@@ -92,7 +92,7 @@ describe('closePLPDropdownOptions', () => {
   });
 });
 
-describe('handleDropdownOptions', () => {
+describe('dropdownContainerEventHandlers', () => {
   const productListing = mockProductListing();
   const PLPSelectorDropdownContainer = mockDropdownContainer();
 
@@ -100,7 +100,7 @@ describe('handleDropdownOptions', () => {
     expect(PLPSelectorDropdownContainer.onclick).toBeFalsy();
     expect(productListing.onmouseleave).toBeFalsy();
 
-    handleDropdownOptions(
+    dropdownContainerEventHandlers(
       testSKU,
       productListing,
       PLPSelectorDropdownContainer
@@ -127,9 +127,9 @@ describe('handleDropdownOptions', () => {
   });
 });
 
-describe('PLPDropdownCurrentOption', () => {
+describe('PLPDropdownCurrSelectedVariant', () => {
   describe('Competitive Cyclist', () => {
-    const ccCurrentOption = PLPDropdownCurrentOption();
+    const ccCurrentOption = PLPDropdownCurrSelectedVariant();
 
     test('should be a div element', () => {
       expect(ccCurrentOption.tagName).toBe('DIV');
@@ -137,7 +137,7 @@ describe('PLPDropdownCurrentOption', () => {
 
     test('should have correct classes', () => {
       expect([...ccCurrentOption.classList]).toEqual([
-        'plp-dropdown-current-option',
+        'plp-dropdown-curr-selected-variant',
         'cc',
       ]);
     });
@@ -150,10 +150,10 @@ describe('PLPDropdownCurrentOption', () => {
   describe('Backcountry', () => {
     test('should have correct classes', () => {
       global.siteString = 'bc';
-      const bcCurrentOption = PLPDropdownCurrentOption();
+      const bcCurrentOption = PLPDropdownCurrSelectedVariant();
 
       expect([...bcCurrentOption.classList]).toEqual([
-        'plp-dropdown-current-option',
+        'plp-dropdown-curr-selected-variant',
         'bc',
       ]);
       global.siteString = 'cc';
@@ -182,7 +182,7 @@ describe('PLPSelectorDropdownContainer', () => {
     });
 
     test('should have correct children', () => {
-      const currentOption = PLPDropdownCurrentOption();
+      const currentOption = PLPDropdownCurrSelectedVariant();
 
       expect(firstChild).toEqual(currentOption);
       expect(lastChild).not.toBe(currentOption);
@@ -212,7 +212,7 @@ describe('PLPSelectorDropdownContainer', () => {
 
     test('should have correct children', () => {
       global.siteString = 'bc';
-      const currentOption = PLPDropdownCurrentOption();
+      const currentOption = PLPDropdownCurrSelectedVariant();
       const caret = BCDropdownCaret();
 
       expect(firstChild).toEqual(currentOption);

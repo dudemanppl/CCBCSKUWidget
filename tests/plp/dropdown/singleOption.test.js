@@ -3,7 +3,7 @@ global.onPLP = true;
 const {
   updatePricingPLP,
   copySKUPLP,
-  addMethodsToPLPSelectorDropdownOption,
+  singleOptionEventHandlers,
   PLPSelectorDropdownOption,
 } = require('../../../src/plp/dropdown/singleOption');
 
@@ -121,7 +121,7 @@ describe('copySKUPLP', () => {
   });
 });
 
-describe('addMethodsToPLPSelectorDropdownOption', () => {
+describe('singleOptionEventHandlers', () => {
   const mockDropdownOption = (
     productListingImg,
     outOfStock = true,
@@ -133,7 +133,7 @@ describe('addMethodsToPLPSelectorDropdownOption', () => {
     const productListingPrice = HTMLElem('div');
     const highlightCurrSelectedOption = jest.fn();
 
-    addMethodsToPLPSelectorDropdownOption(
+    singleOptionEventHandlers(
       PLPSelectorDropdownOption,
       { ...formattedProduct, outOfStock, imageSrc },
       props,
