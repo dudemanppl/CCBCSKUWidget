@@ -331,5 +331,6 @@ global.formattedProduct = {
   SKU: 'KSK000I-WHT-S',
   outOfStock: false,
   variant: 'White1, S',
-  imageSrc: '/images/items/medium/KSK/KSK000I/WHT.jpg',
+  imageSrc:
+    'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
 };

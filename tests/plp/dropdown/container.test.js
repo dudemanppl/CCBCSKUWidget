@@ -40,12 +40,17 @@ describe('openPLPDropdownOptions', () => {
   const currentTarget = HTMLElem('div');
   currentTarget.append(HTMLElem('div'));
   const event = { currentTarget };
-  const productListing = mockProductListing();
+  const productListingElems = [HTMLElem('img'), HTMLElem('div')];
+  const state = {
+    variantSelected: false,
+    currentlySelectedOptionIdx: -1,
+    variantImgSrc: null,
+  };
 
   describe('first invocation', () => {
     test('should add dropdown to the target', async () => {
       fetch.once(JSON.stringify(CCResponse));
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
 
       expect(currentTarget.lastChild.classList[0]).toBe('plp-dropdown-options');
     });
@@ -53,7 +58,7 @@ describe('openPLPDropdownOptions', () => {
 
   describe('subsequent invocations', () => {
     test('should close the opened dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
 
       expect([...currentTarget.lastChild.classList]).toEqual(
         expect.arrayContaining(['hidden'])
@@ -61,7 +66,7 @@ describe('openPLPDropdownOptions', () => {
     });
 
     test('should open the closed dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
 
       expect([...currentTarget.lastChild.classList]).not.toEqual(
         expect.arrayContaining(['hidden'])
