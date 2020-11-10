@@ -82,6 +82,7 @@ const singleOptionEventHandlers = (
     highlightCurrSelectedOption();
     updatePricingPLP(productListingPrice, props, price);
     copySKUPLP(currentOption, variant, SKU);
+    props.variantImgSrc = imageSrc;
   };
 };
 

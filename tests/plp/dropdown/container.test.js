@@ -40,7 +40,7 @@ describe('openPLPDropdownOptions', () => {
   const currentTarget = HTMLElem('div');
   currentTarget.append(HTMLElem('div'));
   const event = { currentTarget };
-  const productListingElems = [HTMLElem('img'), HTMLElem('div')];
+  const listingElems = productListingElems(mockProductListing());
   const state = {
     variantSelected: false,
     currentlySelectedOptionIdx: -1,
@@ -50,7 +50,7 @@ describe('openPLPDropdownOptions', () => {
   describe('first invocation', () => {
     test('should add dropdown to the target', async () => {
       fetch.once(JSON.stringify(CCResponse));
-      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect(currentTarget.lastChild.classList[0]).toBe('plp-dropdown-options');
     });
@@ -58,7 +58,7 @@ describe('openPLPDropdownOptions', () => {
 
   describe('subsequent invocations', () => {
     test('should close the opened dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect([...currentTarget.lastChild.classList]).toEqual(
         expect.arrayContaining(['hidden'])
@@ -66,7 +66,7 @@ describe('openPLPDropdownOptions', () => {
     });
 
     test('should open the closed dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListingElems, state);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect([...currentTarget.lastChild.classList]).not.toEqual(
         expect.arrayContaining(['hidden'])
@@ -129,7 +129,11 @@ describe('dropdownContainerEventHandlers', () => {
     dropdownContainerEventHandlers(
       testSKU,
       productListing,
-      PLPSelectorDropdownContainer
+      PLPSelectorDropdownContainer,
+      {
+        variantImgSrc:
+          'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
+      }
     );
 
     expect(PLPSelectorDropdownContainer.onclick).toBeTruthy();

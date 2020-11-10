@@ -85,15 +85,23 @@ const dropdownContainerEventHandlers = (
   PLPSelectorDropdownContainer,
   state
 ) => {
+  const [productListingImg, productListingPrice] = productListingElems(
+    productListing
+  );
+
   PLPSelectorDropdownContainer.onclick = (event) =>
     openPLPDropdownOptions(
       event,
       productID,
-      productListingElems(productListing),
+      [productListingImg, productListingPrice],
       state
     );
 
   productListing.onmouseleave = () => {
+    if (state.variantImgSrc) {
+      productListingImg.src = state.variantImgSrc;
+    }
+
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
   };
 };
