@@ -81,7 +81,9 @@ const formatVariant = ({
     SKU: id,
     outOfStock: !stockLevel,
     variant: title,
-    imageSrc: url,
+    imageSrc: `https://content.${
+      onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
+    }.com${url}`,
   };
 
   return formattedVariant;

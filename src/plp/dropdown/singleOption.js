@@ -71,13 +71,9 @@ singleOptionEventHandlers = (
   if (outOfStock) PLPSelectorDropdownOption.classList.add('oos-alert');
 
   PLPSelectorDropdownOption.onmouseenter = () => {
-    const newImgSource = `https://content.${
-      onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
-    }.com${imageSrc}`;
-
     /** Changes image source if variant image changes */
-    if (productListingImg.src !== newImgSource) {
-      productListingImg.src = newImgSource;
+    if (productListingImg.src !== imageSrc) {
+      productListingImg.src = imageSrc;
     }
   };
 
