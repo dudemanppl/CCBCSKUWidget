@@ -19,7 +19,11 @@ global.clearBody = () => {
 global.mockProductListing = (SKU = testSKU) => {
   const productListing = HTMLElem('div');
   productListing.setAttribute('data-product-id', SKU);
-  productListing.append(HTMLElem('div'));
+  const img = HTMLElem('img');
+  img.src =
+    'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg';
+
+  productListing.append(img, HTMLElem('div', ['js-pl-pricing']));
 
   return productListing;
 };
@@ -331,5 +335,7 @@ global.formattedProduct = {
   SKU: 'KSK000I-WHT-S',
   outOfStock: false,
   variant: 'White1, S',
-  imageSrc: '/images/items/medium/KSK/KSK000I/WHT.jpg',
+  imageSrc: `https://content.${
+    onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
+  }.com/images/items/medium/KSK/KSK000I/WHT.jpg`,
 };

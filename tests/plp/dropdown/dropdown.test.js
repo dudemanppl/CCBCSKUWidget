@@ -6,7 +6,6 @@ const {
   formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
-  productListingElems,
 } = require('../../../src/plp/dropdown/dropdown');
 
 const createMockDropdown = () => {
@@ -140,6 +139,22 @@ describe('formatVariant', () => {
   test('imageSrc property should be a string', () => {
     expect(typeof result.imageSrc).toBe('string');
   });
+
+  describe('imageSrc should be correct', () => {
+    test('Competitive Cyclist', () => {
+      expect(result.imageSrc).toBe(
+        'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+      );
+    });
+    test('Backcountry', () => {
+      global.onCompetitiveCyclist = false;
+      const bcResult = formatVariant(firstVariant);
+
+      expect(bcResult.imageSrc).toBe(
+        'https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+      );
+    });
+  });
 });
 
 describe('toggleCurrOptionClass', () => {
@@ -194,25 +209,5 @@ describe('highlightCurrSelectedOption', () => {
     expect(firstClass).toBeUndefined();
     expect(lastClass).toBe('curr-selected-option');
     expect(toggleCurrOptionClass).not.toBeCalled();
-  });
-});
-
-describe('productListingElems', () => {
-  const productListing = HTMLElem('div');
-  const productListingImg = HTMLElem('img');
-  const productListingPrice = HTMLElem('div', ['js-pl-pricing']);
-
-  productListing.append(productListingImg, productListingPrice);
-
-  const [imgElem, priceElem] = productListingElems(productListing);
-
-  test('should get productListingImg', () => {
-    expect(imgElem).toEqual(productListingImg);
-    expect(imgElem).toBeInstanceOf(HTMLElement);
-  });
-
-  test('should get productListingPrice', () => {
-    expect(priceElem).toEqual(productListingPrice);
-    expect(priceElem).toBeInstanceOf(HTMLElement);
   });
 });

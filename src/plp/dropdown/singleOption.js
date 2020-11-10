@@ -59,7 +59,7 @@ const copySKUPLP = (currentOption, variant, SKU) => {
  * @param {function} highlightCurrSelectedOption Function to change the highlighting of the currently selected variant
  */
 
-singleOptionEventHandlers = (
+const singleOptionEventHandlers = (
   PLPSelectorDropdownOption,
   { price, SKU, outOfStock, variant, imageSrc },
   props,
@@ -71,13 +71,9 @@ singleOptionEventHandlers = (
   if (outOfStock) PLPSelectorDropdownOption.classList.add('oos-alert');
 
   PLPSelectorDropdownOption.onmouseenter = () => {
-    const newImgSource = `https://content.${
-      onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
-    }.com${imageSrc}`;
-
     /** Changes image source if variant image changes */
-    if (productListingImg.src !== newImgSource) {
-      productListingImg.src = newImgSource;
+    if (productListingImg.src !== imageSrc) {
+      productListingImg.src = imageSrc;
     }
   };
 
@@ -86,6 +82,7 @@ singleOptionEventHandlers = (
     highlightCurrSelectedOption();
     updatePricingPLP(productListingPrice, props, price);
     copySKUPLP(currentOption, variant, SKU);
+    props.variantImgSrc = imageSrc;
   };
 };
 

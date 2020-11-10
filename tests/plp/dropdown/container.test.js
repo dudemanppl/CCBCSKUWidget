@@ -2,6 +2,7 @@ const {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
+  productListingElems,
   dropdownContainerEventHandlers,
   PLPDropdownCurrSelectedVariant,
   PLPSelectorDropdownContainer,
@@ -39,12 +40,17 @@ describe('openPLPDropdownOptions', () => {
   const currentTarget = HTMLElem('div');
   currentTarget.append(HTMLElem('div'));
   const event = { currentTarget };
-  const productListing = mockProductListing();
+  const listingElems = productListingElems(mockProductListing());
+  const state = {
+    variantSelected: false,
+    currentlySelectedOptionIdx: -1,
+    variantImgSrc: null,
+  };
 
   describe('first invocation', () => {
     test('should add dropdown to the target', async () => {
       fetch.once(JSON.stringify(CCResponse));
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect(currentTarget.lastChild.classList[0]).toBe('plp-dropdown-options');
     });
@@ -52,7 +58,7 @@ describe('openPLPDropdownOptions', () => {
 
   describe('subsequent invocations', () => {
     test('should close the opened dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect([...currentTarget.lastChild.classList]).toEqual(
         expect.arrayContaining(['hidden'])
@@ -60,7 +66,7 @@ describe('openPLPDropdownOptions', () => {
     });
 
     test('should open the closed dropdown', async () => {
-      await openPLPDropdownOptions(event, testSKU, productListing);
+      await openPLPDropdownOptions(event, testSKU, listingElems, state);
 
       expect([...currentTarget.lastChild.classList]).not.toEqual(
         expect.arrayContaining(['hidden'])
@@ -92,9 +98,33 @@ describe('closePLPDropdownOptions', () => {
   });
 });
 
+describe('productListingElems', () => {
+  const productListing = HTMLElem('div');
+  const productListingImg = HTMLElem('img');
+  const productListingPrice = HTMLElem('div', ['js-pl-pricing']);
+
+  productListing.append(productListingImg, productListingPrice);
+
+  const [imgElem, priceElem] = productListingElems(productListing);
+
+  test('should get productListingImg', () => {
+    expect(imgElem).toEqual(productListingImg);
+    expect(imgElem).toBeInstanceOf(HTMLElement);
+  });
+
+  test('should get productListingPrice', () => {
+    expect(priceElem).toEqual(productListingPrice);
+    expect(priceElem).toBeInstanceOf(HTMLElement);
+  });
+});
+
 describe('dropdownContainerEventHandlers', () => {
   const productListing = mockProductListing();
   const PLPSelectorDropdownContainer = mockDropdownContainer();
+  const state = {
+    variantImgSrc:
+      'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
+  };
 
   test('should have added event handlers', () => {
     expect(PLPSelectorDropdownContainer.onclick).toBeFalsy();
@@ -103,7 +133,8 @@ describe('dropdownContainerEventHandlers', () => {
     dropdownContainerEventHandlers(
       testSKU,
       productListing,
-      PLPSelectorDropdownContainer
+      PLPSelectorDropdownContainer,
+      state
     );
 
     expect(PLPSelectorDropdownContainer.onclick).toBeTruthy();
@@ -118,12 +149,32 @@ describe('dropdownContainerEventHandlers', () => {
     );
   });
 
-  test('should handle mouse event on product listing', () => {
-    productListing.dispatchEvent(new MouseEvent('mouseleave'));
+  describe('mouseleave', () => {
+    test('should hide element', () => {
+      productListing.dispatchEvent(new MouseEvent('mouseleave'));
 
-    expect([...PLPSelectorDropdownContainer.lastChild.classList]).toEqual(
-      expect.arrayContaining(['hidden'])
-    );
+      expect([...PLPSelectorDropdownContainer.lastChild.classList]).toEqual(
+        expect.arrayContaining(['hidden'])
+      );
+    });
+
+    describe('image source', () => {
+      test('should change image source if a variant has been selected', () => {
+        productListing.dispatchEvent(new MouseEvent('mouseleave'));
+
+        expect(productListing.firstChild.src).toEqual(
+          'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+        );
+      });
+
+      test('should not change image source if a variant has not been selected', () => {
+        state.variantImgSrc = null;
+        productListing.firstChild.src = 'https://www.google.com';
+        productListing.dispatchEvent(new MouseEvent('mouseleave'));
+
+        expect(productListing.firstChild.src).toBe('https://www.google.com/');
+      });
+    });
   });
 });
 
