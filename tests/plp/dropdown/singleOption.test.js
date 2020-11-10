@@ -125,7 +125,9 @@ describe('singleOptionEventHandlers', () => {
   const mockDropdownOption = (
     productListingImg,
     outOfStock = true,
-    imageSrc = '/images/items/medium/KSK/KSK000I/WHT.jpg'
+    imageSrc = `https://content.${
+      onCompetitiveCyclist ? 'competitivecyclist' : 'backcountry'
+    }.com/images/items/medium/KSK/KSK000I/WHT.jpg`
   ) => {
     const PLPSelectorDropdownOption = HTMLElem('div');
     const props = { variantSelected: false };
@@ -172,7 +174,7 @@ describe('singleOptionEventHandlers', () => {
         otherOption = mockDropdownOption(
           productListingImg,
           true,
-          '/images/items/medium/KSK/KSK000I/WHIA.jpg'
+          'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHIA.jpg'
         );
       });
 
@@ -205,7 +207,7 @@ describe('singleOptionEventHandlers', () => {
         otherOption = mockDropdownOption(
           productListingImg,
           true,
-          '/images/items/medium/KSK/KSK000I/WHIA.jpg'
+          'https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHIA.jpg'
         );
       });
 
