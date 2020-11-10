@@ -139,6 +139,22 @@ describe('formatVariant', () => {
   test('imageSrc property should be a string', () => {
     expect(typeof result.imageSrc).toBe('string');
   });
+
+  describe('imageSrc should be correct', () => {
+    test('Competitive Cyclist', () => {
+      expect(result.imageSrc).toBe(
+        'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+      );
+    });
+    test('Backcountry', () => {
+      global.onCompetitiveCyclist = false;
+      const bcResult = formatVariant(firstVariant);
+
+      expect(bcResult.imageSrc).toBe(
+        'https://content.backcountry.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+      );
+    });
+  });
 });
 
 describe('toggleCurrOptionClass', () => {

@@ -121,6 +121,10 @@ describe('productListingElems', () => {
 describe('dropdownContainerEventHandlers', () => {
   const productListing = mockProductListing();
   const PLPSelectorDropdownContainer = mockDropdownContainer();
+  const state = {
+    variantImgSrc:
+      'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
+  };
 
   test('should have added event handlers', () => {
     expect(PLPSelectorDropdownContainer.onclick).toBeFalsy();
@@ -130,10 +134,7 @@ describe('dropdownContainerEventHandlers', () => {
       testSKU,
       productListing,
       PLPSelectorDropdownContainer,
-      {
-        variantImgSrc:
-          'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
-      }
+      state
     );
 
     expect(PLPSelectorDropdownContainer.onclick).toBeTruthy();
@@ -148,12 +149,32 @@ describe('dropdownContainerEventHandlers', () => {
     );
   });
 
-  test('should handle mouse event on product listing', () => {
-    productListing.dispatchEvent(new MouseEvent('mouseleave'));
+  describe('mouseleave', () => {
+    test('should hide element', () => {
+      productListing.dispatchEvent(new MouseEvent('mouseleave'));
 
-    expect([...PLPSelectorDropdownContainer.lastChild.classList]).toEqual(
-      expect.arrayContaining(['hidden'])
-    );
+      expect([...PLPSelectorDropdownContainer.lastChild.classList]).toEqual(
+        expect.arrayContaining(['hidden'])
+      );
+    });
+
+    describe('image source', () => {
+      test('should change image source if a variant has been selected', () => {
+        productListing.dispatchEvent(new MouseEvent('mouseleave'));
+
+        expect(productListing.firstChild.src).toEqual(
+          'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg'
+        );
+      });
+
+      test('should not change image source if a variant has not been selected', () => {
+        state.variantImgSrc = null;
+        productListing.firstChild.src = 'https://www.google.com';
+        productListing.dispatchEvent(new MouseEvent('mouseleave'));
+
+        expect(productListing.firstChild.src).toBe('https://www.google.com/');
+      });
+    });
   });
 });
 
