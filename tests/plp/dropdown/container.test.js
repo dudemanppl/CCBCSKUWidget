@@ -2,6 +2,7 @@ const {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
+  productListingElems,
   dropdownContainerEventHandlers,
   PLPDropdownCurrSelectedVariant,
   PLPSelectorDropdownContainer,
@@ -89,6 +90,26 @@ describe('closePLPDropdownOptions', () => {
     expect([...mockContainer.lastChild.classList]).not.toEqual(
       expect.arrayContaining(['hidden'])
     );
+  });
+});
+
+describe('productListingElems', () => {
+  const productListing = HTMLElem('div');
+  const productListingImg = HTMLElem('img');
+  const productListingPrice = HTMLElem('div', ['js-pl-pricing']);
+
+  productListing.append(productListingImg, productListingPrice);
+
+  const [imgElem, priceElem] = productListingElems(productListing);
+
+  test('should get productListingImg', () => {
+    expect(imgElem).toEqual(productListingImg);
+    expect(imgElem).toBeInstanceOf(HTMLElement);
+  });
+
+  test('should get productListingPrice', () => {
+    expect(priceElem).toEqual(productListingPrice);
+    expect(priceElem).toBeInstanceOf(HTMLElement);
   });
 });
 

@@ -93,7 +93,7 @@ const formatVariant = ({
  * Toggles classname of given element to highlight/unhighlight it
  *
  * @param {Element} PLPSelectorDropdown
- * @param {Object} state Current state of parent component
+ * @param {object} state Data about the component
  * @param {number} state.currentlySelectedOptionIdx Index of the currently selected option
  */
 
@@ -113,7 +113,7 @@ const toggleCurrOptionClass = (PLPSelectorDropdown, state) => {
  * Highlights the selected option on a PLP dropdown
  *
  * @param {Element} PLPSelectorDropdown
- * @param {Object} state
+ * @param {object} state Data about the component
  * @param {number} newlySelectectedIdx Index of newly selected option
  */
 
@@ -133,51 +133,35 @@ const highlightCurrSelectedOption = (
 };
 
 /**
- * Returns tuple of elements with price and image to pass to event handlers
- *
- * @param {Element} productListing PLI product listing where widget was added
- * @return {array}
- */
-
-const productListingElems = (productListing) => {
-  const [productListingImg] = productListing.getElementsByTagName('img');
-  const [productListingPrice] = productListing.getElementsByClassName(
-    'js-pl-pricing'
-  );
-
-  const productListingElems = [productListingImg, productListingPrice];
-
-  return productListingElems;
-};
-
-/**
- * Adds all options to the dropdown
- *
+ *  Adds all options to the dropdown
  * @param {string} productID Parent SKU for item from CC/BC catalog
+ * @param {Element} currSelectedVariant Element that shows the currently selected variant
+ * @param {Element[]} productListingElems Tuple of elements with price and image
+ * @param {object} state Data about the component
+ * @param {Element} PLPSelectorDropdown
  */
 
 /* istanbul ignore next */
-
 const dropdownOptions = async (
   productID,
-  currentOption,
-  productListing,
+  currSelectedVariant,
+  productListingElems,
   state,
   PLPSelectorDropdown
 ) => {
   const variants = await getVariants(productID);
 
-  const dropdownOptions = variants.map((variant, index) =>
+  const newDropdownOptions = variants.map((variant, index) =>
     PLPSelectorDropdownOption(
       formatVariant(variant),
       state,
-      currentOption,
-      productListingElems(productListing),
+      currSelectedVariant,
+      productListingElems,
       () => highlightCurrSelectedOption(PLPSelectorDropdown, state, index)
     )
   );
 
-  return dropdownOptions;
+  return newDropdownOptions;
 };
 
 /**
@@ -209,7 +193,6 @@ module.exports = {
   formatVariant,
   toggleCurrOptionClass,
   highlightCurrSelectedOption,
-  productListingElems,
   PLPSelectorDropdown,
 };
 // endRemoveIf(production)

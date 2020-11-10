@@ -12,24 +12,30 @@ const PLPDropdownOpened = ({ classList: [elementClass] }) => {
 /**
  * @param {Event} event From event handler
  * @param {string} productID Parent SKU for item from CC/BC catalog
- * @param {Element} productListing PLI product listing where widget was
+ * @param {Element[]} productListingElems Tuple of elements with price and image
+ * @param {object} state Data about the component
  */
 
 const openPLPDropdownOptions = async (
   event,
   productID,
-  productListing,
+  productListingElems,
   state
 ) => {
   const { currentTarget } = event;
-  const { firstChild: currentOption, lastChild } = currentTarget;
+  const { firstChild: currSelectedVariant, lastChild } = currentTarget;
 
   if (PLPDropdownOpened(lastChild)) {
     lastChild.classList.toggle('hidden');
   } else {
     /** Element won't be created until it is clicked */
     currentTarget.append(
-      await PLPSelectorDropdown(productID, currentOption, productListing, state)
+      await PLPSelectorDropdown(
+        productID,
+        currSelectedVariant,
+        productListingElems,
+        state
+      )
     );
   }
 };
@@ -47,11 +53,30 @@ const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
 };
 
 /**
+ * Returns tuple of elements with price and image to pass to event handlers
+ *
+ * @param {Element} productListing PLI product listing where widget was added
+ * @return {array}
+ */
+
+const productListingElems = (productListing) => {
+  const [productListingImg] = productListing.getElementsByTagName('img');
+  const [productListingPrice] = productListing.getElementsByClassName(
+    'js-pl-pricing'
+  );
+
+  const productListingElems = [productListingImg, productListingPrice];
+
+  return productListingElems;
+};
+
+/**
  * Opens and closes the dropdown options on PLP
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
  * @param {Element} productListing PLI product listing where widget was added
  * @param {Element} PLPSelectorDropdownContainer
+ * @param {object} state Data about the component
  */
 
 const dropdownContainerEventHandlers = (
@@ -61,7 +86,12 @@ const dropdownContainerEventHandlers = (
   state
 ) => {
   PLPSelectorDropdownContainer.onclick = (event) =>
-    openPLPDropdownOptions(event, productID, productListing, state);
+    openPLPDropdownOptions(
+      event,
+      productID,
+      productListingElems(productListing),
+      state
+    );
 
   productListing.onmouseleave = () => {
     closePLPDropdownOptions(PLPSelectorDropdownContainer);
@@ -123,6 +153,7 @@ module.exports = {
   PLPDropdownOpened,
   openPLPDropdownOptions,
   closePLPDropdownOptions,
+  productListingElems,
   dropdownContainerEventHandlers,
   PLPDropdownCurrSelectedVariant,
   PLPSelectorDropdownContainer,
