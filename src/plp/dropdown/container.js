@@ -5,8 +5,8 @@
  * @return {boolean}
  */
 
-const PLPDropdownOpened = ({ classList: [elementClass] }) => {
-  return elementClass === 'plp-dropdown-options';
+const PLPDropdownOpened = ({ classList: [firstClass] }) => {
+  return firstClass === 'plp-dropdown-options';
 };
 
 /**
@@ -17,19 +17,25 @@ const PLPDropdownOpened = ({ classList: [elementClass] }) => {
  */
 
 const openPLPDropdownOptions = async (
-  event,
+  { currentTarget },
   productID,
   productListingElems,
   state
 ) => {
-  const { currentTarget } = event;
   const { firstChild: currSelectedVariant, lastChild } = currentTarget;
 
   if (PLPDropdownOpened(lastChild)) {
     lastChild.classList.toggle('hidden');
   } else {
     /** Element won't be created until it is clicked */
-    currentTarget.append(
+    const placeholderDropdown = HTMLElem('UL', [
+      'plp-dropdown-options',
+      'hidden',
+      siteString,
+    ]);
+    currentTarget.append(placeholderDropdown);
+
+    placeholderDropdown.replaceWith(
       await PLPSelectorDropdown(
         productID,
         currSelectedVariant,
@@ -41,15 +47,11 @@ const openPLPDropdownOptions = async (
 };
 
 /**
- * @param {Element} PLPSelectorDropdownContainer
+ * @param {Element} PLPDropdownOptions
  */
 
-const closePLPDropdownOptions = (PLPSelectorDropdownContainer) => {
-  const { lastChild } = PLPSelectorDropdownContainer;
-
-  if (PLPDropdownOpened(lastChild)) {
-    lastChild.classList.add('hidden');
-  }
+const closePLPDropdownOptions = (PLPDropdownOptions) => {
+  PLPDropdownOptions.classList.add('hidden');
 };
 
 /**
@@ -102,7 +104,12 @@ const dropdownContainerEventHandlers = (
       productListingImg.src = state.variantImgSrc;
     }
 
-    closePLPDropdownOptions(PLPSelectorDropdownContainer);
+    const [
+      PLPSelectorDropdownContainer,
+    ] = productListing.getElementsByClassName('plp-dropdown-options');
+
+    PLPSelectorDropdownContainer &&
+      closePLPDropdownOptions(PLPSelectorDropdownContainer);
   };
 };
 
