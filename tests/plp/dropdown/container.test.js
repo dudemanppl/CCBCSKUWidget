@@ -59,7 +59,6 @@ describe('openPLPDropdownOptions', () => {
   describe('subsequent invocations', () => {
     test('should close the opened dropdown', async () => {
       await openPLPDropdownOptions(event, testSKU, listingElems, state);
-      console.log(currentTarget.classList);
 
       expect([...currentTarget.lastChild.classList]).toEqual(
         expect.arrayContaining(['hidden'])
@@ -78,31 +77,18 @@ describe('openPLPDropdownOptions', () => {
 
 describe('closePLPDropdownOptions', () => {
   test('should close the opened dropdown', () => {
-    const mockContainer = mockDropdownContainer();
+    const dropdown = mockDropdown();
 
-    closePLPDropdownOptions(mockContainer);
+    closePLPDropdownOptions(dropdown);
 
-    expect([...mockContainer.lastChild.classList]).toEqual(
-      expect.arrayContaining(['hidden'])
-    );
-  });
-
-  test('should not close the dropdown if not open', () => {
-    const mockContainer = mockDropdownContainer();
-    mockContainer.lastChild.classList = ['random-class'];
-
-    closePLPDropdownOptions(mockContainer);
-
-    expect([...mockContainer.lastChild.classList]).not.toEqual(
-      expect.arrayContaining(['hidden'])
-    );
+    expect([...dropdown.classList]).toEqual(expect.arrayContaining(['hidden']));
   });
 });
 
 describe('productListingElems', () => {
   const productListing = HTMLElem('div');
   const productListingImg = HTMLElem('img');
-  const productListingPrice = HTMLElem('div', ['js-pl-pricing']);
+  const productListingPrice = HTMLElem('div', ['ui-pl-pricing']);
 
   productListing.append(productListingImg, productListingPrice);
 
@@ -121,7 +107,8 @@ describe('productListingElems', () => {
 
 describe('dropdownContainerEventHandlers', () => {
   const productListing = mockProductListing();
-  const PLPSelectorDropdownContainer = mockDropdownContainer();
+  const PLPSelectorDropdownContainer = HTMLElem('div');
+  PLPSelectorDropdownContainer.append(mockDropdown());
   const state = {
     variantImgSrc:
       'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg',
