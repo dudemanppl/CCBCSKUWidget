@@ -59,6 +59,7 @@ describe('openPLPDropdownOptions', () => {
   describe('subsequent invocations', () => {
     test('should close the opened dropdown', async () => {
       await openPLPDropdownOptions(event, testSKU, listingElems, state);
+      console.log(currentTarget.classList);
 
       expect([...currentTarget.lastChild.classList]).toEqual(
         expect.arrayContaining(['hidden'])

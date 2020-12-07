@@ -55,13 +55,25 @@ const PLPWidgetContainer = (productID, productListing) => {
 };
 
 /**
+ * @param {Element} productListing PLP product listing
+ * @return {string} Product ID from a listing on the BC activity page
+ */
+
+const getProductIDBCActivityPage = (productListing) => {
+  const productID = [...productListing.classList].pop().slice(-7);
+  return productID;
+};
+
+/**
  * Adds single widget to the PLP
  *
  * @param {Element} productListing PLP product listing
  */
 
 const addPLPSingleWidget = (productListing) => {
-  const productID = productListing.getAttribute('data-product-id');
+  const productID = onBCActivityPage
+    ? getProductIDBCActivityPage(productListing)
+    : productListing.getAttribute('data-product-id');
   const targetLocation = productListing.firstChild;
 
   targetLocation.append(PLPWidgetContainer(productID, targetLocation));

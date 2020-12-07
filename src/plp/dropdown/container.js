@@ -33,6 +33,7 @@ const openPLPDropdownOptions = async (
       'hidden',
       siteString,
     ]);
+
     currentTarget.append(placeholderDropdown);
 
     placeholderDropdown.replaceWith(
@@ -64,7 +65,7 @@ const closePLPDropdownOptions = (PLPDropdownOptions) => {
 const productListingElems = (productListing) => {
   const [productListingImg] = productListing.getElementsByTagName('img');
   const [productListingPrice] = productListing.getElementsByClassName(
-    'js-pl-pricing'
+    'ui-pl-pricing'
   );
 
   const productListingElems = [productListingImg, productListingPrice];
