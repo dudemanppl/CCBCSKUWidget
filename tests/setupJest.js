@@ -6,6 +6,7 @@ global.HTMLElem = HTMLElem;
 
 global.classnamesForElem = classnamesForElem;
 
+global.onBCActivityPage = false;
 global.onCompetitiveCyclist = true;
 global.siteString = 'cc';
 global.onPLP = false;
@@ -18,7 +19,18 @@ global.clearBody = () => {
 
 global.mockProductListing = (SKU = testSKU) => {
   const productListing = HTMLElem('div');
-  productListing.setAttribute('data-product-id', SKU);
+  if (!onBCActivityPage) {
+    productListing.setAttribute('data-product-id', SKU);
+  } else {
+    productListing.classList = [
+      'product',
+      'ui-product-listing',
+      'ui-product-listing--show-more',
+      'product-swatches',
+      'qa-product-listing',
+      'qa-product-listing-KSK000I',
+    ];
+  }
   const img = HTMLElem('img');
   img.src =
     'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg';
@@ -28,11 +40,10 @@ global.mockProductListing = (SKU = testSKU) => {
   return productListing;
 };
 
-global.mockDropdownContainer = () => {
-  const mockDropdownContainer = HTMLElem('div');
-  mockDropdownContainer.append(HTMLElem('div', ['plp-dropdown-options']));
+global.mockDropdown = () => {
+  const mockDropdown = HTMLElem('div', ['plp-dropdown-options']);
 
-  return mockDropdownContainer;
+  return mockDropdown;
 };
 
 global.testSKU = 'KSK000I';

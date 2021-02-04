@@ -28,15 +28,9 @@ const deleteAllElemsOfClass = (elemClassName) => {
  */
 
 const fixBCStyling = () => {
-  deleteAllElemsOfClass('js-pl-focus-trigger');
+  deleteAllElemsOfClass('ui-pl-info');
   deleteAllElemsOfClass('js-pl-color-thumbs');
   deleteAllElemsOfClass('js-pl-sizes-wrap');
-  runOnAllElemsOfClass('js-pl-expandable', ({ style }) => {
-    style.top = '10px';
-    style.right = '10px';
-    style.bottom = '10px';
-    style.left = '10px';
-  });
 };
 
 /**
@@ -47,7 +41,10 @@ const fixBCStyling = () => {
  */
 
 const PLPWidgetContainer = (productID, productListing) => {
-  const newPLPWidgetContainer = HTMLElem('div', ['plp-widget-container']);
+  const newPLPWidgetContainer = HTMLElem('div', [
+    'plp-widget-container',
+    siteString,
+  ]);
 
   newPLPWidgetContainer.append(
     PLPSelectorDropdownContainer(productID, productListing),
@@ -58,13 +55,25 @@ const PLPWidgetContainer = (productID, productListing) => {
 };
 
 /**
+ * @param {Element} productListing PLP product listing
+ * @return {string} Product ID from a listing on the BC activity page
+ */
+
+const getProductIDBCActivityPage = (productListing) => {
+  const productID = [...productListing.classList].pop().slice(-7);
+  return productID;
+};
+
+/**
  * Adds single widget to the PLP
  *
  * @param {Element} productListing PLP product listing
  */
 
 const addPLPSingleWidget = (productListing) => {
-  const productID = productListing.getAttribute('data-product-id');
+  const productID = onBCActivityPage
+    ? getProductIDBCActivityPage(productListing)
+    : productListing.getAttribute('data-product-id');
   const targetLocation = productListing.firstChild;
 
   targetLocation.append(PLPWidgetContainer(productID, targetLocation));
@@ -78,8 +87,9 @@ const addAllPLPWidgets = () => {
   if (!onCompetitiveCyclist) {
     fixBCStyling();
   }
-  runOnAllElemsOfClass('js-product-listing', (productListing) =>
-    addPLPSingleWidget(productListing)
+  runOnAllElemsOfClass(
+    onBCActivityPage ? 'ui-product-listing' : 'js-product-listing',
+    addPLPSingleWidget
   );
 };
 
@@ -89,14 +99,18 @@ const addAllPLPWidgets = () => {
 
 const nodeToObservePLP = () => {
   const [nodeToObserve] = document.getElementsByClassName(
-    onCompetitiveCyclist ? 'js-inner-body' : 'inner-body'
+    onCompetitiveCyclist
+      ? 'js-inner-body'
+      : onBCActivityPage
+      ? 'product-listing__wrapper'
+      : 'inner-body'
   );
 
   return nodeToObserve;
 };
 
 /* istanbul ignore next */
-if (onPLP) {
+if (onPLP || onBCActivityPage) {
   addAllPLPWidgets();
 
   /** Watches for changes on SPA to rerender PLP widgets */
@@ -111,6 +125,7 @@ module.exports = {
   deleteAllElemsOfClass,
   fixBCStyling,
   PLPWidgetContainer,
+  getProductIDBCActivityPage,
   addPLPSingleWidget,
   addAllPLPWidgets,
   nodeToObservePLP,
