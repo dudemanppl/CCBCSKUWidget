@@ -19,7 +19,18 @@ global.clearBody = () => {
 
 global.mockProductListing = (SKU = testSKU) => {
   const productListing = HTMLElem('div');
-  productListing.setAttribute('data-product-id', SKU);
+  if (!onBCActivityPage) {
+    productListing.setAttribute('data-product-id', SKU);
+  } else {
+    productListing.classList = [
+      'product',
+      'ui-product-listing',
+      'ui-product-listing--show-more',
+      'product-swatches',
+      'qa-product-listing',
+      'qa-product-listing-KSK000I',
+    ];
+  }
   const img = HTMLElem('img');
   img.src =
     'https://content.competitivecyclist.com/images/items/medium/KSK/KSK000I/WHT.jpg';

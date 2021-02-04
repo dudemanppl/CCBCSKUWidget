@@ -3,6 +3,7 @@ const {
   deleteAllElemsOfClass,
   fixBCStyling,
   PLPWidgetContainer,
+  getProductIDBCActivityPage,
   addPLPSingleWidget,
   addAllPLPWidgets,
   nodeToObservePLP,
@@ -15,6 +16,7 @@ const {
 const { WMSLink } = require('../../src/shared/index');
 
 const { BCDropdownCaret } = require('../../src/plp/dropdown/BCDropdownCaret');
+const { doc } = require('prettier');
 
 global.PLPSelectorDropdownContainer = PLPSelectorDropdownContainer;
 global.WMSLink = WMSLink;
@@ -128,10 +130,9 @@ describe('fixBCStyling', () => {
   beforeEach(() => {
     for (let i = 0; i < 5; i += 1) {
       document.body.append(
-        HTMLElem('div', ['js-pl-focus-trigger']),
+        HTMLElem('div', ['ui-pl-info']),
         HTMLElem('div', ['js-pl-color-thumbs']),
-        HTMLElem('div', ['js-pl-sizes-wrap']),
-        HTMLElem('div', ['js-pl-expandable'])
+        HTMLElem('div', ['js-pl-sizes-wrap'])
       );
     }
     fixBCStyling();
@@ -139,10 +140,8 @@ describe('fixBCStyling', () => {
 
   afterEach(clearBody);
 
-  test('should delete elements with class of js-pl-focus-trigger', () => {
-    expect(document.getElementsByClassName('js-pl-focus-trigger')).toHaveLength(
-      0
-    );
+  test('should delete elements with class of ui-pl-info', () => {
+    expect(document.getElementsByClassName('ui-pl-info')).toHaveLength(0);
   });
 
   test('should delete elements with class of js-pl-color-thumbs', () => {
@@ -153,19 +152,6 @@ describe('fixBCStyling', () => {
 
   test('should delete elements with class of js-pl-sizes-wrap', () => {
     expect(document.getElementsByClassName('js-pl-sizes-wrap')).toHaveLength(0);
-  });
-
-  test('should change styling of elements with class of js-pl-expandable to have a top, right, bottom, and left of 10px', () => {
-    const [
-      {
-        style: { top, right, bottom, left },
-      },
-    ] = document.getElementsByClassName('js-pl-expandable');
-
-    expect(top).toBe('10px');
-    expect(right).toBe('10px');
-    expect(bottom).toBe('10px');
-    expect(left).toBe('10px');
   });
 });
 
@@ -197,15 +183,29 @@ describe('PLPWidgetContainer', () => {
   });
 });
 
+describe('getProductIDBCActivityPage', () => {
+  afterAll(() => (global.onBCActivityPage = false));
+});
+
 describe('addPLPSingleWidget', () => {
-  const productListing = mockProductListing();
+  describe('should be added to the correct place', () => {
+    test('on normal PLP', () => {
+      const productListing = mockProductListing();
+      addPLPSingleWidget(productListing);
 
-  addPLPSingleWidget(productListing);
+      const widget = productListing.firstChild.firstChild;
+      expect(widget.classList[0]).toBe('plp-widget-container');
+    });
 
-  const widget = productListing.firstChild.firstChild;
+    test('on BC activity page', () => {
+      global.onBCActivityPage = true;
+      const productListing = mockProductListing();
+      addPLPSingleWidget(productListing);
 
-  test('should be added to the correct place', () => {
-    expect(widget.classList[0]).toBe('plp-widget-container');
+      const widget = productListing.firstChild.firstChild;
+
+      expect(widget.classList[0]).toBe('plp-widget-container');
+    });
   });
 });
 
@@ -217,6 +217,7 @@ describe('addAllPLPWidgets', () => {
 
       document.body.append(mockListingContainer);
     }
+    global.onBCActivityPage = false;
   });
 
   afterEach(clearBody);
@@ -262,3 +263,11 @@ describe('nodeToObservePLP', () => {
     expect(node.classList[0]).toBe('inner-body');
   });
 });
+
+let total = 0;
+
+for (const price of [...document.getElementsByClassName('qa-total-price')]) {
+  const priceTotal = parseFloat(price.innerText.slice(1));
+  if (priceTotal === 16.1) break;
+  total += priceTotal;
+}

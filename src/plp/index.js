@@ -125,6 +125,7 @@ module.exports = {
   deleteAllElemsOfClass,
   fixBCStyling,
   PLPWidgetContainer,
+  getProductIDBCActivityPage,
   addPLPSingleWidget,
   addAllPLPWidgets,
   nodeToObservePLP,
