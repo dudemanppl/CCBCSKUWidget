@@ -1,12 +1,12 @@
 # CC/BC SKU Widget
 
-## Description
+### Description
 
 A browser extension made for use on the Competitive Cyclist and Backcountry websites to optimize the workflow for Gearheads.
 
-## Usage
+### Usage
 
-## Installation
+### Installation
 
 ##### **[Chrome Web Store Install Link](https://chrome.google.com/webstore/detail/ccbc-sku-widget/oclphakakbdnigniddcimhmcikgedhhk 'link to Chrome Web Store')**
 
@@ -18,9 +18,9 @@ A browser extension made for use on the Competitive Cyclist and Backcountry webs
 4. Check the box for **Developer mode** in the top right
 5. Click the **load unpacked extension** button and select the folder where you unzipped the file
 
-## Contributing
+### Contributing
 
-1. **[Fork the repo](https://github.com/dudemanppl/CCBCSKUWidget/fork?fragment=1)**
+1. **[Fork the repo](https://github.com/dudemanppl/CCBCSKUWidget/fork?fragment=1 'link to fork repo')**
 2. Clone your forked copy locally
 3. Manually install the extension as described above
 4. Run the command below to hot reload local changes
@@ -29,3 +29,16 @@ A browser extension made for use on the Competitive Cyclist and Backcountry webs
 $ yarn dev
 ```
 
+5. Do your thang, adding tests as necessary as well. Run tests with
+
+```
+$ yarn test
+```
+
+6. Before opening a pull request, bundle the extension to be injested by the Chrome Web Store by running
+
+```
+$ yarn build
+```
+
+7. **[Open a pull request](https://github.com/dudemanppl/CCBCSKUWidget/compare 'link to open a pull request')**
