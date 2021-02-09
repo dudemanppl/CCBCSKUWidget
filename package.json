@@ -27,12 +27,13 @@
     "gulp-concat": "^2.6.1",
     "gulp-imagemin": "^7.1.0",
     "gulp-remove-code": "^3.0.4",
-    "gulp-rename": "^2.0.0",
     "gulp-terser": "^1.4.0",
     "gulp-zip": "^5.0.2",
     "jest": "^26.4.2",
     "jest-fetch-mock": "^3.0.3",
     "prettier": "^2.1.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "gulp-if": "^3.0.0"
+  }
 }
