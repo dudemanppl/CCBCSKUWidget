@@ -1,19 +1,58 @@
 # CC/BC SKU Widget
 
-## Description
+### Description
 
-Browser extension made for use on the Competitive Cyclist and Backcountry websites to be able to quickly copy item SKUs to the clipboard.
+A browser extension made for use on the Competitive Cyclist and Backcountry websites to optimize the workflow for Gearheads.
 
-Only tested with Chrome so far, so good luck. Email me at tommyliao340@gmail.com if you have any concerns.
+### Usage
 
-## Installation
+![GIF of usage on PLP](https://media3.giphy.com/media/wdjh2nH1WOMGD53Cfa/giphy.gif)
 
-#### **[Chrome Web Store Install Link](https://chrome.google.com/webstore/detail/ccbc-sku-widget/oclphakakbdnigniddcimhmcikgedhhk "link to Chrome Web Store")**
 
-#### Manual Install
+![GIF of checking stock on PLP](https://media0.giphy.com/media/YxiCmWz3ZfsQLS2v51/giphy.gif
+)
 
-1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/dist/CCBCSKUWidget.zip "link to file")**.
-2. Unzip the file.
-3. Copy "chrome://extensions/" and paste it in to your address bar.
-4. Check the box for **Developer mode** in the top right.
-5. Click the **load unpacked extension** button and select the folder where you unzipped the file.
+![GIF of usage on PDP](https://media0.giphy.com/media/rwjxGwEmrKkgm8vJdE/giphy.gif)
+
+#### Original workflow without extension
+Checking stock was another, even longer process
+
+![GIF of old workflow to get SKU](https://media1.giphy.com/media/ZdyC4PIqJLdvUqZH50/giphy.gif
+)
+
+### Installation
+
+##### **[Chrome Web Store Install Link](https://chrome.google.com/webstore/detail/ccbc-sku-widget/oclphakakbdnigniddcimhmcikgedhhk 'link to Chrome Web Store')**
+
+##### Manual Install
+
+1. Download the ZIP file **[here](https://github.com/dudemanppl/CCBCSKUWidget/raw/master/dist/CCBCSKUWidget.zip 'link to zip file of extension')**
+2. Unzip the file
+3. Copy "chrome://extensions/" and paste it in to your address bar
+4. Check the box for **Developer mode** in the top right
+5. Click the **load unpacked extension** button and select the folder where you unzipped the file
+
+### Contributing
+
+1. **[Fork the repo](https://github.com/dudemanppl/CCBCSKUWidget/fork?fragment=1 'link to fork repo')**
+2. Clone your forked copy locally
+3. Manually install the extension as described above
+4. Run the command below to hot reload local changes
+
+```
+$ yarn dev
+```
+
+5. Do your thang, adding tests as necessary as well. Run tests with
+
+```
+$ yarn test
+```
+
+6. Before opening a pull request, bundle the extension to be injested by the Chrome Web Store by running
+
+```
+$ yarn build
+```
+
+7. **[Open a pull request](https://github.com/dudemanppl/CCBCSKUWidget/compare 'link to open a pull request')**

@@ -2,8 +2,8 @@ const { src, dest, series, parallel, watch } = require('gulp');
 const cleanCSS = require('gulp-clean-css');
 const concat = require('gulp-concat');
 const terser = require('gulp-terser');
-const rename = require('gulp-rename');
 const removeCode = require('gulp-remove-code');
+const gulpif = require('gulp-if');
 const imagemin = require('gulp-imagemin');
 const zip = require('gulp-zip');
 const {
@@ -25,20 +25,20 @@ const contentScripts = [
 ];
 
 const terserOptions = {
-  mangle: production
-    ? {
-        toplevel: true,
-      }
-    : false,
-  compress: production ? { ecma: 8 } : false,
+  mangle: {
+    toplevel: true,
+  },
+  compress: { ecma: 8 },
 };
+
+const concatOptions = { newLine: ' ' };
 
 const destLocation = 'dist/minified';
 
 const minifyCSS = (cb) => {
   src('src/**/*.css')
     .pipe(cleanCSS())
-    .pipe(concat('index.min.css', { newLine: '' }))
+    .pipe(concat('index.min.css', concatOptions))
     .pipe(dest(destLocation));
 
   cb();
@@ -47,16 +47,19 @@ const minifyCSS = (cb) => {
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
     .pipe(removeCode({ production: true }))
-    .pipe(concat('index.min.js', { newLine: '' }))
-    .pipe(terser(terserOptions))
+    .pipe(concat('index.min.js', concatOptions))
+    .pipe(gulpif(production, terser(terserOptions)))
     .pipe(dest(destLocation));
 
   cb();
 };
 
 const minifyJSBackgroundScript = (cb) => {
-  src('src/shared/changeIcon.js')
-    .pipe(rename('changeIcon.min.js'))
+  const backgroundScripts = ['src/shared/changeIcon.js'];
+  !production && backgroundScripts.push('hot-reload.js');
+
+  src(backgroundScripts)
+    .pipe(concat('changeIcon.min.js'), concatOptions)
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
 
