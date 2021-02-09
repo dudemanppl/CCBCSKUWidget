@@ -33,12 +33,14 @@ const terserOptions = {
   compress: production ? { ecma: 8 } : false,
 };
 
+const concatOptions = { newLine: '' };
+
 const destLocation = 'dist/minified';
 
 const minifyCSS = (cb) => {
   src('src/**/*.css')
     .pipe(cleanCSS())
-    .pipe(concat('index.min.css', { newLine: '' }))
+    .pipe(concat('index.min.css', concatOptions))
     .pipe(dest(destLocation));
 
   cb();
@@ -47,7 +49,7 @@ const minifyCSS = (cb) => {
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
     .pipe(removeCode({ production: true }))
-    .pipe(concat('index.min.js', { newLine: '' }))
+    .pipe(concat('index.min.js', concatOptions))
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
 
@@ -55,8 +57,12 @@ const minifyJSContentScripts = (cb) => {
 };
 
 const minifyJSBackgroundScript = (cb) => {
-  src('src/shared/changeIcon.js')
-    .pipe(rename('changeIcon.min.js'))
+  const backgroundScripts = ['src/shared/changeIcon.js'];
+  !production && backgroundScripts.push('hot-reload.js');
+  console.log(backgroundScripts);
+
+  src(backgroundScripts)
+    .pipe(concat('changeIcon.min.js'), concatOptions)
     .pipe(terser(terserOptions))
     .pipe(dest(destLocation));
 
