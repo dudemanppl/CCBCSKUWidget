@@ -6,6 +6,20 @@ A browser extension made for use on the Competitive Cyclist and Backcountry webs
 
 ### Usage
 
+![GIF of usage on PLP](https://media3.giphy.com/media/wdjh2nH1WOMGD53Cfa/giphy.gif)
+
+
+![GIF of checking stock on PLP](https://media0.giphy.com/media/YxiCmWz3ZfsQLS2v51/giphy.gif
+)
+
+![GIF of usage on PDP](https://media0.giphy.com/media/rwjxGwEmrKkgm8vJdE/giphy.gif)
+
+#### Original workflow without extension
+Checking stock was another, even longer process
+
+![GIF of old workflow to get SKU](https://media1.giphy.com/media/ZdyC4PIqJLdvUqZH50/giphy.gif
+)
+
 ### Installation
 
 ##### **[Chrome Web Store Install Link](https://chrome.google.com/webstore/detail/ccbc-sku-widget/oclphakakbdnigniddcimhmcikgedhhk 'link to Chrome Web Store')**
