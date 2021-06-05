@@ -40,23 +40,30 @@ Checking stock was another, even longer process
 
 1. **[Fork the repo](https://github.com/dudemanppl/CCBCSKUWidget/fork?fragment=1 'link to fork repo')**
 2. Clone your forked copy locally
-3. Manually install the extension as described above
-4. Run the command below to hot reload local changes
+3. Get your development enviroment ready by running these two commands
+
+```
+$ yarn install
+$ yarn build
+```
+
+4. Manually install the extension as described in the "Manual Install" section above
+5. Run the command below to hot reload local changes
 
 ```
 $ yarn dev
 ```
 
-5. Do your thang, adding tests as necessary as well. Run tests with
+6. Do your thang, adding tests as necessary as well. Run tests with
 
 ```
 $ yarn test
 ```
 
-6. Before opening a pull request, bundle the extension to be injested by the Chrome Web Store by running
+7. Before opening a pull request, bundle the extension to be injested by the Chrome Web Store by running
 
 ```
 $ yarn build
 ```
 
-7. **[Open a pull request](https://github.com/dudemanppl/CCBCSKUWidget/compare 'link to open a pull request')**
+8. **[Open a pull request](https://github.com/dudemanppl/CCBCSKUWidget/compare 'link to open a pull request')**
