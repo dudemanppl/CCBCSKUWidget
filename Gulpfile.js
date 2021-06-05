@@ -99,6 +99,18 @@ const dev = () => {
   watch('src/images/*.png', devWatchOpts, compressImages);
 };
 
+const hmm = (cb) => {
+  src('nice.js').pipe(terser(terserOptions)).pipe(dest('nice.min.js'));
+
+  cb();
+};
+
+const uh = () => {
+  const devWatchOpts = { ignoreInitial: false };
+  watch('nice.js', devWatchOpts, hmm);
+};
+exports.uh = uh;
+
 exports.dev = dev;
 
 exports.default = build;
