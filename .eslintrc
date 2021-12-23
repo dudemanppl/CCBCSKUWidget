@@ -1,8 +1,12 @@
 {
+  "root": true,
   "extends": [
-    "airbnb",
-    "plugin:prettier/recommended",
-    "prettier/react"
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "prettier"
+  ],
+  "plugins": [
+    "prettier"
   ],
   "env": {
     "browser": true,

@@ -6,30 +6,40 @@
  * @param {?string} [id] Id for HTML element
  * @param {?string} [textContent] Text content inside new element
  */
-var HTMLElem = function (tagName, classList, id, textContent) {
-    var _a;
-    var newHTMLElem = document.createElement(tagName);
-    if (classList) {
-        if (Array.isArray(classList)) {
-            (_a = newHTMLElem.classList).add.apply(_a, classList);
-        }
-        else {
-            throw new TypeError('Expected an array');
-        }
+
+const HTMLElem = (
+  tagName: string,
+  classList?: string[],
+  id?: string,
+  textContent?: string
+) => {
+  const newHTMLElem = document.createElement(tagName);
+
+  if (classList) {
+    if (Array.isArray(classList)) {
+      newHTMLElem.classList.add(...classList);
+    } else {
+      throw new TypeError('Expected an array');
     }
-    if (id) {
-        newHTMLElem.id = id;
-    }
-    if (textContent) {
-        newHTMLElem.textContent = textContent;
-    }
-    return newHTMLElem;
+  }
+
+  if (id) {
+    newHTMLElem.id = id;
+  }
+
+  if (textContent) {
+    newHTMLElem.textContent = textContent;
+  }
+
+  return newHTMLElem;
 };
+
 /**
  * Creates a button that links to WMS inventory page of desired product ID
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
  */
+
 // const WMSLink = (productID) => {
 //   const newWMSLink = HTMLElem(
 //     'a',
@@ -37,15 +47,20 @@ var HTMLElem = function (tagName, classList, id, textContent) {
 //     null,
 //     'Go to WMS'
 //   );
+
 //   newWMSLink.setAttribute('type', 'button');
 //   newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+
 //   return newWMSLink;
 // };
+
 // const classnamesForElem = (elem) => {
 //   const classnames = [siteString];
+
 //   const add = (...classes) => {
 //     classnames.push(...classes);
 //   };
+
 //   if (elem === 'WMSLink' || elem === 'CopySKUButton') {
 //     add('btn', 'btn-reset');
 //     if (onPDP) {
@@ -59,9 +74,11 @@ var HTMLElem = function (tagName, classList, id, textContent) {
 //       add('plp');
 //     }
 //   }
+
 //   if (elem === 'WMSLink') {
 //     add('link-to-wms');
 //   }
+
 //   if (elem === 'PLPPrice') {
 //     add(
 //       'ui-pl-pricing__high-price',
@@ -70,8 +87,10 @@ var HTMLElem = function (tagName, classList, id, textContent) {
 //       'qa-item-price-high'
 //     );
 //   }
+
 //   return classnames;
 // };
-function greet(person, date) {
-    console.log("Hello ".concat(person, ", today is ").concat(date.toDateString(), "!"));
+
+function greet(person: string, date: Date) {
+  console.log(`Hello ${person}, today is ${date.toDateString()}!`);
 }

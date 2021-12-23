@@ -1,0 +1,1 @@
+chrome.runtime.onMessage.addListener((({onCompetitiveCyclist:e},{tab:{id:t}})=>{e||chrome.pageAction.setIcon({path:"images/bc.png",tabId:t})}));

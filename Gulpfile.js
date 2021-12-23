@@ -1,11 +1,11 @@
 const { src, dest, series, parallel, watch } = require('gulp');
-const cleanCSS = require('gulp-clean-css');
-const concat = require('gulp-concat');
-const terser = require('gulp-terser');
-const removeCode = require('gulp-remove-code');
+const ts = require('gulp-typescript');
 const gulpif = require('gulp-if');
+const terser = require('gulp-terser');
 const imagemin = require('gulp-imagemin');
 const zip = require('gulp-zip');
+const sass = require('gulp-sass')(require('sass'));
+
 const {
   env: { NODE_ENV },
 } = require('process');
@@ -13,15 +13,15 @@ const {
 const production = NODE_ENV === 'production';
 
 const contentScripts = [
-  'src/index.js',
-  'src/shared/index.js',
-  'src/pdp/copySKUButton.js',
-  'src/pdp/index.js',
-  'src/plp/dropdown/BCDropdownCaret.js',
-  'src/plp/dropdown/container.js',
-  'src/plp/dropdown/dropdown.js',
-  'src/plp/dropdown/singleOption.js',
-  'src/plp/index.js',
+  // 'src/index.js',
+  'src/shared/index.ts',
+  // 'src/pdp/copySKUButton.js',
+  // 'src/pdp/index.js',
+  // 'src/plp/dropdown/BCDropdownCaret.js',
+  // 'src/plp/dropdown/container.js',
+  // 'src/plp/dropdown/dropdown.js',
+  // 'src/plp/dropdown/singleOption.js',
+  // 'src/plp/index.js',
 ];
 
 const terserOptions = {
@@ -31,23 +31,28 @@ const terserOptions = {
   compress: { ecma: 8 },
 };
 
-const concatOptions = { newLine: ' ' };
-
 const destLocation = 'dist/minified';
 
+const sassCompilerOptions = {
+  outputStyle: 'compressed',
+};
+
 const minifyCSS = (cb) => {
-  src('src/**/*.css')
-    .pipe(cleanCSS())
-    .pipe(concat('index.min.css', concatOptions))
-    .pipe(dest(destLocation));
+  src('src/sass/**/*.scss')
+    .pipe(sass(sassCompilerOptions).on('error', sass.logError))
+    .pipe(dest(`${destLocation}/index.min.css`));
 
   cb();
 };
 
 const minifyJSContentScripts = (cb) => {
   src(contentScripts)
-    .pipe(removeCode({ production: true }))
-    .pipe(concat('index.min.js', concatOptions))
+    .pipe(
+      ts({
+        outFile: 'index.min.js',
+        allowJs: true,
+      })
+    )
     .pipe(gulpif(production, terser(terserOptions)))
     .pipe(dest(destLocation));
 
@@ -58,10 +63,7 @@ const minifyJSBackgroundScript = (cb) => {
   const backgroundScripts = ['src/shared/changeIcon.js'];
   !production && backgroundScripts.push('hot-reload.js');
 
-  src(backgroundScripts)
-    .pipe(concat('changeIcon.min.js'), concatOptions)
-    .pipe(terser(terserOptions))
-    .pipe(dest(destLocation));
+  src(backgroundScripts).pipe(terser(terserOptions)).pipe(dest(destLocation));
 
   cb();
 };
@@ -99,6 +101,4 @@ const dev = () => {
   watch('src/images/*.png', devWatchOpts, compressImages);
 };
 
-exports.dev = dev;
-
-exports.default = build;
+module.exports = { default: build, dev };
