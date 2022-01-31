@@ -4,6 +4,7 @@ const gulpif = require('gulp-if');
 const terser = require('gulp-terser');
 const imagemin = require('gulp-imagemin');
 const zip = require('gulp-zip');
+const log = require('fancy-log');
 const sass = require('gulp-sass')(require('sass'));
 
 const {
@@ -53,7 +54,7 @@ const minifyJSContentScripts = (cb) => {
         allowJs: true,
       })
     )
-    .pipe(gulpif(production, terser(terserOptions)))
+    .on('error', log)
     .pipe(dest(destLocation));
 
   cb();
@@ -85,8 +86,8 @@ const zipFiles = (cb) => {
 const build = series(
   parallel(
     minifyCSS,
-    minifyJSContentScripts,
-    minifyJSBackgroundScript,
+    // minifyJSContentScripts,
+    // minifyJSBackgroundScript,
     compressImages
   ),
   zipFiles
@@ -101,4 +102,4 @@ const dev = () => {
   watch('src/images/*.png', devWatchOpts, compressImages);
 };
 
-module.exports = { default: build, dev };
+module.exports = { default: minifyJSContentScripts, dev };

@@ -16,6 +16,7 @@ const onPDP: boolean = Boolean(
 chrome.runtime.sendMessage({ onCompetitiveCyclist });
 
 interface HTMLElemOptions {
+  tagName: keyof HTMLElementTagNameMap;
   /** Classes to add for styling */
   classList?: string[];
   id?: string;
@@ -26,35 +27,46 @@ interface HTMLElemOptions {
  * Creates HTML Element given a tagName, optionally can add classes, ID, and textContent
  */
 
-const HTMLElem = <TagName extends keyof HTMLElementTagNameMap>(
-  tagName: TagName,
-  options: HTMLElemOptions
-): HTMLElement => {
-  const newHTMLElem = <HTMLElement>document.createElement(tagName);
+class HTMLElem {
+  newHTMLElem: HTMLElement;
 
-  newHTMLElem.classList.add(...options.classList);
-  newHTMLElem.id = options.id;
-  newHTMLElem.textContent = options.textContent;
+  constructor(options: HTMLElemOptions) {
+    this.newHTMLElem = document.createElement(options.tagName);
 
-  return newHTMLElem;
-};
+    this.newHTMLElem.classList.add(...options.classList);
+    this.newHTMLElem.id = options.id;
+    this.newHTMLElem.textContent = options.textContent;
+  }
+}
 
 /**
  * Creates a link to WMS inventory page of desired product ID
  */
 
-const WMSLink = (productID: string): HTMLAnchorElement => {
-  const WMSLinkOptions: HTMLElemOptions = {
-    textContent: 'Go to WMS',
-    classList: [siteString, 'btn', 'btn-reset'],
-  };
-  const newWMSLink = <HTMLAnchorElement>HTMLElem('a', WMSLinkOptions);
+class WMSLink extends HTMLElem {
+  newWMSLink: HTMLAnchorElement;
 
-  newWMSLink.setAttribute('type', 'button');
-  newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+  constructor(productID: string) {
+    const WMSLinkOptions: HTMLElemOptions = {
+      tagName: 'a',
+      textContent: 'Go to WMS',
+      classList: [siteString, 'btn', 'btn-reset', 'link-to-wms'],
+    };
 
-  return newWMSLink;
-};
+    super(WMSLinkOptions);
+
+    this.newWMSLink = <HTMLAnchorElement>this.newHTMLElem;
+    this.newWMSLink.setAttribute('type', 'button');
+    this.newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+  }
+}
+
+class PDPWMSLink extends WMSLink {
+  constructor(productID: string) {
+    super(productID);
+    this.newWMSLink.classList.add('test');
+  }
+}
 
 // const classnamesForElem = (elem) => {
 //   const classnames = [siteString];
