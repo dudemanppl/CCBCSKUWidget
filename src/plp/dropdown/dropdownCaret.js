@@ -1,15 +1,19 @@
 /**
- * Creates dropdown caret for BC
+ * Creates dropdown caret
  */
 
-const BCDropdownCaret = () => {
-  const newBCDropdownCaret = document.createElementNS(
+const dropdownCaret = () => {
+  const newDropdownCaret = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'svg'
   );
 
-  newBCDropdownCaret.classList.add('bc-dropdown-caret');
-  newBCDropdownCaret.setAttribute('viewBox', '0 0 256 256');
+  newDropdownCaret.classList.add('dropdown-caret');
+
+  if (onCompetitiveCyclist) {
+    newDropdownCaret.classList.add('cc');
+  }
+  newDropdownCaret.setAttribute('viewBox', '0 0 256 256');
 
   const svgPath = document.createElementNS(
     'http://www.w3.org/2000/svg',
@@ -23,11 +27,11 @@ const BCDropdownCaret = () => {
 
   svgPath.classList.add('caret-path');
 
-  newBCDropdownCaret.append(svgPath);
+  newDropdownCaret.append(svgPath);
 
-  return newBCDropdownCaret;
+  return newDropdownCaret;
 };
 
 // removeIf(production)
-module.exports = { BCDropdownCaret };
+module.exports = { dropdownCaret };
 // endRemoveIf(production)

@@ -1,39 +1,4 @@
 /**
- * Runs a function on each element of a given class
- *
- * @param {string} elemClassName HTML element class
- * @callback func
- */
-
-const runOnAllElemsOfClass = (elemClassName, func) => {
-  const elems = [...document.getElementsByClassName(elemClassName)];
-
-  for (const elem of elems) {
-    func(elem);
-  }
-};
-
-/**
- * Deletes all elements of a given class
- *
- * @param {string} elemClassName HTML element class
- */
-
-const deleteAllElemsOfClass = (elemClassName) => {
-  runOnAllElemsOfClass(elemClassName, (elem) => elem.remove());
-};
-
-/**
- * Forces styling on BC to prevent onhover zoom effect, which sorta messes with the extension.
- */
-
-const fixBCStyling = () => {
-  deleteAllElemsOfClass('ui-pl-info');
-  deleteAllElemsOfClass('js-pl-color-thumbs');
-  deleteAllElemsOfClass('js-pl-sizes-wrap');
-};
-
-/**
  * Creates main SKU Widget container for PLP
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
@@ -55,26 +20,19 @@ const PLPWidgetContainer = (productID, productListing) => {
 };
 
 /**
- * @param {Element} productListing PLP product listing
- * @return {string} Product ID from a listing on the BC activity page
- */
-
-const getProductIDBCActivityPage = (productListing) => {
-  const productID = [...productListing.classList].pop().slice(-7);
-  return productID;
-};
-
-/**
  * Adds single widget to the PLP
  *
  * @param {Element} productListing PLP product listing
  */
 
 const addPLPSingleWidget = (productListing) => {
-  const productID = onBCActivityPage
-    ? getProductIDBCActivityPage(productListing)
-    : productListing.getAttribute('data-product-id');
-  const targetLocation = productListing.firstChild;
+  const imgSrc = productListing.querySelector('img').src;
+  const sliceStart = onCompetitiveCyclist ? 60 : 53;
+  const sliceIndexs = [sliceStart, sliceStart + 7];
+
+  const productID = imgSrc.slice(...sliceIndexs);
+
+  const targetLocation = productListing.lastChild;
 
   targetLocation.append(PLPWidgetContainer(productID, targetLocation));
 };
@@ -84,46 +42,27 @@ const addPLPSingleWidget = (productListing) => {
  */
 
 const addAllPLPWidgets = () => {
-  if (!onCompetitiveCyclist) {
-    fixBCStyling();
+  const PLPItems = document.querySelectorAll('[data-id="productListingItems"]');
+
+  for (const productListing of PLPItems) {
+    addPLPSingleWidget(productListing);
   }
-  runOnAllElemsOfClass(
-    onBCActivityPage ? 'ui-product-listing' : 'js-product-listing',
-    addPLPSingleWidget
-  );
-};
-
-/**
- * @return {Element} Node to observe for changes on the PLP
- */
-
-const nodeToObservePLP = () => {
-  const [nodeToObserve] = document.getElementsByClassName(
-    onCompetitiveCyclist
-      ? 'js-inner-body'
-      : onBCActivityPage
-      ? 'product-listing__wrapper'
-      : 'inner-body'
-  );
-
-  return nodeToObserve;
 };
 
 /* istanbul ignore next */
 if (onPLP || onBCActivityPage) {
   addAllPLPWidgets();
 
+  const nodeToObservePLP = document.querySelector('[data-id="productsWrap"]');
+
   /** Watches for changes on SPA to rerender PLP widgets */
-  new MutationObserver(() => addAllPLPWidgets()).observe(nodeToObservePLP(), {
+  new MutationObserver(() => addAllPLPWidgets()).observe(nodeToObservePLP, {
     childList: true,
   });
 }
 
 // removeIf(production)
 module.exports = {
-  runOnAllElemsOfClass,
-  deleteAllElemsOfClass,
-  fixBCStyling,
   PLPWidgetContainer,
   getProductIDBCActivityPage,
   addPLPSingleWidget,

@@ -1,11 +1,8 @@
 .plp-dropdown-container.cc::after {
-  position: absolute;
 }
+position: absolute;
 
-.link-to-wms.plp:hover {
-  color: white;
-}
-.btn.link-to-wms.plp.bc:hover {
+.btn.link-to-wms.plp:hover {
   background-color: #222;
   color: white;
 }
@@ -20,7 +17,7 @@
   font-weight: 600;
   transition: 0.2s;
   margin-top: 10px;
-  padding: 0 15px;
+  padding: 5px 15px;
 }
 
 .link-to-wms.plp.bc {
@@ -74,16 +71,6 @@
 .plp-dropdown-container.cc {
   border-color: #ccc;
   color: #555;
-}
-
-.plp-dropdown-container.cc::after {
-  content: '';
-  font-family: ccicons;
-  font-size: 24px;
-  line-height: 32px;
-  height: 35px;
-  right: 5.5%;
-  border-left: 1px solid #ccc;
 }
 
 .plp-dropdown-curr-selected-variant {
@@ -165,16 +152,23 @@
   background-color: #ebebeb;
 }
 
-.bc-dropdown-caret {
+.dropdown-caret {
+  position: absolute;
   fill: #555;
   height: 26px;
   width: 26px;
-  float: right;
-  padding: 4px;
+  right: 28px;
+  top: 6px;
 }
 
-.product:hover .bc-dropdown-caret {
+.dropdown-caret.cc {
+  right: 18px;
+}
+
+.product:hover .dropdown-caret {
   fill: #222;
 }
 
-
+[data-id='productListingItems'] {
+  padding-bottom: 100px !important;
+}

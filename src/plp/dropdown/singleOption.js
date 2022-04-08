@@ -5,24 +5,24 @@
  * @param {string} price Sale price of an item
  */
 
-const updatePricingPLP = (productListingPrice, props, price) => {
-  const { variantSelected } = props;
+// const updatePricingPLP = (productListingPrice, props, price) => {
+//   const { variantSelected } = props;
 
-  if (productListingPrice.firstChild.textContent !== price && variantSelected) {
-    productListingPrice.firstChild.textContent = price;
-  } else if (!variantSelected) {
-    /** Removes current elements related to price if variant has not been selected yet */
-    while (productListingPrice.lastChild) {
-      productListingPrice.lastChild.remove();
-    }
+//   if (productListingPrice.firstChild.textContent !== price && variantSelected) {
+//     productListingPrice.firstChild.textContent = price;
+//   } else if (!variantSelected) {
+//     /** Removes current elements related to price if variant has not been selected yet */
+//     while (productListingPrice.lastChild) {
+//       productListingPrice.lastChild.remove();
+//     }
 
-    productListingPrice.append(
-      HTMLElem('span', classnamesForElem('PLPPrice'), null, price)
-    );
+//     productListingPrice.append(
+//       HTMLElem('span', classnamesForElem('PLPPrice'), null, price)
+//     );
 
-    props.variantSelected = true;
-  }
-};
+//     props.variantSelected = true;
+//   }
+// };
 
 /**
  *
@@ -80,7 +80,7 @@ const singleOptionEventHandlers = (
   /* istanbul ignore next */
   PLPSelectorDropdownOption.onclick = () => {
     highlightCurrSelectedOption();
-    updatePricingPLP(productListingPrice, props, price);
+    // updatePricingPLP(productListingPrice, props, price);
     copySKUPLP(currentOption, variant, SKU);
     props.variantImgSrc = imageSrc;
   };
@@ -108,7 +108,7 @@ const PLPSelectorDropdownOption = (product, ...params) => {
 
 // removeIf(production)
 module.exports = {
-  updatePricingPLP,
+  // updatePricingPLP,
   copySKUPLP,
   singleOptionEventHandlers,
   PLPSelectorDropdownOption,

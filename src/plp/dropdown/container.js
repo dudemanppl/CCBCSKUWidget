@@ -64,9 +64,8 @@ const closePLPDropdownOptions = (PLPDropdownOptions) => {
 
 const productListingElems = (productListing) => {
   const [productListingImg] = productListing.getElementsByTagName('img');
-  const [productListingPrice] = productListing.getElementsByClassName(
-    'ui-pl-pricing'
-  );
+  const [productListingPrice] =
+    productListing.getElementsByClassName('ui-pl-pricing');
 
   const productListingElems = [productListingImg, productListingPrice];
 
@@ -88,9 +87,8 @@ const dropdownContainerEventHandlers = (
   PLPSelectorDropdownContainer,
   state
 ) => {
-  const [productListingImg, productListingPrice] = productListingElems(
-    productListing
-  );
+  const [productListingImg, productListingPrice] =
+    productListingElems(productListing);
 
   PLPSelectorDropdownContainer.onclick = (event) =>
     openPLPDropdownOptions(
@@ -105,9 +103,8 @@ const dropdownContainerEventHandlers = (
       productListingImg.src = state.variantImgSrc;
     }
 
-    const [
-      PLPSelectorDropdownContainer,
-    ] = productListing.getElementsByClassName('plp-dropdown-options');
+    const [PLPSelectorDropdownContainer] =
+      productListing.getElementsByClassName('plp-dropdown-options');
 
     PLPSelectorDropdownContainer &&
       closePLPDropdownOptions(PLPSelectorDropdownContainer);
@@ -148,11 +145,10 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
     variantImgSrc: null,
   };
 
-  newPLPSelectorDropdownContainer.append(PLPDropdownCurrSelectedVariant());
-  /** Adds caret to BC PLP dropdown to mimic BC PDP */
-  if (!onCompetitiveCyclist) {
-    newPLPSelectorDropdownContainer.append(BCDropdownCaret());
-  }
+  newPLPSelectorDropdownContainer.append(
+    PLPDropdownCurrSelectedVariant(),
+    dropdownCaret()
+  );
 
   dropdownContainerEventHandlers(
     productID,
