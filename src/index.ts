@@ -1,21 +1,8 @@
-const queryString: string = window.location.search;
-const urlParams: URLSearchParams = new URLSearchParams(queryString);
-
-const onBCActivityPage: boolean = !!urlParams.getAll('activity')[0];
-const onCompetitiveCyclist: boolean =
-  window.location.host === 'www.competitivecyclist.com';
-
-const siteString: string = onCompetitiveCyclist ? 'cc' : 'bc';
-const onPLP: boolean = Boolean(
-  document.getElementsByClassName('search-results').length
-);
-const onPDP: boolean = Boolean(
-  document.getElementsByClassName('js-kraken-pdp-body').length
-);
+import { onCompetitiveCyclist, siteString } from './ENV';
 
 chrome.runtime.sendMessage({ onCompetitiveCyclist });
 
-interface HTMLElemOptions {
+export interface HTMLElemOptions {
   tagName: keyof HTMLElementTagNameMap;
   /** Classes to add for styling */
   classList?: string[];
@@ -23,19 +10,24 @@ interface HTMLElemOptions {
   textContent?: string;
 }
 
+interface ComponentOptions {
+  /** Additional classes to be added to a component */
+  additionalClasses?: string[];
+}
+
 /**
  * Creates HTML Element given a tagName, optionally can add classes, ID, and textContent
  */
 
-class HTMLElem {
-  newHTMLElem: HTMLElement;
+export class HTMLElem {
+  HTMLElem: HTMLElement;
 
   constructor(options: HTMLElemOptions) {
-    this.newHTMLElem = document.createElement(options.tagName);
+    this.HTMLElem = document.createElement(options.tagName);
 
-    this.newHTMLElem.classList.add(...options.classList);
-    this.newHTMLElem.id = options.id;
-    this.newHTMLElem.textContent = options.textContent;
+    this.HTMLElem.classList.add(...options.classList);
+    this.HTMLElem.id = options.id;
+    this.HTMLElem.textContent = options.textContent;
   }
 }
 
@@ -43,8 +35,8 @@ class HTMLElem {
  * Creates a link to WMS inventory page of desired product ID
  */
 
-class WMSLink extends HTMLElem {
-  newWMSLink: HTMLAnchorElement;
+export class WMSLink extends HTMLElem {
+  WMSLink: HTMLAnchorElement;
 
   constructor(productID: string) {
     const WMSLinkOptions: HTMLElemOptions = {
@@ -55,16 +47,43 @@ class WMSLink extends HTMLElem {
 
     super(WMSLinkOptions);
 
-    this.newWMSLink = <HTMLAnchorElement>this.newHTMLElem;
-    this.newWMSLink.setAttribute('type', 'button');
-    this.newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+    this.WMSLink = <HTMLAnchorElement>this.HTMLElem;
+
+    this.WMSLink.setAttribute('type', 'button');
+    this.WMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
   }
 }
 
-class PDPWMSLink extends WMSLink {
+export class PDPWMSLink extends WMSLink {
+  PDPWMSLink: HTMLAnchorElement;
+
   constructor(productID: string) {
+    const componentOptions = <ComponentOptions>{
+      additionalClasses: [
+        'pdp',
+        onCompetitiveCyclist ? 'btn--secondary' : 'product-buybox__btn',
+      ],
+    };
+
     super(productID);
-    this.newWMSLink.classList.add('test');
+
+    this.PDPWMSLink = <HTMLAnchorElement>this.WMSLink;
+    this.PDPWMSLink.classList.add(...componentOptions.additionalClasses);
+  }
+}
+
+export class PLPWMSLink extends WMSLink {
+  PLPWMSLink: HTMLAnchorElement;
+
+  constructor(productID: string) {
+    const componentOptions = <ComponentOptions>{
+      additionalClasses: ['plp'],
+    };
+
+    super(productID);
+
+    this.PLPWMSLink = <HTMLAnchorElement>this.WMSLink;
+    this.PLPWMSLink.classList.add(...componentOptions.additionalClasses);
   }
 }
 
