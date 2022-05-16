@@ -1,5 +1,9 @@
 const WMSLinkPDP = (productID) => {
-  const newWMSLinkButton = HTMLElem('button', ['chakra-button', 'css-n74rjt', 'wms-button-pdp']);
+  const newWMSLinkButton = HTMLElem('button', [
+    'chakra-button',
+    siteString,
+    'wms-button-pdp',
+  ]);
   const newWMSLink = HTMLElem('a', ['wms-link-pdp'], null, 'Go to WMS');
 
   newWMSLinkButton.setAttribute('type', 'button');
