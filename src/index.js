@@ -9,9 +9,7 @@ const onBCActivityPage = !!urlParams.getAll('activity')[0];
 const onCompetitiveCyclist =
   window.location.host === 'www.competitivecyclist.com';
 const siteString = onCompetitiveCyclist ? 'cc' : 'bc';
-const onPLP = document.querySelectorAll(
-  '[data-id="productListingItems"]'
-).length;
-const onPDP = document.getElementsByClassName('js-kraken-pdp-body').length;
+const onPLP = document.getElementById('pageType').content.slice(0, 3) === 'plp';
+const onPDP = document.getElementById('pageType').content === 'pdp';
 
 chrome.runtime.sendMessage({ onCompetitiveCyclist });

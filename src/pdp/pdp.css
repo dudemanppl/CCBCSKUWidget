@@ -1,43 +1,11 @@
-#copy-sku-button,
-.link-to-wms.pdp {
-  transition: 0.2s;
-  width: calc(50% - 5px);
-  border: 1px solid #222;
+button.wms-button-pdp {
+  margin-top: 16px;
+  padding: 0;
 }
 
-#copy-sku-button {
-  float: right;
-}
-
-.link-to-wms.pdp {
-  float: left;
-}
-
-#copy-sku-button.bc,
-.link-to-wms.pdp.bc {
-  height: 35px;
-  width: calc(50% - 3px);
-  line-height: 33px;
-  margin-top: 8px;
-  background-color: white;
-  color: #222;
-}
-#copy-sku-button.bc:hover,
-.link-to-wms.pdp.bc:hover {
-  color: white;
-  background-color: #222;
-}
-
-#copy-sku-button.flash:hover {
-  background-color: white;
-}
-
-#copy-sku-button.no-variant-selected:hover {
-  color: red;
-  border-color: red;
-  background-color: white;
-}
-
-div.product-buybox__actions {
-  margin-bottom: 55px;
+.wms-link-pdp {
+  width: 100%;
+  height: 100%;
+  padding: 12px 24px;
+  line-height: 24px;
 }
