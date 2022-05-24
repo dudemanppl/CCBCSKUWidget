@@ -30,19 +30,24 @@ if (onPDP) {
     );
   };
 
+  let currentlySelectedVariantSKU;
+
   const variantSelector = document.getElementById('buybox-variant-selector');
 
   const hasDropdown = variantSelector.children.length === 2;
 
   if (hasDropdown) {
-    let currentlySelectedVariantSKU;
-
     const variantDropdown = variantSelector.querySelector('ul');
 
-    for (const variant of variantDropdown.children) {
-      variant.onclick = () => {
-        const fullSKU = variant.getAttribute('value');
+    for (let i = 0; i < variantDropdown.children.length; i += 1) {
+      const variant = variantDropdown.children[i];
+      const fullSKU = variant.getAttribute('value');
 
+      if (i === 0) {
+        currentlySelectedVariantSKU = fullSKU;
+      }
+
+      variant.onclick = () => {
         currentlySelectedVariantSKU = fullSKU;
       };
     }
