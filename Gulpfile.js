@@ -54,18 +54,6 @@ const minifyJSContentScripts = (cb) => {
   cb();
 };
 
-const minifyJSBackgroundScript = (cb) => {
-  const backgroundScripts = ['src/shared/changeIcon.js'];
-  !production && backgroundScripts.push('hot-reload.js');
-
-  src(backgroundScripts)
-    .pipe(concat('changeIcon.min.js'), concatOptions)
-    .pipe(terser(terserOptions))
-    .pipe(dest(destLocation));
-
-  cb();
-};
-
 const compressImages = (cb) => {
   src('src/images/*.png')
     .pipe(imagemin([imagemin.optipng({ optimizationLevel: 7 })]))
@@ -81,12 +69,7 @@ const zipFiles = (cb) => {
 };
 
 const build = series(
-  parallel(
-    minifyCSS,
-    minifyJSContentScripts,
-    minifyJSBackgroundScript,
-    compressImages
-  ),
+  parallel(minifyCSS, minifyJSContentScripts, compressImages),
   zipFiles
 );
 
@@ -95,7 +78,6 @@ const dev = () => {
 
   watch('src/**/*.css', devWatchOpts, minifyCSS);
   watch(contentScripts, devWatchOpts, minifyJSContentScripts);
-  watch('src/shared/changeIcon.js', devWatchOpts, minifyJSBackgroundScript);
   watch('src/images/*.png', devWatchOpts, compressImages);
 };
 

@@ -1,15 +1,15 @@
 {
   "name": "CC/BC SKU Widget",
-  "version": "1.2.93",
+  "version": "1.2.94",
   "description": "Instantly copy SKUs and check stock on the Competitive Cyclist and Backcountry websites",
   "author": "Tommy Liao",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": { "128": "images/cc.png" },
-  "page_action": {
+  "action": {
     "browser_style": true,
     "default_icon": "images/cc.png"
   },
-  "permissions": [
+  "host_permissions": [
     "https://www.competitivecyclist.com/*",
     "https://www.backcountry.com/*"
   ],
@@ -22,6 +22,5 @@
       "css": ["index.min.css"],
       "js": ["index.min.js"]
     }
-  ],
-  "background": { "scripts": ["changeIcon.min.js"] }
+  ]
 }
