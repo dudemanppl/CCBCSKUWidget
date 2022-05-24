@@ -60,13 +60,3 @@ if (onPLP || onBCActivityPage) {
     childList: true,
   });
 }
-
-// removeIf(production)
-module.exports = {
-  PLPWidgetContainer,
-  getProductIDBCActivityPage,
-  addPLPSingleWidget,
-  addAllPLPWidgets,
-  nodeToObservePLP,
-};
-// endRemoveIf(production)

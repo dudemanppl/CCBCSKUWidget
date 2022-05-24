@@ -1,4 +1,4 @@
-button.wms-button-pdp {
+button.wms-button-pdp, button.copy-sku-button-pdp {
   margin-top: 16px;
   padding: 0;
   display: flex;
@@ -25,18 +25,32 @@ button.wms-button-pdp {
   transition: 0.3s;
   padding-top: 12px;
   padding-bottom: 12px;
-  background: var(--chakra-colors-btn-dark);
-  color: var(--chakra-colors-txt-inverted);
   width: var(--chakra-sizes-full);
   height: var(--chakra-sizes-12);
   line-height: 1.2;
 }
 
-button.wms-button-pdp.bc {
+button.wms-button-pdp, button.copy-sku-button-pdp:hover {
+  background: var(--chakra-colors-btn-dark);
+  color: var(--chakra-colors-txt-inverted);
+}
+
+button.copy-sku-button-pdp {
+  border: 1px solid;
+  border-color: var(--chakra-colors-border-primary);
+  color: var(--chakra-colors-txt-primary);
+  background: var(--chakra-colors-btn-light);
+}
+
+button.copy-sku-button-pdp:active {
+  background: var(--chakra-colors-gray-200);
+}
+
+button.wms-button-pdp.bc, button.copy-sku-button-pdp.bc {
   border-radius: 100px
 }
 
-button.wms-button-pdp.cc {
+button.wms-button-pdp.cc, button.copy-sku-button-pdp.cc {
   border-radius: 2px;
 }
 

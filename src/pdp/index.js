@@ -15,6 +15,80 @@ const WMSLinkPDP = (productID) => {
 };
 
 if (onPDP) {
+  const newCopySKUButton = HTMLElem(
+    'button',
+    ['chakra-button', siteString, 'copy-sku-button-pdp'],
+    null,
+    'Copy SKU'
+  );
+
+  newCopySKUButton.setAttribute('type', 'button');
+
+  const copySKU = () => {
+    navigator.clipboard.writeText(
+      currentlySelectedVariantSKU || 'Error copying SKU'
+    );
+  };
+
+  const variantSelector = document.getElementById('buybox-variant-selector');
+
+  const hasDropdown = variantSelector.children.length === 2;
+
+  if (hasDropdown) {
+    let currentlySelectedVariantSKU;
+
+    const variantDropdown = variantSelector.querySelector('ul');
+
+    for (const variant of variantDropdown.children) {
+      variant.onclick = () => {
+        const fullSKU = variant.getAttribute('value');
+
+        currentlySelectedVariantSKU = fullSKU;
+      };
+    }
+
+    newCopySKUButton.onclick = copySKU;
+  } else {
+    let currentlySelectedSize;
+
+    const itemsOfferedElements = document.querySelectorAll(
+      '[itemprop="itemOffered"]'
+    );
+
+    const items = {};
+
+    for (const item of itemsOfferedElements) {
+      const [{ content: variantAndSize }, { content: fullSKU }] = item.children;
+      const [variant, size] = variantAndSize.split(`, `);
+
+      items[variant] = { ...items[variant], [size]: fullSKU };
+    }
+    const sizeSelectorElem = variantSelector.lastChild.lastChild;
+
+    for (const singleSizeSelectWrapper of sizeSelectorElem.children) {
+      const { firstChild, lastChild } = singleSizeSelectWrapper;
+
+      const actualSize = firstChild.getAttribute('value');
+
+      const singleSizeSelectElem = lastChild;
+
+      singleSizeSelectElem.onclick = () => {
+        currentlySelectedSize = actualSize;
+      };
+    }
+
+    newCopySKUButton.onclick = () => {
+      const colorSelector = variantSelector.firstChild.lastChild;
+      const currentlySelectedColor = colorSelector.textContent;
+
+      const fullSKU = items[currentlySelectedColor][currentlySelectedSize];
+
+      currentlySelectedVariantSKU = fullSKU;
+
+      copySKU();
+    };
+  }
+
   const PDPTargetLocation = document.getElementById('buybox-variant-selector')
     .nextSibling.nextSibling;
 
@@ -22,5 +96,5 @@ if (onPDP) {
     .querySelector('[data-id="productId"]')
     .innerText.slice(-7);
 
-  PDPTargetLocation.append(WMSLinkPDP(parentSKU));
+  PDPTargetLocation.append(WMSLinkPDP(parentSKU), newCopySKUButton);
 }
