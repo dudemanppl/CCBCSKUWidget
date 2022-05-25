@@ -2,7 +2,7 @@
  * Returns new HTML element given a tagName. Options to add id or classes.
  *
  * @param {string} tagName HTML tag name
- * @param {?array|string} [classList] Desired classes to add.
+ * @param {?string[]} [classList] Desired classes to add.
  * @param {?string} [id] Id for HTML element
  * @param {?string} [textContent] Text content inside new element
  */
@@ -11,11 +11,7 @@ const HTMLElem = (tagName, classList, id, textContent) => {
   const newHTMLElem = document.createElement(tagName);
 
   if (classList) {
-    if (Array.isArray(classList)) {
-      newHTMLElem.classList.add(...classList);
-    } else {
-      throw new TypeError('Expected an array');
-    }
+    newHTMLElem.classList.add(...classList);
   }
 
   if (id) {
@@ -38,7 +34,7 @@ const HTMLElem = (tagName, classList, id, textContent) => {
 const WMSLink = (productID) => {
   const newWMSLink = HTMLElem(
     'a',
-    classnamesForElem('WMSLink'),
+    ['btn', 'btn-reset', 'plp', 'link-to-wms', siteString],
     null,
     'Go to WMS'
   );
@@ -48,44 +44,3 @@ const WMSLink = (productID) => {
 
   return newWMSLink;
 };
-
-const classnamesForElem = (elem) => {
-  const classnames = [siteString];
-
-  const add = (...classes) => {
-    classnames.push(...classes);
-  };
-
-  if (elem === 'WMSLink' || elem === 'CopySKUButton') {
-    add('btn', 'btn-reset');
-    if (onPDP) {
-      add('pdp');
-      if (onCompetitiveCyclist) {
-        add('btn--secondary');
-      } else {
-        add('product-buybox__btn');
-      }
-    } else {
-      add('plp');
-    }
-  }
-
-  if (elem === 'WMSLink') {
-    add('link-to-wms');
-  }
-
-  if (elem === 'PLPPrice') {
-    add(
-      'ui-pl-pricing__high-price',
-      'ui-pl-pricing--price-retail',
-      'js-item-price-high',
-      'qa-item-price-high'
-    );
-  }
-
-  return classnames;
-};
-
-// removeIf(production)
-module.exports = { HTMLElem, WMSLink, classnamesForElem };
-// endRemoveIf(production)

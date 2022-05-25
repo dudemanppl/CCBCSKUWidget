@@ -1,7 +1,3 @@
-.plp-dropdown-container.cc::after {
-}
-position: absolute;
-
 .btn.link-to-wms.plp:hover {
   background-color: #222;
   color: white;
