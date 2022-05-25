@@ -9,58 +9,9 @@
   font-weight: 600;
 }
 
-.item-unformatted .ui-productcomparison-toggle,
-.add-to-cart .js-productcomparison-toggle-wrap,
-.add-to-cart .buy-box__wishlist-btn,
-.product-buybox__actions .product-buybox__action--whislist,
 .plp-dropdown-options.hidden {
   display: none;
 }
 
-/* CC PLI fix */
 
-.product-grid .ui-pli {
-  border-color: white;
-  padding: 10px 20px 110px;
-  border: 1px solid white;
-}
 
-/* CC PDP fix */
-
-.ui-basedropdown-option.ui-unifiedropdown-option .ui-basedropdown-option-value {
-  width: calc(100% - 35px);
-}
-
-/* BC PLI enbiggener */
-
-.ui-product-listing .ui-pl-placeholder {
-  padding-bottom: 50px;
-  margin-top: 0;
-}
-
-.ui-product-listing .ui-pl-link .ui-pl-img {
-  padding-top: 30px;
-}
-
-/* BC activity page fixes */
-
-div .ui-product-listing--show-more.is-expanded .ui-pl-expandable,
-.ui-product-listing--show-more:hover .ui-pl-expandable {
-  top: 10px;
-  right: 10px;
-  left: 10px;
-  bottom: 10px;
-}
-
-div .ui-product-listing .ui-pl-reviews {
-  opacity: 1;
-}
-
-#recs_placement .ui-pl-info {
-  display: none;
-}
-
-#recs_placement .ui-pl-placeholder {
-  margin-bottom: 90px;
-  padding-bottom: 0;
-}

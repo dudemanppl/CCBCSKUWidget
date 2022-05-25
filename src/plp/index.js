@@ -49,8 +49,7 @@ const addAllPLPWidgets = () => {
   }
 };
 
-/* istanbul ignore next */
-if (onPLP || onBCActivityPage) {
+if (onPLP) {
   addAllPLPWidgets();
 
   const nodeToObservePLP = document.querySelector('[data-id="productsWrap"]');
