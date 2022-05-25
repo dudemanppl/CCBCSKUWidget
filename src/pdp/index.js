@@ -14,7 +14,7 @@ const WMSLinkPDP = (productID) => {
   return newWMSLinkButton;
 };
 
-if (onPDP) {
+const copySKUButtonPDP = () => {
   const newCopySKUButton = HTMLElem(
     'button',
     ['chakra-button', siteString, 'copy-sku-button-pdp'],
@@ -24,17 +24,38 @@ if (onPDP) {
 
   newCopySKUButton.setAttribute('type', 'button');
 
+  return newCopySKUButton;
+};
+
+const getItemsOffered = () => {
+  const itemsOfferedElements = document.querySelectorAll(
+    '[itemprop="itemOffered"]'
+  );
+
+  const items = {};
+
+  for (const item of itemsOfferedElements) {
+    const [{ content: variantAndSize }, { content: fullSKU }] = item.children;
+    const [variant, size] = variantAndSize.split(`, `);
+
+    items[variant] = { ...items[variant], [size]: fullSKU };
+  }
+
+  return items;
+};
+
+if (onPDP) {
+  let currentlySelectedVariantSKU;
+
+  const newCopySKUButton = copySKUButtonPDP();
+  const variantSelector = document.getElementById('buybox-variant-selector');
+  const hasDropdown = variantSelector.children.length === 2;
+
   const copySKU = () => {
     navigator.clipboard.writeText(
       currentlySelectedVariantSKU || 'Error copying SKU'
     );
   };
-
-  let currentlySelectedVariantSKU;
-
-  const variantSelector = document.getElementById('buybox-variant-selector');
-
-  const hasDropdown = variantSelector.children.length === 2;
 
   if (hasDropdown) {
     const variantDropdown = variantSelector.querySelector('ul');
@@ -43,6 +64,7 @@ if (onPDP) {
       const variant = variantDropdown.children[i];
       const fullSKU = variant.getAttribute('value');
 
+      // Sets the SKU to be the first variant, which is selected by default
       if (i === 0) {
         currentlySelectedVariantSKU = fullSKU;
       }
@@ -56,18 +78,7 @@ if (onPDP) {
   } else {
     let currentlySelectedSize;
 
-    const itemsOfferedElements = document.querySelectorAll(
-      '[itemprop="itemOffered"]'
-    );
-
-    const items = {};
-
-    for (const item of itemsOfferedElements) {
-      const [{ content: variantAndSize }, { content: fullSKU }] = item.children;
-      const [variant, size] = variantAndSize.split(`, `);
-
-      items[variant] = { ...items[variant], [size]: fullSKU };
-    }
+    const itemsOffered = getItemsOffered();
     const sizeSelectorWrapper = variantSelector.lastChild.lastChild;
 
     if (sizeSelectorWrapper.childElementCount === 1) {
@@ -92,7 +103,8 @@ if (onPDP) {
       const colorSelector = variantSelector.firstChild.lastChild;
       const currentlySelectedColor = colorSelector.textContent;
 
-      const fullSKU = items[currentlySelectedColor][currentlySelectedSize];
+      const fullSKU =
+        itemsOffered[currentlySelectedColor][currentlySelectedSize];
 
       currentlySelectedVariantSKU = fullSKU;
 
