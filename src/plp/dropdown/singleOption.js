@@ -1,28 +1,33 @@
 /**
  * Updates pricing shown on PLP if variant pricing changes
  * @param {Element} productListingPrice Reference to the element with pricing information
- * @param {boolean} props.variantSelected Boolean of whether or not an variant has been selected from the current dropdown
  * @param {string} price Sale price of an item
+ * @param {number} discount Discount in percentage from MSRP
  */
 
-// const updatePricingPLP = (productListingPrice, props, price) => {
-//   const { variantSelected } = props;
+const updatePricingPLP = (productListingPrice, price, discount) => {
+  // updates discount percentage, needs more fleshing out tho 
+  
+  // const {
+  //   nextSibling: { lastChild: discountElem },
+  // } = productListingPrice;
 
-//   if (productListingPrice.firstChild.textContent !== price && variantSelected) {
-//     productListingPrice.firstChild.textContent = price;
-//   } else if (!variantSelected) {
-//     /** Removes current elements related to price if variant has not been selected yet */
-//     while (productListingPrice.lastChild) {
-//       productListingPrice.lastChild.remove();
-//     }
+  // if (discountElem) {
+  //   while (discountElem.lastChild) {
+  //     discountElem.lastChild.remove();
+  //   }
+  //   discountElem.textContent = `${discount}% off`;
+  // }
 
-//     productListingPrice.append(
-//       HTMLElem('span', classnamesForElem('PLPPrice'), null, price)
-//     );
+  if (productListingPrice.textContent !== price) {
+    /** Removes current elements related to price if variant has not been selected yet */
+    while (productListingPrice.lastChild) {
+      productListingPrice.lastChild.remove();
+    }
 
-//     props.variantSelected = true;
-//   }
-// };
+    productListingPrice.textContent = price;
+  }
+};
 
 /**
  *
@@ -61,7 +66,7 @@ const copySKUPLP = (currentOption, variant, SKU) => {
 
 const singleOptionEventHandlers = (
   PLPSelectorDropdownOption,
-  { price, SKU, outOfStock, variant, imageSrc },
+  { price, discount, SKU, outOfStock, variant, imageSrc },
   props,
   currentOption,
   [productListingImg, productListingPrice],
@@ -77,10 +82,9 @@ const singleOptionEventHandlers = (
     }
   };
 
-  /* istanbul ignore next */
   PLPSelectorDropdownOption.onclick = () => {
     highlightCurrSelectedOption();
-    // updatePricingPLP(productListingPrice, props, price);
+    updatePricingPLP(productListingPrice, price, discount);
     copySKUPLP(currentOption, variant, SKU);
     props.variantImgSrc = imageSrc;
   };
@@ -105,12 +109,3 @@ const PLPSelectorDropdownOption = (product, ...params) => {
 
   return newPLPSelectorDropdownOption;
 };
-
-// removeIf(production)
-module.exports = {
-  // updatePricingPLP,
-  copySKUPLP,
-  singleOptionEventHandlers,
-  PLPSelectorDropdownOption,
-};
-// endRemoveIf(production)

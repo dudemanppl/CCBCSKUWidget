@@ -20,7 +20,7 @@ const fetchJson = async (url) => {
  */
 
 const getItemInfo = async (productID) => {
-  const url = `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.image&site=${
+  const url = `https://api.backcountry.com/v1/products/${productID}?fields=skus.availability.stockLevel,skus.title,skus.id,skus.salePrice,skus.listPrice,skus.image&site=${
     onCompetitiveCyclist ? 'competitivecyclist' : 'bcs'
   }`;
   const itemInfo = await fetchJson(url);
@@ -71,13 +71,17 @@ const usdString = (num) => {
 
 const formatVariant = ({
   salePrice,
+  listPrice,
   id,
   availability: { stockLevel },
   title,
   image: { url },
 }) => {
+  const discount = Math.round(((listPrice - salePrice) / listPrice) * 100);
+  
   const formattedVariant = {
     price: usdString(salePrice),
+    discount,
     SKU: id,
     outOfStock: !stockLevel,
     variant: title,

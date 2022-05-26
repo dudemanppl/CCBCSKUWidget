@@ -64,8 +64,9 @@ const closePLPDropdownOptions = (PLPDropdownOptions) => {
 
 const productListingElems = (productListing) => {
   const [productListingImg] = productListing.getElementsByTagName('img');
-  const [productListingPrice] =
-    productListing.getElementsByClassName('ui-pl-pricing');
+  const productListingPrice = productListing.querySelector(
+    '[data-id="productListingPrice"]'
+  );
 
   const productListingElems = [productListingImg, productListingPrice];
 
@@ -140,7 +141,6 @@ const PLPSelectorDropdownContainer = (productID, productListing) => {
   ]);
 
   const state = {
-    variantSelected: false,
     currentlySelectedOptionIdx: -1,
     variantImgSrc: null,
   };

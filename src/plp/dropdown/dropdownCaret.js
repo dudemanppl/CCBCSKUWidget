@@ -28,7 +28,3 @@ const dropdownCaret = () => {
 
   return newDropdownCaret;
 };
-
-// removeIf(production)
-module.exports = { dropdownCaret };
-// endRemoveIf(production)
