@@ -36,7 +36,14 @@ const getItemsOffered = () => {
 
   for (const item of itemsOfferedElements) {
     const [{ content: variantAndSize }, { content: fullSKU }] = item.children;
-    const [variant, size] = variantAndSize.split(`, `);
+    let [variant, size] = variantAndSize.split(`, `);
+
+    // Fix for frames/bikes having cm, which isn't shown on the front end size selector
+    if (size.endsWith('cm')) {
+      const sizeWithoutCM = size.substring(0, size.length - 2);
+
+      size = sizeWithoutCM;
+    }
 
     items[variant] = { ...items[variant], [size]: fullSKU };
   }

@@ -14,7 +14,6 @@ const production = NODE_ENV === 'production';
 
 const contentScripts = [
   'src/index.js',
-  'src/pdp/copySKUButton.js',
   'src/pdp/index.js',
   'src/plp/dropdown/dropdownCaret.js',
   'src/plp/dropdown/container.js',
