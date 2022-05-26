@@ -79,8 +79,15 @@ if (onPDP) {
     let currentlySelectedSize;
 
     const itemsOffered = getItemsOffered();
-    const sizeSelectorWrapper = variantSelector.lastChild.lastChild;
+    const {
+      children: [
+        { lastChild: currentlySelectedColorElem },
+        colorSelector,
+        { lastChild: sizeSelectorWrapper },
+      ],
+    } = variantSelector;
 
+    // Sets selected size to the only element, which is selected by default
     if (sizeSelectorWrapper.childElementCount === 1) {
       const actualSize =
         sizeSelectorWrapper.firstChild.firstChild.getAttribute('value');
@@ -100,15 +107,23 @@ if (onPDP) {
     }
 
     newCopySKUButton.onclick = () => {
-      const colorSelector = variantSelector.firstChild.lastChild;
-      const currentlySelectedColor = colorSelector.textContent;
+      const currentlySelectedColor = currentlySelectedColorElem.textContent;
 
-      const fullSKU =
-        itemsOffered[currentlySelectedColor][currentlySelectedSize];
+      if (!currentlySelectedColor) {
+        console.log(colorSelector);
+        for (const {
+          lastChild: singleColorSelectElem,
+        } of colorSelector.children) {
+          singleColorSelectElem.classList.add('red-outline');
+        }
+      } else {
+        const fullSKU =
+          itemsOffered[currentlySelectedColor][currentlySelectedSize];
 
-      currentlySelectedVariantSKU = fullSKU;
+        currentlySelectedVariantSKU = fullSKU;
 
-      copySKU();
+        copySKU();
+      }
     };
   }
 

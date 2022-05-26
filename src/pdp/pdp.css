@@ -60,3 +60,8 @@ button.wms-button-pdp.cc, button.copy-sku-button-pdp.cc {
   line-height: 24px;
 }
 
+
+[data-id="colorTile"] > label > div.red-outline { 
+  border: 1px solid red;
+  box-shadow: 0 0 15px red;
+}
