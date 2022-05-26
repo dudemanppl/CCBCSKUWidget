@@ -1,4 +1,23 @@
 /**
+ * Creates a button that links to WMS inventory page of desired product ID
+ *
+ * @param {string} productID Parent SKU for item from CC/BC catalog
+ */
+
+ const WMSLinkPDP = (productID) => {
+  const newWMSLinkPDP = HTMLElem(
+    'a',
+    ['btn', 'btn-reset', 'plp', 'link-to-wms', siteString],
+    null,
+    'Go to WMS'
+  );
+
+  newWMSLinkPDP.setAttribute('type', 'button');
+  newWMSLinkPDP.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+
+  return newWMSLinkPDP;
+}; 
+/**
  * Creates main SKU Widget container for PLP
  *
  * @param {string} productID Parent SKU for item from CC/BC catalog
@@ -13,7 +32,7 @@ const PLPWidgetContainer = (productID, productListing) => {
 
   newPLPWidgetContainer.append(
     PLPSelectorDropdownContainer(productID, productListing),
-    WMSLink(productID)
+    WMSLinkPDP(productID)
   );
 
   return newPLPWidgetContainer;

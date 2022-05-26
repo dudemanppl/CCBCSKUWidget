@@ -170,7 +170,6 @@ const dropdownOptions = async (
  * @return {Element}
  */
 
-/* istanbul ignore next */
 const PLPSelectorDropdown = async (...args) => {
   const newPLPSelectorDropdown = HTMLElem('ul', [
     'plp-dropdown-options',
@@ -183,16 +182,3 @@ const PLPSelectorDropdown = async (...args) => {
 
   return newPLPSelectorDropdown;
 };
-
-// removeIf(production)
-module.exports = {
-  fetchJson,
-  getItemInfo,
-  getVariants,
-  usdString,
-  formatVariant,
-  toggleCurrOptionClass,
-  highlightCurrSelectedOption,
-  PLPSelectorDropdown,
-};
-// endRemoveIf(production)
