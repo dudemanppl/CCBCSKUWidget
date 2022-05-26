@@ -44,6 +44,42 @@ const getItemsOffered = () => {
   return items;
 };
 
+const iterateThroughChildren = (element, cb, options) => {
+  for (const child of element.children) {
+    cb(child, options);
+  }
+};
+
+const changeStylingOfLastChild = (
+  { lastChild },
+  options = { add: true, classes: [] }
+) => {
+  if (options.add === false) {
+    lastChild.classList.remove(...options.classes);
+  } else {
+    lastChild.classList.add(...options.classes);
+  }
+};
+
+const addRedOutline = (parentContainer) => {
+  iterateThroughChildren(parentContainer, changeStylingOfLastChild, {
+    classes: ['red-outline'],
+  });
+};
+
+const addRemoveRedOutlineClickListener = (parentContainer) => {
+  parentContainer.addEventListener(
+    'click',
+    () => {
+      iterateThroughChildren(parentContainer, changeStylingOfLastChild, {
+        add: false,
+        classes: ['red-outline'],
+      });
+    },
+    { once: true }
+  );
+};
+
 if (onPDP) {
   let currentlySelectedVariantSKU;
 
@@ -55,6 +91,12 @@ if (onPDP) {
     navigator.clipboard.writeText(
       currentlySelectedVariantSKU || 'Error copying SKU'
     );
+
+    newCopySKUButton.textContent = 'Copied!';
+  };
+
+  newCopySKUButton.onmouseleave = () => {
+    newCopySKUButton.textContent = 'Copy SKU';
   };
 
   if (hasDropdown) {
@@ -110,12 +152,15 @@ if (onPDP) {
       const currentlySelectedColor = currentlySelectedColorElem.textContent;
 
       if (!currentlySelectedColor) {
-        console.log(colorSelector);
-        for (const {
-          lastChild: singleColorSelectElem,
-        } of colorSelector.children) {
-          singleColorSelectElem.classList.add('red-outline');
-        }
+        addRedOutline(colorSelector);
+        addRemoveRedOutlineClickListener(colorSelector);
+
+        newCopySKUButton.textContent = 'Select a Color';
+      } else if (!currentlySelectedSize) {
+        addRedOutline(sizeSelectorWrapper);
+        addRemoveRedOutlineClickListener(sizeSelectorWrapper);
+
+        newCopySKUButton.textContent = 'Select a Size';
       } else {
         const fullSKU =
           itemsOffered[currentlySelectedColor][currentlySelectedSize];

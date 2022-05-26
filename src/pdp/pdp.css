@@ -1,4 +1,5 @@
-button.wms-button-pdp, button.copy-sku-button-pdp {
+button.wms-button-pdp,
+button.copy-sku-button-pdp {
   margin-top: 16px;
   padding: 0;
   display: flex;
@@ -30,7 +31,8 @@ button.wms-button-pdp, button.copy-sku-button-pdp {
   line-height: 1.2;
 }
 
-button.wms-button-pdp, button.copy-sku-button-pdp:hover {
+button.wms-button-pdp,
+button.copy-sku-button-pdp:hover {
   background: var(--chakra-colors-btn-dark);
   color: var(--chakra-colors-txt-inverted);
 }
@@ -46,11 +48,13 @@ button.copy-sku-button-pdp:active {
   background: var(--chakra-colors-gray-200);
 }
 
-button.wms-button-pdp.bc, button.copy-sku-button-pdp.bc {
-  border-radius: 100px
+button.wms-button-pdp.bc,
+button.copy-sku-button-pdp.bc {
+  border-radius: 100px;
 }
 
-button.wms-button-pdp.cc, button.copy-sku-button-pdp.cc {
+button.wms-button-pdp.cc,
+button.copy-sku-button-pdp.cc {
   border-radius: 2px;
 }
 
@@ -60,8 +64,9 @@ button.wms-button-pdp.cc, button.copy-sku-button-pdp.cc {
   line-height: 24px;
 }
 
-
-[data-id="colorTile"] > label > div.red-outline { 
+[data-id='colorTile'] > label > div.red-outline,
+[data-id='sizeTile'] > label > div.red-outline {
   border: 1px solid red;
-  box-shadow: 0 0 15px red;
+  box-shadow: 0 0 8px red;
+  opacity: 1;
 }
