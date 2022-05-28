@@ -1,8 +1,9 @@
 const onCompetitiveCyclist =
   window.location.host === 'www.competitivecyclist.com';
 const siteString = onCompetitiveCyclist ? 'cc' : 'bc';
-const onPLP = document.getElementById('pageType').content.slice(0, 3) === 'plp';
-const onPDP = document.getElementById('pageType').content === 'pdp';
+const pageType = document.getElementById('pageType').content;
+const onPLP = pageType.slice(0, 3) === 'plp' || pageType === 'search';
+const onPDP = pageType === 'pdp';
 
 /**
  * Returns new HTML element given a tagName. Options to add id or classes.
