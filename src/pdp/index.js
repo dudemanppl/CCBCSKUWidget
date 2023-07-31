@@ -92,7 +92,10 @@ if (onPDP) {
 
   const newCopySKUButton = copySKUButtonPDP();
   const variantSelector = document.getElementById('buybox-variant-selector');
-  const hasDropdown = variantSelector.children.length === 2;
+  const hasSingleDropdown = variantSelector.querySelector(
+    '[data-id="singleDropdown"]'
+  );
+  const hasColorTile = variantSelector.querySelector('[data-id="colorTile"]');
 
   const copySKU = () => {
     navigator.clipboard.writeText(
@@ -106,7 +109,7 @@ if (onPDP) {
     newCopySKUButton.textContent = 'Copy SKU';
   };
 
-  if (hasDropdown) {
+  if (hasSingleDropdown) {
     const variantDropdown = variantSelector.querySelector('ul');
 
     for (let i = 0; i < variantDropdown.children.length; i += 1) {
@@ -124,17 +127,16 @@ if (onPDP) {
     }
 
     newCopySKUButton.onclick = copySKU;
-  } else {
+  } else if (hasColorTile) {
     let currentlySelectedSize;
 
     const itemsOffered = getItemsOffered();
-    const {
-      children: [
-        { lastChild: currentlySelectedColorElem },
-        colorSelector,
-        { lastChild: sizeSelectorWrapper },
-      ],
-    } = variantSelector;
+
+    const [
+      { lastChild: currentlySelectedColorElem },
+      colorSelector,
+      { lastChild: sizeSelectorWrapper },
+    ] = variantSelector.children;
 
     // Sets selected size to the only element, which is selected by default
     if (sizeSelectorWrapper.childElementCount === 1) {
@@ -176,6 +178,28 @@ if (onPDP) {
 
         copySKU();
       }
+    };
+  } else {
+    const itemsOffered = getItemsOffered();
+
+    const colorElem = variantSelector.querySelector(
+      '[data-id="productColorDropdown"]'
+    ).firstChild.firstChild;
+
+    const sizeElem = variantSelector.querySelector(
+      '[data-id="productSizeDropdown"]'
+    ).firstChild;
+
+    newCopySKUButton.onclick = () => {
+      const currentlySelectedColor = colorElem.innerText;
+      const currentlySelectedSize = sizeElem.innerText;
+
+      const fullSKU =
+        itemsOffered[currentlySelectedColor][currentlySelectedSize];
+
+      currentlySelectedVariantSKU = fullSKU;
+
+      copySKU();
     };
   }
 
