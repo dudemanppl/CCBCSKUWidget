@@ -40,7 +40,7 @@ Checking stock was another, even longer process
 
 1. **[Fork the repo](https://github.com/dudemanppl/CCBCSKUWidget/fork?fragment=1 'link to fork repo')**
 2. Clone your forked copy locally
-3. Get your development enviroment ready by running these two commands
+3. Get your development environment ready by running these two commands
 
 ```
 $ yarn install
