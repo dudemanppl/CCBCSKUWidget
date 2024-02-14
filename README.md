@@ -60,7 +60,7 @@ $ yarn dev
 $ yarn test
 ```
 
-7. Before opening a pull request, bundle the extension to be injested by the Chrome Web Store by running
+7. Before opening a pull request, bundle the extension to be ingested by the Chrome Web Store by running
 
 ```
 $ yarn build
