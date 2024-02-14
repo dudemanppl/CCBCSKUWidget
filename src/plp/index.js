@@ -13,7 +13,7 @@ const WMSLinkPLP = (productID) => {
   );
 
   newWMSLinkPLP.setAttribute('type', 'button');
-  newWMSLinkPLP.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+  newWMSLinkPLP.href = `https://manager.backcountry-apps.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
   return newWMSLinkPLP;
 };

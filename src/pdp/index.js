@@ -7,7 +7,7 @@ const WMSLinkPDP = (productID) => {
   const newWMSLink = HTMLElem('a', ['wms-link-pdp'], null, 'Go to WMS');
 
   newWMSLinkButton.setAttribute('type', 'button');
-  newWMSLink.href = `https://manager.backcountry.com/manager/admin/item_inventory.html?item_id=${productID}`;
+  newWMSLink.href = `https://manager.backcountry-apps.com/manager/admin/item_inventory.html?item_id=${productID}`;
 
   newWMSLinkButton.append(newWMSLink);
 
@@ -104,10 +104,13 @@ if (onPDP) {
     newCopySKUButton.textContent = 'Copy SKU';
   };
 
-  const sizeSelectorWrapper = document.getElementById('buybox-variant-selector').lastElementChild.lastChild;
+  const sizeSelectorWrapper = document.getElementById('buybox-variant-selector')
+    .lastElementChild.lastChild;
 
   newCopySKUButton.onclick = () => {
-    const currentlySelectedSize = !JSON.parse(document.querySelector("#__NEXT_DATA__").innerText).props.pageProps.product.selectedSize;
+    const currentlySelectedSize = !JSON.parse(
+      document.querySelector('#__NEXT_DATA__').innerText
+    ).props.pageProps.product.selectedSize;
 
     if (!currentlySelectedSize) {
       addRedOutline(sizeSelectorWrapper);
@@ -115,7 +118,9 @@ if (onPDP) {
 
       newCopySKUButton.textContent = 'Select a Size';
     } else {
-      const fullSKU = JSON.parse(document.querySelector("#__NEXT_DATA__").innerText).props.pageProps.product.selectedSku;
+      const fullSKU = JSON.parse(
+        document.querySelector('#__NEXT_DATA__').innerText
+      ).props.pageProps.product.selectedSku;
       currentlySelectedVariantSKU = fullSKU;
 
       copySKU();
